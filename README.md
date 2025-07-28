@@ -7,6 +7,12 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 # Secrover
 
+## 🖼️ Screenshot
+
+<a href="https://github.com/Huluti/Secrover/blob/main/assets/screenshot.png">
+  <img src="https://github.com/Huluti/Secrover/blob/main/assets/screenshot.png" height="300" alt="Secrover" />
+</a>
+
 ## 📁 Configuration
 
 Create a new repo with a `config.yaml` file inside where you will list the repositories to scan.
