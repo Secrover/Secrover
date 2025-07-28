@@ -7,10 +7,10 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 # Secrover
 
-## 🖼️ Screenshot
+## 🖼️ Screenshot
 
 <a href="https://github.com/Huluti/Secrover/blob/main/assets/screenshot.png">
-  <img src="https://github.com/Huluti/Secrover/blob/main/assets/screenshot.png" height="300" alt="Secrover" />
+  <img src="https://github.com/Huluti/Secrover/blob/main/assets/screenshot.png" height="400" alt="Secrover" />
 </a>
 
 ## 📁 Configuration
