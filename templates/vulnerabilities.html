@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Secrover Security Audit Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #fafafa; color: #222; }
+        h1, h2, h3 { color: #333; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 30px; background: white; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        ul { margin-top: 0; }
+        .severity-critical { color: #b22222; font-weight: bold; }
+        .severity-high { color: #d2691e; font-weight: bold; }
+        .severity-moderate { color: #b8860b; }
+        .severity-low { color: #228b22; }
+        .severity-info { color: #666666; }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 0.9em;
+        }
+        .badge-critical { background: #b22222; }
+        .badge-high { background: #d2691e; }
+        .badge-moderate { background: #b8860b; }
+        .badge-low { background: #228b22; }
+        .badge-info { background: #666666; }
+        .global-recap {
+            margin-bottom: 40px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .project-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .project-card h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 6px;
+        }
+        .project-card h3 {
+            color: #34495e;
+            margin-top: 18px;
+        }
+        .project-card p {
+            line-height: 1.4;
+        }
+        .project-card ul {
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Secrover Security Audit Report</h1>
+    <p><em>Audit run on: $audit_datetime</em> with <a href="https://github.com/Huluti/Secrover">Secrover</a></p>
+
+    <section class="global-recap">
+        <h2>Global Vulnerabilities Recap</h2>
+        <p>
+            <span class="badge badge-critical">Critical: $critical</span>
+            <span class="badge badge-high">High: $high</span>
+            <span class="badge badge-moderate">Moderate: $moderate</span>
+            <span class="badge badge-low">Low: $low</span>
+            <span class="badge badge-info">Info: $info</span>
+            <strong>Total: $total</strong>
+        </p>
+    </section>
+
+    $repo_sections
+</body>
+</html>
