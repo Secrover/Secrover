@@ -21,7 +21,7 @@ Create a new repo with a `config.yaml` file inside where you will list the repos
 
 ```yaml
 repos:
-  - url: https://github.com/your-org/your-repo
+  - url: git@github.com:your-org/your-repo
     description: "Short description of the project"
     branch: "main"
 
