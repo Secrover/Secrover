@@ -3,58 +3,11 @@ import yaml
 import os
 from git import Repo
 
+from secrover.config import load_config
 from secrover.audits import run_language_audits
 from secrover.report import generate_html_report_from_template
-
-
-def get_repo_name_from_url(url):
-    url = url.rstrip('/')
-    repo_name = url.split('/')[-1]
-    if repo_name.endswith('.git'):
-        repo_name = repo_name[:-4]
-    return repo_name
-
-
-def clone_repos(repos, base_dir="repos"):
-    os.makedirs(base_dir, exist_ok=True)
-
-    for repo in repos:
-        repo_url = repo["url"]
-        branch = repo.get("branch", "main")
-        repo_name = repo.get("name") or get_repo_name_from_url(repo_url)
-        dest_path = os.path.join(base_dir, repo_name)
-
-        if os.path.exists(dest_path):
-            print(
-                f"Repo '{repo_name}' already exists at {dest_path}, skipping clone.")
-            continue
-
-        print(f"Cloning {repo_url} into {dest_path} (branch {branch}) ...")
-        Repo.clone_from(repo_url, dest_path, branch=branch)
-
-
-def detect_language_by_files(repo_path):
-    try:
-        files = set(os.listdir(repo_path))
-    except FileNotFoundError:
-        return "Unknown (repo path not found)"
-
-    # Mapping of language to their typical dependency files
-    lang_files = {
-        "JavaScript": {"package.json", "yarn.lock"},
-        "PHP": {"composer.json"},
-    }
-
-    detected_languages = []
-
-    for lang, dep_files in lang_files.items():
-        if dep_files.intersection(files):
-            detected_languages.append(lang)
-
-    if not detected_languages:
-        return "Unknown"
-
-    return ", ".join(detected_languages)
+from secrover.git import clone_repos, get_repo_name_from_url
+from secrover.languages import detect_language_by_files
 
 
 def main():
@@ -75,12 +28,11 @@ def main():
     config_path = args.config
     output_path = args.output
 
-    if not os.path.exists(config_path):
-        print(f"Config file {config_path} does not exist.")
+    try:
+        config = load_config(config_path)
+    except FileNotFoundError as e:
+        print(e)
         exit(1)
-
-    with open(config_path, "r") as file:
-        config = yaml.safe_load(file)
 
     print(f"Using config: {config_path}")
     print(f"Report will be saved to: {output_path}")
