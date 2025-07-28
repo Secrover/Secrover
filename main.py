@@ -3,8 +3,8 @@ import os
 from git import Repo
 from string import Template
 
-from audits import run_language_audits
-from report import generate_html_report_from_template
+from secrover.audits import run_language_audits
+from secrover.report import generate_html_report_from_template
 
 
 def get_repo_name_from_url(url):
