@@ -5,7 +5,7 @@
 Secrover is a free and open-source tool that generates security audit reports for your projects.
 We believe that security should not be locked behind paywalls or costly SaaS solutions — everyone deserves access to quality security insights and clear, good reporting.
 
-<h1 align="center">Secrover</h1>
+# Secrover
 
 ## 📁 Configuration
 
