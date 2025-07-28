@@ -3,6 +3,16 @@ from string import Template
 from collections import defaultdict
 from datetime import datetime
 
+# Define severity levels and corresponding emojis
+severity_order = ["critical", "high", "moderate", "low", "info"]
+severity_emojis = {
+    "critical": "🚨",
+    "high": "⚠️",
+    "moderate": "▶️",
+    "low": "↘️",
+    "info": "ℹ️",
+}
+
 
 def aggregate_global_summary(results):
     """
@@ -23,6 +33,71 @@ def aggregate_global_summary(results):
     return global_counts
 
 
+def render_badges(severity, total):
+    return "".join(
+        f"<span class=\"badge badge-{level}\">{severity_emojis.get(level, '')} {level.capitalize()}: {severity.get(level, 0)}</span>"
+        for level in severity_order
+    ) + f"<span class=\"badge badge-total\">📈 Total: {total}</span>"
+
+
+def render_packages_list(packages):
+    if packages:
+        return "".join(f"<div>{pkg}</div>" for pkg in sorted(packages))
+    return "<p class=\"no-issues mb-0\">None - All clear! 🎉</p>"
+
+
+def render_card_header(repo_name, tool_name=None):
+    badge_html = f'<span class="badge-small badge-basic">{tool_name}</span>' if tool_name else ""
+    return f"""
+    <div class="project-header">
+        <h3>{repo_name}</h3>
+        {badge_html}
+    </div>
+    """
+
+
+def render_project_card(repo_name, description, tool_name=None, audit=None):
+    header_html = render_card_header(repo_name, tool_name)
+
+    if audit is None:
+        body_html = f"""
+        <p class="project-description">{description}</p>
+        <p class="mb-0">No audit data available{f' for {tool_name}' if tool_name else ''}.</p>
+        """
+    else:
+        severity_html = render_badges(
+            audit.get("vulnerabilities_by_severity", {}),
+            audit.get("total_vulnerabilities", 0)
+        )
+        packages_html = render_packages_list(
+            audit.get("packages_impacted", []))
+        abandoned_html = render_packages_list(
+            audit.get("abandoned_packages", []))
+
+        body_html = f"""
+        <p class="project-description">{description}</p>
+        <p><strong>🎯 Severity Breakdown:</strong></p>
+        <div class="vulnerability-badges mb-20">
+            {severity_html}
+        </div>
+        <p><strong>📦 Impacted Packages:</strong></p>
+        <div class="packages-list mb-20">
+            {packages_html}
+        </div>
+        <p><strong>📦 Abandoned Packages:</strong></p>
+        <div class="packages-list">
+            {abandoned_html}
+        </div>
+        """
+
+    return f"""
+    <div class="project-card">
+        {header_html}
+        {body_html}
+    </div>
+    """
+
+
 def generate_html_report_from_template(results, output_path):
     template_path = "templates/vulnerabilities.html"
     if not os.path.exists(template_path):
@@ -31,17 +106,7 @@ def generate_html_report_from_template(results, output_path):
     with open(template_path, "r", encoding="utf-8") as f:
         template_content = f.read()
 
-    # Get current datetime formatted
     audit_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    severity_order = ["critical", "high", "moderate", "low", "info"]
-    severity_emojis = {
-        "critical": "🚨",
-        "high": "⚠️",
-        "moderate": "▶️",
-        "low": "↘️",
-        "info": "ℹ️",
-    }
     repo_sections = []
 
     for repo_name, repo_data in results.items():
@@ -49,57 +114,13 @@ def generate_html_report_from_template(results, output_path):
         audits = repo_data.get("audits", {})
 
         if not audits:
-            repo_sections.append(
-                f"<h2>{repo_name}</h2><p>No audit results available.</p>")
+            repo_sections.append(render_project_card(repo_name, description))
             continue
 
         for tool_name, audit in audits.items():
-            if not audit:
-                repo_sections.append(
-                    f"<h3>{tool_name.capitalize()} audit for {repo_name} - no data</h3>")
-                continue
+            repo_sections.append(render_project_card(
+                repo_name, description, tool_name, audit))
 
-            vulns = audit.get("total_vulnerabilities", 0)
-            severity = audit.get("vulnerabilities_by_severity", {})
-            packages = audit.get("packages_impacted", [])
-            abandoned = audit.get("abandoned_packages", [])
-
-            # Build severity list sorted by severity order
-            severity_html = "".join(
-                f"<span class=\"badge badge-{level}\">{severity_emojis.get(level, '')} {level.capitalize()}: {severity.get(level, 0)}</span>"
-                for level in severity_order
-            )
-            severity_html += f"<span class=\"badge badge-total\">📈 Total: {vulns}</span>"
-
-            packages_html = "".join(f"<div>{pkg}</div>" for pkg in sorted(
-                packages)) + "" if packages else "<p class=\"no-issues mb-0\">None - All clear! 🎉</p>"
-            abandoned_html = "".join(f"<div>{pkg}</div>" for pkg in sorted(
-                abandoned)) + "" if abandoned else "<p class=\"no-issues mb-0\">None - All clear! 🎉</p>"
-
-            section = f"""
-            <div class="project-card">
-                <div class="project-header">
-                    <h3>{repo_name}</h3>
-                    <span class="badge-small badge-basic">{tool_name}</span>
-                </div>
-                <p class="project-description">{description}</p>
-                <p><strong>🎯 Severity Breakdown:</strong></p>
-                <div class="vulnerability-badges mb-20">
-                    {severity_html}
-                </div>
-                <p><strong>📦 Impacted Packages:</strong></p>
-                <div class="packages-list mb-20">
-                    {packages_html}
-                </div>
-                <p><strong>📦 Abandoned packages:</strong></p>
-                <div class="packages-list">
-                    {abandoned_html}
-                </div>
-            </div>
-            """
-            repo_sections.append(section)
-
-    # Aggregate global summary for recap
     global_summary = aggregate_global_summary(results)
 
     template = Template(template_content)
@@ -115,7 +136,7 @@ def generate_html_report_from_template(results, output_path):
     )
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path + "/vulnerabilities.html", "w", encoding="utf-8") as f:
+    with open(os.path.join(output_path, "vulnerabilities.html"), "w", encoding="utf-8") as f:
         f.write(output_html)
 
     print(f"HTML report generated in {output_path}")
