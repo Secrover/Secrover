@@ -1,7 +1,5 @@
 import argparse
-import yaml
 import os
-from git import Repo
 
 from secrover.config import load_config
 from secrover.audits import run_language_audits
