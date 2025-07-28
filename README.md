@@ -1,8 +1,8 @@
-# Secrover
-
 <p align="center">
     <img src="https://github.com/Huluti/Secrover/blob/main/assets/secrover.png" height="40" alt="Secrover" />
 </p>
+
+<h1 align="center">Secrover</h1>
 
 Secrover is a free and open-source tool that generates security audit reports for your projects.
 We believe that security should not be locked behind paywalls or costly SaaS solutions — everyone deserves access to quality security insights and clear, good reporting.
