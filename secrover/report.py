@@ -80,7 +80,7 @@ def generate_html_report_from_template(results, output_path):
             <div class="project-card">
                 <div class="project-header">
                     <h3>{repo_name}</h3>
-                    <span>{tool_name}</span>
+                    <span class="badge-small badge-basic">{tool_name}</span>
                 </div>
                 <p class="project-description">{description}</p>
                 <p><strong>🎯 Severity Breakdown:</strong></p>
