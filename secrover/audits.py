@@ -53,16 +53,8 @@ def run_npm_audit(repo_path):
 
 def run_composer_audit(repo_path):
     try:
-        subprocess.run(
-            ["composer", "install", "--no-interaction",
-                "--no-progress", "--prefer-dist"],
-            cwd=repo_path,
-            check=True,
-            capture_output=True,
-            text=True,
-        )
         result = subprocess.run(
-            ["composer", "audit", "--format=json"],
+            ["composer", "audit", "--format=json", "--locked"],
             cwd=repo_path,
             capture_output=True,
             text=True,

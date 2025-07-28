@@ -1,7 +1,7 @@
+import argparse
 import yaml
 import os
 from git import Repo
-from string import Template
 
 from secrover.audits import run_language_audits
 from secrover.report import generate_html_report_from_template
@@ -58,8 +58,32 @@ def detect_language_by_files(repo_path):
 
 
 def main():
-    with open("config.yaml", "r") as file:
+    parser = argparse.ArgumentParser(description="Secrover Security Scanner")
+    parser.add_argument(
+        "-c", "--config",
+        default="config.yaml",
+        help="Path to config YAML file"
+    )
+    parser.add_argument(
+        "-o", "--output",
+        default="output/",
+        help="Path to output folder"
+    )
+
+    args = parser.parse_args()
+
+    config_path = args.config
+    output_path = args.output
+
+    if not os.path.exists(config_path):
+        print(f"Config file {config_path} does not exist.")
+        exit(1)
+
+    with open(config_path, "r") as file:
         config = yaml.safe_load(file)
+
+    print(f"Using config: {config_path}")
+    print(f"Report will be saved to: {output_path}")
 
     repos = config["repos"]
     base_dir = "repos"
@@ -90,7 +114,7 @@ def main():
             if tool == "composer" and summary.get("abandoned_packages"):
                 print(f"  Abandoned packages: {summary['abandoned_packages']}")
 
-    generate_html_report_from_template(all_results)
+    generate_html_report_from_template(all_results, output_path)
 
     print("All repos processed.")
 

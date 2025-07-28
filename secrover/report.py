@@ -23,9 +23,8 @@ def aggregate_global_summary(results):
     return global_counts
 
 
-def generate_html_report_from_template(results,
-                                       template_path="templates/vulnerabilities.html",
-                                       output_path="output/vulnerabilities.html"):
+def generate_html_report_from_template(results, output_path):
+    template_path = "templates/vulnerabilities.html"
     if not os.path.exists(template_path):
         raise FileNotFoundError(f"Template file not found: {template_path}")
 
@@ -101,7 +100,7 @@ def generate_html_report_from_template(results,
     )
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
+    with open(output_path + "/vulnerabilities.html", "w", encoding="utf-8") as f:
         f.write(output_html)
 
-    print(f"HTML report generated at {output_path}")
+    print(f"HTML report generated in {output_path}")
