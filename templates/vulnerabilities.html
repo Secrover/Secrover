@@ -3,80 +3,200 @@
 <head>
     <meta charset="UTF-8" />
     <title>Secrover - Security Audit Report</title>
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03Ljk5OTg3IDBDNC41MTk5OSAwIDIuNjQ1MTEgMC4yNTEzNzggMS42NjI2OSAwLjQ3NDMxMUMwLjgyMTA3OSAwLjY2NDg4OSAwLjM0MjEzNyAxLjM3MjQ0IDAuMjUyODkyIDIuMTMyNjJDMC4wNzczODYyIDMuNjU0MjggLTAuMDA2OTEzOTIgNS4xODUwNyAwLjAwMDQ0Mjg5OCA2LjcxNjhDMC4wMTk5OTg4IDEwLjEzOCAxLjgyOTgxIDEzLjMzNjUgNC44NzYyNiAxNC45NDkzQzUuNDIxNjkgMTUuMjM4IDUuOTc1MyAxNS40OTcyIDYuNDk3NjIgMTUuNjg1M0M3LjAxMzU0IDE1Ljg3MTMgNy41MzMwMSAxNiA3Ljk5OTg3IDE2QzguNDY2NzIgMTYgOC45ODYxOSAxNS44NzEzIDkuNTAxNzYgMTUuNjg1M0MxMC4wMjQ0IDE1LjQ5NzIgMTAuNTc4IDE1LjIzOCAxMS4xMjMxIDE0Ljk0OTNDMTQuMTY5OSAxMy4zMzY1IDE1Ljk3OTcgMTAuMTM4IDE1Ljk5OTMgNi43MTY4TDE2IDYuNTA2NjdDMTYgNC42NDY0IDE1Ljg1NzQgMy4wNzIgMTUuNzQ2OCAyLjEzMjYyQzE1LjY1NzkgMS4zNzI4IDE1LjE3NzkgMC42NjQ4ODkgMTQuMzM3IDAuNDc0MzExQzEzLjM1NDYgMC4yNTEzNzggMTEuNDc5NyAwIDcuOTk5ODcgMFpNNC4zODM0NSAyLjcyNjA0QzUuMDY4MjYgMi42MDI2NyA2LjE4ODI4IDIuNDg4ODkgNy45OTk4NyAyLjQ4ODg5QzkuODExNDUgMi40ODg4OSAxMC45MzE1IDIuNjAyNjcgMTEuNjE2MyAyLjcyNjA0QzEyLjQ3MzIgMi44ODA3MSAxMi45NTY3IDMuNTkxNDcgMTMuMDMxNCA0LjM1MkMxMy4wOTI2IDQuOTY4NTMgMTMuMTU1NSA1Ljg0OTYgMTMuMTU1NSA2Ljg2MjIyQzEzLjE1NTUgOC45MjggMTIuMTUxOCAxMC44Mjg4IDEwLjQ3ODEgMTIuMDI1NkMxMC4wNzQ2IDEyLjMxNDMgOS42NDc1NCAxMi41ODkyIDkuMjM5MzUgMTIuNzkzNkM4Ljg0NDY4IDEyLjk5MTYgOC40MDczNCAxMy4xNTU2IDcuOTk5ODcgMTMuMTU1NkM3LjU5MjM5IDEzLjE1NTYgNy4xNTQ3IDEyLjk5MTYgNi43NjAzOCAxMi43OTRDNi4zNTIxOSAxMi41ODkyIDUuOTI1MTYgMTIuMzE0IDUuNTIxNiAxMi4wMjU2QzMuODQ3OTcgMTAuODI4OCAyLjg0NDIyIDguOTI4IDIuODQ0MjIgNi44NjIyMkMyLjg0NDIyIDUuODQ5NiAyLjkwNzE2IDQuOTY4NTMgMi45Njc5NiA0LjM1MkMzLjA0Mjk4IDMuNTkxNDcgMy41MjY1NSAyLjg4MDcxIDQuMzgzMDkgMi43MjYwNE03Ljk5OTg3IDMuNTU1NTZDNi4yMjgxIDMuNTU1NTYgNS4xNzU2NCAzLjY2NzIgNC41NzI2MSAzLjc3NkM0LjI4NTY3IDMuODI3NTYgNC4wNjg3OCA0LjA2MDQ0IDQuMDI5NjcgNC40NTY4OUMzLjk1MTI5IDUuMjU2MjggMy45MTE2NiA2LjA1OSAzLjkxMDkxIDYuODYyMjJDMy45MTA5MSA4LjU3NTI5IDQuNzQxNSAxMC4xNTY0IDYuMTQyMDYgMTEuMTU4QzYuNTIxOCAxMS40Mjk3IDYuODk5MDUgMTEuNjcgNy4yMzg2MSAxMS44NDA3QzcuNTkyMzkgMTIuMDE3OCA3Ljg0NzMzIDEyLjA4ODkgNy45OTk4NyAxMi4wODg5QzguMTUyNCAxMi4wODg5IDguNDA3MzQgMTIuMDE3OCA4Ljc2MTEyIDExLjg0MDRDOS4xMDEwNCAxMS42Njk3IDkuNDc3OTQgMTEuNDI5NyA5Ljg1NzY4IDExLjE1NzdDMTEuMjU4MiAxMC4xNTY4IDEyLjA4ODggOC41NzU2NCAxMi4wODg4IDYuODYyMjJDMTIuMDg4OCA1Ljg5MjI3IDEyLjAyODQgNS4wNDcxMSAxMS45NzAxIDQuNDU2ODlDMTEuOTMxIDQuMDYwOCAxMS43MTQxIDMuODI3NTYgMTEuNDI3MSAzLjc3NkMxMC44MjQxIDMuNjY3MiA5Ljc3MTYzIDMuNTU1NTYgNy45OTk4NyAzLjU1NTU2WiIgZmlsbD0iIzJBMkRGMiIvPgo8L3N2Zz4K" type="image/svg+xml">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background: #fafafa; color: #222; }
-        h1, h2, h3 { color: #333; }
-        table { border-collapse: collapse; width: 100%; margin-bottom: 30px; background: white; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        ul { margin-top: 0; }
-        a { color: #638eed; }
-        #logo { height: 40px; }
-        .badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 12px;
-            color: white;
-            font-weight: bold;
-            margin-right: 8px;
-            font-size: 0.9em;
+        /* http://meyerweb.com/eric/tools/css/reset/ 
+        v2.0 | 20110126
+        License: none (public domain)
+        */
+        html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed, 
+        figure, figcaption, footer, header, hgroup, 
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
         }
-        .badge-critical { background: #b22222; }
-        .badge-high { background: #d2691e; }
-        .badge-moderate { background: #b8860b; }
-        .badge-low { background: #228b22; }
-        .badge-info { background: #666666; }
-        .global-recap {
-            margin-bottom: 40px;
-            padding: 15px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        /* HTML5 display-role reset for older browsers */
+        article, aside, details, figcaption, figure, 
+        footer, header, hgroup, menu, nav, section {
+            display: block;
         }
-        .project-card {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        body {
+            line-height: 1;
         }
-        .project-card h2 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 1.8em;
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 6px;
+        ol, ul {
+            list-style: none;
         }
-        .project-card h3 {
-            color: #34495e;
-            margin-top: 18px;
+        blockquote, q {
+            quotes: none;
         }
-        .project-card p {
-            line-height: 1.4;
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
         }
-        .project-card ul {
-            margin-top: 5px;
-            margin-bottom: 15px;
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
         }
 
+        :root {
+        --main-color: #638eed;;
+        }
+        body { font-family: Arial, sans-serif; margin: 20px; background: var(--main-color); color: #222; }
+        #main {
+            margin: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 40px;
+            padding: 0 0 40px 0;
+        }
+        h1, h2, h3 { color: #333; margin-bottom: 20px; font-weight: bold; }
+        h1 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; }
+        a { color: var(--main-color); }
+        #logo { height: 40px; }
+        .vulnerability-badges {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
+        .badge-critical { background: linear-gradient(135deg, #dc3545, #c82333); }
+        .badge-high { background: linear-gradient(135deg, #fd7e14, #e55a00); }
+        .badge-moderate { background: linear-gradient(135deg, #ffc107, #e0a800); }
+        .badge-low { background: linear-gradient(135deg, #28a745, #1e7e34); }
+        .badge-info { background: linear-gradient(135deg, #17a2b8, #138496); }
+        .badge-total { background: var(--main-color); }
+        .global-recap {
+            margin-bottom: 40px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+        }
+        #repos { display: grid; gap: 40px; grid-template-columns: 1fr 1fr; }
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--main-color);
+        }
+        .project-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card h3 {
+            margin-bottom: 0;
+        }
+        .project-card p {
+            margin-bottom: 20px;
+        }
+        .project-card .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .project-card .project-description {
+            color: #666;
+            font-style: italic;
+        }
+        .packages-list {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .packages-list div {
+            color: #666;
+            font-size: 14px;
+            font-family: monospace;
+            margin-bottom: 4px;
+            padding: 4px 8px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid var(--main-color);
+        }
+        .no-issues {
+            color: #28a745;
+            font-weight: 500;
+            font-style: italic;
+        }
+        strong {
+            font-weight: bold;
+        }
+        .mb-20 { margin-bottom: 20px; }
+        .mb-0 { margin-bottom: 0 !important; }
     </style>
 </head>
 <body>
-    <img id="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDUiIGhlaWdodD0iOTQiIGZpbGw9Im5vbmUiIHhtbG5zOnY9Imh0dHBzOi8vdmVjdGEuaW8vbmFubyI+PGcgZmlsbD0iIzAwMCI+PHBhdGggZD0iTTM1LjAxNiA5My41MzZjLTYuMzE1IDAtMTIuMDc1LTEuMDI0LTE3LjI4LTMuMDcyLTUuMTItMi4xMzMtOS4yNTktNS4yOTEtMTIuNDE2LTkuNDcyQzIuMjQ4IDc2LjcyNS41ODQgNzEuMzQ5LjMyOCA2NC44NjRoMjEuMjQ4Yy4zNDEgMi45ODcgMS41MzYgNS42NzUgMy41ODQgOC4wNjQgMi4xMzMgMi4zODkgNS4zMzMgMy41ODQgOS42IDMuNTg0IDMuNjY5IDAgNi40LS44MTEgOC4xOTItMi40MzIgMS44NzctMS42MjEgMi44MTYtMy43NTUgMi44MTYtNi40IDAtMS4xOTUtLjIxMy0yLjMwNC0uNjQtMy4zMjgtLjM0MS0xLjAyNC0xLjA2Ny0yLjAwNS0yLjE3Ni0yLjk0NC0xLjEwOS0xLjAyNC0yLjgxNi0yLjA0OC01LjEyLTMuMDcyLTIuMjE5LTEuMDI0LTUuMjA1LTIuMTMzLTguOTYtMy4zMjgtNi45OTctMi4yMTktMTIuNDU5LTQuODIxLTE2LjM4NC03LjgwOHMtNi42OTktNi4xODctOC4zMi05LjZjLTEuNTM2LTMuNDEzLTIuMzA0LTYuOTEyLTIuMzA0LTEwLjQ5NkMxLjk0OSAyMS4zMDEgMy40IDE2LjQ4IDYuMjE2IDEyLjY0YzIuODE2LTMuOTI1IDYuNTcxLTYuODY5IDExLjI2NC04LjgzMlMyNy40MjEuODY0IDMzLjIyNC44NjRzMTEuMDkzIDEuMDI0IDE1Ljg3MiAzLjA3MmM0Ljg2NCAxLjk2MyA4Ljc4OSA0LjkwNyAxMS43NzYgOC44MzJzNC41MjMgOC43ODkgNC42MDggMTQuNTkySDQzLjcyYy0uMDg1LTIuMzA0LTEuMDY3LTQuNDgtMi45NDQtNi41MjhzLTQuNjUxLTMuMDcyLTguMzItMy4wNzJjLTIuNjQ1LjA4NS00LjkwNy44NTMtNi43ODQgMi4zMDQtMS43OTIgMS4zNjUtMi42ODggMy4zMjgtMi42ODggNS44ODggMCAyLjIxOS45MzkgNC4xMzkgMi44MTYgNS43NnM0LjUyMyAzLjExNSA3LjkzNiA0LjQ4YzMuNDk5IDEuMzY1IDcuNTUyIDIuODE2IDEyLjE2IDQuMzUyIDMuNDk5IDEuMTk1IDYuNTcxIDIuNjAzIDkuMjE2IDQuMjI0IDIuNzMxIDEuNTM2IDQuOTkyIDMuMzcxIDYuNzg0IDUuNTA0IDEuNzkyIDIuMDQ4IDMuMTU3IDQuMzk1IDQuMDk2IDcuMDRzMS40MDggNS42MzIgMS40MDggOC45NmMwIDUuNDYxLTEuNDA4IDEwLjI0LTQuMjI0IDE0LjMzNi0yLjczMSA0LjA5Ni02LjUyOCA3LjI5Ni0xMS4zOTIgOS42LTQuODY0IDIuMjE5LTEwLjQ1MyAzLjMyOC0xNi43NjggMy4zMjh6bTEzOS4wNDQgMGMtNi40IDAtMTIuMDMyLTEuMzY1LTE2Ljg5Ni00LjA5NnMtOC43MDQtNi41NzEtMTEuNTItMTEuNTJjLTIuNzMxLTUuMDM1LTQuMDk2LTEwLjkyMy00LjA5Ni0xNy42NjQgMC02LjQ4NSAxLjMyMy0xMi4yMDMgMy45NjgtMTcuMTUyIDIuNjQ1LTUuMDM1IDYuNC04Ljk2IDExLjI2NC0xMS43NzYgNC44NjQtMi45MDEgMTAuNjI0LTQuMzUyIDE3LjI4LTQuMzUyIDcuNTA5IDAgMTQuMDggMS45NjMgMTkuNzEyIDUuODg4IDUuNjMyIDMuODQgOS40MjkgOS45ODQgMTEuMzkyIDE4LjQzMmgtMjEuMTJjLS44NTMtMi40NzUtMi4xNzYtNC4zMDktMy45NjgtNS41MDQtMS43MDctMS4yOC0zLjg0LTEuOTItNi40LTEuOTItMi44MTYgMC01LjEyLjc2OC02LjkxMiAyLjMwNC0xLjcwNyAxLjUzNi0yLjk4NyAzLjU0MS0zLjg0IDYuMDE2LS43NjggMi40NzUtMS4xNTIgNS4xNjMtMS4xNTIgOC4wNjQgMCAyLjgxNi4zODQgNS41MDQgMS4xNTIgOC4wNjQuODUzIDIuNDc1IDIuMTMzIDQuNDggMy44NCA2LjAxNiAxLjc5MiAxLjUzNiA0LjA5NiAyLjMwNCA2LjkxMiAyLjMwNCAyLjU2IDAgNC42OTMtLjY0IDYuNC0xLjkyIDEuNzkyLTEuMjggMy4xMTUtMy4xMTUgMy45NjgtNS41MDRoMjEuMTJjLTEuMTk1IDUuMjA1LTMuMjQzIDkuNi02LjE0NCAxMy4xODRzLTYuNDg1IDYuMzU3LTEwLjc1MiA4LjMyYy00LjE4MSAxLjg3Ny04LjkxNyAyLjgxNi0xNC4yMDggMi44MTZ6Ii8+PHVzZSBocmVmPSIjQiIvPjxwYXRoIGQ9Ik0zNDkuOTkyIDkybC0yMi41MjgtNjMuNDg4aDIwLjg2NGwxMy44MjQgNDUuMzEyIDEzLjY5Ni00NS4zMTJoMjAuNzM2TDM3NC4wNTYgOTJoLTI0LjA2NHoiLz48dXNlIGhyZWY9IiNCIiB4PSIyNTMuMzc1Ii8+PC9nPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTI4OS45OTkgMjNjLTE1LjIyNCAwLTIzLjQyNyAxLjEtMjcuNzI1IDIuMDc1LTMuNjgyLjgzNC01Ljc3NyAzLjkyOS02LjE2OCA3LjI1NWExNjguMjEgMTY4LjIxIDAgMCAwLTEuMTA0IDIwLjA1NmMuMDg1IDE0Ljk2OCA4LjAwMyAyOC45NjEgMjEuMzMyIDM2LjAxNyAyLjM4NiAxLjI2MyA0LjgwOCAyLjM5NyA3LjA5MyAzLjIyIDIuMjU3LjgxNCA0LjUzIDEuMzc3IDYuNTcyIDEuMzc3czQuMzE2LS41NjMgNi41NzEtMS4zNzdjMi4yODctLjgyMyA0LjcwOS0xLjk1NyA3LjA5NC0zLjIyIDEzLjMyOS03LjA1NiAyMS4yNDctMjEuMDUgMjEuMzMzLTM2LjAxN2wuMDAzLS45MTljMC04LjEzOS0uNjI0LTE1LjAyNy0xLjEwOC0xOS4xMzctLjM4OC0zLjMyNC0yLjQ4OS02LjQyMS02LjE2Ny03LjI1NUMzMTMuNDI2IDI0LjEgMzA1LjIyNCAyMyAyODkuOTk5IDIzem0tMTUuODIxIDExLjkyNmMyLjk5Ni0uNTQgNy44OTYtMS4wMzggMTUuODIxLTEuMDM4czEyLjgyNi40OTggMTUuODIyIDEuMDM4YzMuNzQ5LjY3NyA1Ljg2NSAzLjc4NiA2LjE5MSA3LjExNGExMTIuNTkgMTEyLjU5IDAgMCAxIC41NDMgMTAuOTgyYzAgOS4wMzgtNC4zOTEgMTcuMzU0LTExLjcxMyAyMi41OS0xLjc2NiAxLjI2My0zLjYzNCAyLjQ2Ni01LjQyIDMuMzYtMS43MjcuODY2LTMuNjQgMS41ODQtNS40MjMgMS41ODRzLTMuNjk3LS43MTctNS40MjItMS41ODJjLTEuNzg2LS44OTYtMy42NTQtMi4xLTUuNDItMy4zNjItNy4zMjItNS4yMzYtMTEuNzE0LTEzLjU1Mi0xMS43MTQtMjIuNTlhMTEzLjI4IDExMy4yOCAwIDAgMSAuNTQyLTEwLjk4MmMuMzI4LTMuMzI3IDIuNDQ0LTYuNDM3IDYuMTkxLTcuMTE0bTE1LjgyMyAzLjYyOWMtNy43NTEgMC0xMi4zNTYuNDg4LTE0Ljk5NC45NjQtMS4yNTUuMjI2LTIuMjA0IDEuMjQ0LTIuMzc1IDIuOTc5LS4zNDMgMy40OTctLjUxNiA3LjAwOS0uNTIgMTAuNTIzIDAgNy40OTUgMy42MzQgMTQuNDEyIDkuNzYyIDE4Ljc5NCAxLjY2MSAxLjE4OSAzLjMxMSAyLjI0IDQuNzk3IDIuOTg3IDEuNTQ4Ljc3NSAyLjY2MyAxLjA4NiAzLjMzIDEuMDg2czEuNzgzLS4zMTEgMy4zMzEtMS4wODdjMS40ODctLjc0NyAzLjEzNi0xLjc5NyA0Ljc5Ny0yLjk4NyA2LjEyOC00LjM3OSA5Ljc2Mi0xMS4yOTYgOS43NjItMTguNzkzYTEwOC40NiAxMDguNDYgMCAwIDAtLjUyLTEwLjUyM2MtLjE3MS0xLjczMy0xLjEyLTIuNzUzLTIuMzc1LTIuOTc5LTIuNjM5LS40NzYtNy4yNDMtLjk2NC0xNC45OTUtLjk2NHoiIGZpbGw9IiMyYTJkZjIiLz48cGF0aCBkPSJNMTA1LjQzOCAyNi45NzZjNi4zMTUgMCAxMS44NjIgMS4zMjMgMTYuNjQgMy45NjkgNC44NjQgMi41NiA4LjY2MSA2LjI3MiAxMS4zOTIgMTEuMTM2IDIuODE2IDQuNzc5IDQuMjI0IDEwLjQ5NiA0LjIyNCAxNy4xNTIgMCAuODUzLS4wNDIgMS43OTItLjEyOCAyLjgxNiAwIC45MzktLjA4NiAxLjkyLS4yNTYgMi45NDRoLTQ0LjhjLjI1NiAzLjA3Mi45ODEgNS41MDQgMi4xNzYgNy4yOTYgMS4yOCAxLjc5MiAyLjgxNiAzLjExNCA0LjYwOCAzLjk2OCAxLjg3Ny43NjggMy43MTIgMS4xNTIgNS41MDQgMS4xNTIgMi40NzUgMCA0LjU2Ni0uNTEyIDYuMjcyLTEuNTM2czMuMDI5LTIuNjAzIDMuOTY4LTQuNzM2aDIxLjEyYy0uOTM4IDQuMDExLTIuODE2IDcuNzIzLTUuNjMyIDExLjEzN3MtNi4zNTcgNi4xNDMtMTAuNjI0IDguMTkxYy00LjE4MSAyLjA0OC05LjAwMiAzLjA3Mi0xNC40NjQgMy4wNzItNS44ODggMC0xMS4zMDctMS4yMzctMTYuMjU2LTMuNzEyLTQuOTQ5LTIuNTYtOC45MTctNi4zMTUtMTEuOTAzLTExLjI2NXMtNC40OC0xMS4wNS00LjQ4LTE4LjMwNCAxLjQ1MS0xMy4zNTQgNC4zNTMtMTguMzA0IDYuODI2LTguNjYxIDExLjc3NS0xMS4xMzZjNC45NDktMi41NiAxMC40NTQtMy44NDEgMTYuNTEyLTMuODQxem0tLjI1NiAxNS44NzJjLTMuNDEzIDAtNi4yMjkgMS4wMjQtOC40NDggMy4wNzItMi4yMTkgMS45NjMtMy42MjcgNC42NTEtNC4yMjUgOC4wNjVoMjQuODMyYzAtMy40OTktMS4xNTItNi4yMy0zLjQ1Ni04LjE5MnMtNS4yMDYtMi45NDQtOC43MDQtMi45NDR6TTQyNi42ODggMjdjNi4zMTUgMCAxMS44NjIgMS4zMjMgMTYuNjQgMy45NjggNC44NjQgMi41NiA4LjY2MSA2LjI3MiAxMS4zOTIgMTEuMTM2IDIuODE2IDQuNzc5IDQuMjI0IDEwLjQ5NiA0LjIyNCAxNy4xNTJhMzMuODQgMzMuODQgMCAwIDEtLjEyOCAyLjgxNmMwIC45MzktLjA4NiAxLjkxOS0uMjU2IDIuOTQzaC00NC44Yy4yNTYgMy4wNzIuOTgxIDUuNTA0IDIuMTc2IDcuMjk2IDEuMjggMS43OTIgMi44MTYgMy4xMTUgNC42MDggMy45NjkgMS44NzcuNzY4IDMuNzEyIDEuMTUxIDUuNTA0IDEuMTUxIDIuNDc1IDAgNC41NjYtLjUxMSA2LjI3Mi0xLjUzNXMzLjAyOS0yLjYwMyAzLjk2OC00LjczNmgyMS4xMmMtLjkzOCA0LjAxLTIuODE2IDcuNzIyLTUuNjMyIDExLjEzNnMtNi4zNTcgNi4xNDQtMTAuNjI0IDguMTkyYy00LjE4MSAyLjA0OC05LjAwMiAzLjA3MS0xNC40NjQgMy4wNzEtNS44ODggMC0xMS4zMDctMS4yMzctMTYuMjU2LTMuNzEyLTQuOTQ5LTIuNTYtOC45MTctNi4zMTUtMTEuOTA0LTExLjI2NHMtNC40OC0xMS4wNS00LjQ4LTE4LjMwNCAxLjQ1MS0xMy4zNTUgNC4zNTItMTguMzA1IDYuODI3LTguNjYxIDExLjc3Ni0xMS4xMzZjNC45NDktMi41NiAxMC40NTQtMy44NCAxNi41MTItMy44NHptLS4yNTYgMTUuODcyYy0zLjQxNCAwLTYuMjI5IDEuMDI0LTguNDQ4IDMuMDcyLTIuMjE4IDEuOTYzLTMuNjI3IDQuNjUtNC4yMjQgOC4wNjRoMjQuODMyYzAtMy40OTgtMS4xNTItNi4yMjktMy40NTYtOC4xOTFzLTUuMjA2LTIuOTQ0LTguNzA0LTIuOTQ0eiIgZmlsbD0iIzAwMCIvPjxkZWZzID48cGF0aCBpZD0iQiIgZD0iTTIxMS4wODcgOTJWMjguNTEyaDE5LjcxMnY5Ljg1NmMyLjIxOS0zLjI0MyA1LjAzNS01LjkzMSA4LjQ0OC04LjA2NCAzLjQxMy0yLjIxOSA3LjMzOS0zLjMyOCAxMS43NzYtMy4zMjhWNDcuODRoLTUuNTA0Yy00Ljk0OSAwLTguNjYxIDEuMTA5LTExLjEzNiAzLjMyOC0yLjM4OSAyLjIxOS0zLjU4NCA1Ljg4OC0zLjU4NCAxMS4wMDhWOTJoLTE5LjcxMnoiLz48L2RlZnM+PC9zdmc+" alt="Secrover">
-    <h1>Security Audit Report</h1>
-    <p><em>Audit run on: $audit_datetime</em> with <a href="https://github.com/Huluti/Secrover">Secrover</a></p>
+    <div id="main">
+        <div id="header">
+            <img id="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDUiIGhlaWdodD0iOTQiIGZpbGw9Im5vbmUiIHhtbG5zOnY9Imh0dHBzOi8vdmVjdGEuaW8vbmFubyI+PGcgZmlsbD0iIzAwMCI+PHBhdGggZD0iTTM1LjAxNiA5My41MzZjLTYuMzE1IDAtMTIuMDc1LTEuMDI0LTE3LjI4LTMuMDcyLTUuMTItMi4xMzMtOS4yNTktNS4yOTEtMTIuNDE2LTkuNDcyQzIuMjQ4IDc2LjcyNS41ODQgNzEuMzQ5LjMyOCA2NC44NjRoMjEuMjQ4Yy4zNDEgMi45ODcgMS41MzYgNS42NzUgMy41ODQgOC4wNjQgMi4xMzMgMi4zODkgNS4zMzMgMy41ODQgOS42IDMuNTg0IDMuNjY5IDAgNi40LS44MTEgOC4xOTItMi40MzIgMS44NzctMS42MjEgMi44MTYtMy43NTUgMi44MTYtNi40IDAtMS4xOTUtLjIxMy0yLjMwNC0uNjQtMy4zMjgtLjM0MS0xLjAyNC0xLjA2Ny0yLjAwNS0yLjE3Ni0yLjk0NC0xLjEwOS0xLjAyNC0yLjgxNi0yLjA0OC01LjEyLTMuMDcyLTIuMjE5LTEuMDI0LTUuMjA1LTIuMTMzLTguOTYtMy4zMjgtNi45OTctMi4yMTktMTIuNDU5LTQuODIxLTE2LjM4NC03LjgwOHMtNi42OTktNi4xODctOC4zMi05LjZjLTEuNTM2LTMuNDEzLTIuMzA0LTYuOTEyLTIuMzA0LTEwLjQ5NkMxLjk0OSAyMS4zMDEgMy40IDE2LjQ4IDYuMjE2IDEyLjY0YzIuODE2LTMuOTI1IDYuNTcxLTYuODY5IDExLjI2NC04LjgzMlMyNy40MjEuODY0IDMzLjIyNC44NjRzMTEuMDkzIDEuMDI0IDE1Ljg3MiAzLjA3MmM0Ljg2NCAxLjk2MyA4Ljc4OSA0LjkwNyAxMS43NzYgOC44MzJzNC41MjMgOC43ODkgNC42MDggMTQuNTkySDQzLjcyYy0uMDg1LTIuMzA0LTEuMDY3LTQuNDgtMi45NDQtNi41MjhzLTQuNjUxLTMuMDcyLTguMzItMy4wNzJjLTIuNjQ1LjA4NS00LjkwNy44NTMtNi43ODQgMi4zMDQtMS43OTIgMS4zNjUtMi42ODggMy4zMjgtMi42ODggNS44ODggMCAyLjIxOS45MzkgNC4xMzkgMi44MTYgNS43NnM0LjUyMyAzLjExNSA3LjkzNiA0LjQ4YzMuNDk5IDEuMzY1IDcuNTUyIDIuODE2IDEyLjE2IDQuMzUyIDMuNDk5IDEuMTk1IDYuNTcxIDIuNjAzIDkuMjE2IDQuMjI0IDIuNzMxIDEuNTM2IDQuOTkyIDMuMzcxIDYuNzg0IDUuNTA0IDEuNzkyIDIuMDQ4IDMuMTU3IDQuMzk1IDQuMDk2IDcuMDRzMS40MDggNS42MzIgMS40MDggOC45NmMwIDUuNDYxLTEuNDA4IDEwLjI0LTQuMjI0IDE0LjMzNi0yLjczMSA0LjA5Ni02LjUyOCA3LjI5Ni0xMS4zOTIgOS42LTQuODY0IDIuMjE5LTEwLjQ1MyAzLjMyOC0xNi43NjggMy4zMjh6bTEzOS4wNDQgMGMtNi40IDAtMTIuMDMyLTEuMzY1LTE2Ljg5Ni00LjA5NnMtOC43MDQtNi41NzEtMTEuNTItMTEuNTJjLTIuNzMxLTUuMDM1LTQuMDk2LTEwLjkyMy00LjA5Ni0xNy42NjQgMC02LjQ4NSAxLjMyMy0xMi4yMDMgMy45NjgtMTcuMTUyIDIuNjQ1LTUuMDM1IDYuNC04Ljk2IDExLjI2NC0xMS43NzYgNC44NjQtMi45MDEgMTAuNjI0LTQuMzUyIDE3LjI4LTQuMzUyIDcuNTA5IDAgMTQuMDggMS45NjMgMTkuNzEyIDUuODg4IDUuNjMyIDMuODQgOS40MjkgOS45ODQgMTEuMzkyIDE4LjQzMmgtMjEuMTJjLS44NTMtMi40NzUtMi4xNzYtNC4zMDktMy45NjgtNS41MDQtMS43MDctMS4yOC0zLjg0LTEuOTItNi40LTEuOTItMi44MTYgMC01LjEyLjc2OC02LjkxMiAyLjMwNC0xLjcwNyAxLjUzNi0yLjk4NyAzLjU0MS0zLjg0IDYuMDE2LS43NjggMi40NzUtMS4xNTIgNS4xNjMtMS4xNTIgOC4wNjQgMCAyLjgxNi4zODQgNS41MDQgMS4xNTIgOC4wNjQuODUzIDIuNDc1IDIuMTMzIDQuNDggMy44NCA2LjAxNiAxLjc5MiAxLjUzNiA0LjA5NiAyLjMwNCA2LjkxMiAyLjMwNCAyLjU2IDAgNC42OTMtLjY0IDYuNC0xLjkyIDEuNzkyLTEuMjggMy4xMTUtMy4xMTUgMy45NjgtNS41MDRoMjEuMTJjLTEuMTk1IDUuMjA1LTMuMjQzIDkuNi02LjE0NCAxMy4xODRzLTYuNDg1IDYuMzU3LTEwLjc1MiA4LjMyYy00LjE4MSAxLjg3Ny04LjkxNyAyLjgxNi0xNC4yMDggMi44MTZ6Ii8+PHVzZSBocmVmPSIjQiIvPjxwYXRoIGQ9Ik0zNDkuOTkyIDkybC0yMi41MjgtNjMuNDg4aDIwLjg2NGwxMy44MjQgNDUuMzEyIDEzLjY5Ni00NS4zMTJoMjAuNzM2TDM3NC4wNTYgOTJoLTI0LjA2NHoiLz48dXNlIGhyZWY9IiNCIiB4PSIyNTMuMzc1Ii8+PC9nPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTI4OS45OTkgMjNjLTE1LjIyNCAwLTIzLjQyNyAxLjEtMjcuNzI1IDIuMDc1LTMuNjgyLjgzNC01Ljc3NyAzLjkyOS02LjE2OCA3LjI1NWExNjguMjEgMTY4LjIxIDAgMCAwLTEuMTA0IDIwLjA1NmMuMDg1IDE0Ljk2OCA4LjAwMyAyOC45NjEgMjEuMzMyIDM2LjAxNyAyLjM4NiAxLjI2MyA0LjgwOCAyLjM5NyA3LjA5MyAzLjIyIDIuMjU3LjgxNCA0LjUzIDEuMzc3IDYuNTcyIDEuMzc3czQuMzE2LS41NjMgNi41NzEtMS4zNzdjMi4yODctLjgyMyA0LjcwOS0xLjk1NyA3LjA5NC0zLjIyIDEzLjMyOS03LjA1NiAyMS4yNDctMjEuMDUgMjEuMzMzLTM2LjAxN2wuMDAzLS45MTljMC04LjEzOS0uNjI0LTE1LjAyNy0xLjEwOC0xOS4xMzctLjM4OC0zLjMyNC0yLjQ4OS02LjQyMS02LjE2Ny03LjI1NUMzMTMuNDI2IDI0LjEgMzA1LjIyNCAyMyAyODkuOTk5IDIzem0tMTUuODIxIDExLjkyNmMyLjk5Ni0uNTQgNy44OTYtMS4wMzggMTUuODIxLTEuMDM4czEyLjgyNi40OTggMTUuODIyIDEuMDM4YzMuNzQ5LjY3NyA1Ljg2NSAzLjc4NiA2LjE5MSA3LjExNGExMTIuNTkgMTEyLjU5IDAgMCAxIC41NDMgMTAuOTgyYzAgOS4wMzgtNC4zOTEgMTcuMzU0LTExLjcxMyAyMi41OS0xLjc2NiAxLjI2My0zLjYzNCAyLjQ2Ni01LjQyIDMuMzYtMS43MjcuODY2LTMuNjQgMS41ODQtNS40MjMgMS41ODRzLTMuNjk3LS43MTctNS40MjItMS41ODJjLTEuNzg2LS44OTYtMy42NTQtMi4xLTUuNDItMy4zNjItNy4zMjItNS4yMzYtMTEuNzE0LTEzLjU1Mi0xMS43MTQtMjIuNTlhMTEzLjI4IDExMy4yOCAwIDAgMSAuNTQyLTEwLjk4MmMuMzI4LTMuMzI3IDIuNDQ0LTYuNDM3IDYuMTkxLTcuMTE0bTE1LjgyMyAzLjYyOWMtNy43NTEgMC0xMi4zNTYuNDg4LTE0Ljk5NC45NjQtMS4yNTUuMjI2LTIuMjA0IDEuMjQ0LTIuMzc1IDIuOTc5LS4zNDMgMy40OTctLjUxNiA3LjAwOS0uNTIgMTAuNTIzIDAgNy40OTUgMy42MzQgMTQuNDEyIDkuNzYyIDE4Ljc5NCAxLjY2MSAxLjE4OSAzLjMxMSAyLjI0IDQuNzk3IDIuOTg3IDEuNTQ4Ljc3NSAyLjY2MyAxLjA4NiAzLjMzIDEuMDg2czEuNzgzLS4zMTEgMy4zMzEtMS4wODdjMS40ODctLjc0NyAzLjEzNi0xLjc5NyA0Ljc5Ny0yLjk4NyA2LjEyOC00LjM3OSA5Ljc2Mi0xMS4yOTYgOS43NjItMTguNzkzYTEwOC40NiAxMDguNDYgMCAwIDAtLjUyLTEwLjUyM2MtLjE3MS0xLjczMy0xLjEyLTIuNzUzLTIuMzc1LTIuOTc5LTIuNjM5LS40NzYtNy4yNDMtLjk2NC0xNC45OTUtLjk2NHoiIGZpbGw9IiMyYTJkZjIiLz48cGF0aCBkPSJNMTA1LjQzOCAyNi45NzZjNi4zMTUgMCAxMS44NjIgMS4zMjMgMTYuNjQgMy45NjkgNC44NjQgMi41NiA4LjY2MSA2LjI3MiAxMS4zOTIgMTEuMTM2IDIuODE2IDQuNzc5IDQuMjI0IDEwLjQ5NiA0LjIyNCAxNy4xNTIgMCAuODUzLS4wNDIgMS43OTItLjEyOCAyLjgxNiAwIC45MzktLjA4NiAxLjkyLS4yNTYgMi45NDRoLTQ0LjhjLjI1NiAzLjA3Mi45ODEgNS41MDQgMi4xNzYgNy4yOTYgMS4yOCAxLjc5MiAyLjgxNiAzLjExNCA0LjYwOCAzLjk2OCAxLjg3Ny43NjggMy43MTIgMS4xNTIgNS41MDQgMS4xNTIgMi40NzUgMCA0LjU2Ni0uNTEyIDYuMjcyLTEuNTM2czMuMDI5LTIuNjAzIDMuOTY4LTQuNzM2aDIxLjEyYy0uOTM4IDQuMDExLTIuODE2IDcuNzIzLTUuNjMyIDExLjEzN3MtNi4zNTcgNi4xNDMtMTAuNjI0IDguMTkxYy00LjE4MSAyLjA0OC05LjAwMiAzLjA3Mi0xNC40NjQgMy4wNzItNS44ODggMC0xMS4zMDctMS4yMzctMTYuMjU2LTMuNzEyLTQuOTQ5LTIuNTYtOC45MTctNi4zMTUtMTEuOTAzLTExLjI2NXMtNC40OC0xMS4wNS00LjQ4LTE4LjMwNCAxLjQ1MS0xMy4zNTQgNC4zNTMtMTguMzA0IDYuODI2LTguNjYxIDExLjc3NS0xMS4xMzZjNC45NDktMi41NiAxMC40NTQtMy44NDEgMTYuNTEyLTMuODQxem0tLjI1NiAxNS44NzJjLTMuNDEzIDAtNi4yMjkgMS4wMjQtOC40NDggMy4wNzItMi4yMTkgMS45NjMtMy42MjcgNC42NTEtNC4yMjUgOC4wNjVoMjQuODMyYzAtMy40OTktMS4xNTItNi4yMy0zLjQ1Ni04LjE5MnMtNS4yMDYtMi45NDQtOC43MDQtMi45NDR6TTQyNi42ODggMjdjNi4zMTUgMCAxMS44NjIgMS4zMjMgMTYuNjQgMy45NjggNC44NjQgMi41NiA4LjY2MSA2LjI3MiAxMS4zOTIgMTEuMTM2IDIuODE2IDQuNzc5IDQuMjI0IDEwLjQ5NiA0LjIyNCAxNy4xNTJhMzMuODQgMzMuODQgMCAwIDEtLjEyOCAyLjgxNmMwIC45MzktLjA4NiAxLjkxOS0uMjU2IDIuOTQzaC00NC44Yy4yNTYgMy4wNzIuOTgxIDUuNTA0IDIuMTc2IDcuMjk2IDEuMjggMS43OTIgMi44MTYgMy4xMTUgNC42MDggMy45NjkgMS44NzcuNzY4IDMuNzEyIDEuMTUxIDUuNTA0IDEuMTUxIDIuNDc1IDAgNC41NjYtLjUxMSA2LjI3Mi0xLjUzNXMzLjAyOS0yLjYwMyAzLjk2OC00LjczNmgyMS4xMmMtLjkzOCA0LjAxLTIuODE2IDcuNzIyLTUuNjMyIDExLjEzNnMtNi4zNTcgNi4xNDQtMTAuNjI0IDguMTkyYy00LjE4MSAyLjA0OC05LjAwMiAzLjA3MS0xNC40NjQgMy4wNzEtNS44ODggMC0xMS4zMDctMS4yMzctMTYuMjU2LTMuNzEyLTQuOTQ5LTIuNTYtOC45MTctNi4zMTUtMTEuOTA0LTExLjI2NHMtNC40OC0xMS4wNS00LjQ4LTE4LjMwNCAxLjQ1MS0xMy4zNTUgNC4zNTItMTguMzA1IDYuODI3LTguNjYxIDExLjc3Ni0xMS4xMzZjNC45NDktMi41NiAxMC40NTQtMy44NCAxNi41MTItMy44NHptLS4yNTYgMTUuODcyYy0zLjQxNCAwLTYuMjI5IDEuMDI0LTguNDQ4IDMuMDcyLTIuMjE4IDEuOTYzLTMuNjI3IDQuNjUtNC4yMjQgOC4wNjRoMjQuODMyYzAtMy40OTgtMS4xNTItNi4yMjktMy40NTYtOC4xOTFzLTUuMjA2LTIuOTQ0LTguNzA0LTIuOTQ0eiIgZmlsbD0iIzAwMCIvPjxkZWZzID48cGF0aCBpZD0iQiIgZD0iTTIxMS4wODcgOTJWMjguNTEyaDE5LjcxMnY5Ljg1NmMyLjIxOS0zLjI0MyA1LjAzNS01LjkzMSA4LjQ0OC04LjA2NCAzLjQxMy0yLjIxOSA3LjMzOS0zLjMyOCAxMS43NzYtMy4zMjhWNDcuODRoLTUuNTA0Yy00Ljk0OSAwLTguNjYxIDEuMTA5LTExLjEzNiAzLjMyOC0yLjM4OSAyLjIxOS0zLjU4NCA1Ljg4OC0zLjU4NCAxMS4wMDhWOTJoLTE5LjcxMnoiLz48L2RlZnM+PC9zdmc+" alt="Secrover">
+            <div>
+                <strong>Security Audit Report</strong>
+                <p><em>Audit run on: $audit_datetime with <a href="https://github.com/Huluti/Secrover">Secrover</a></em></p>
+            </div>
+        </div>
+        <section class="global-recap">
+            <h1>🔍 Global Vulnerabilities Recap</h1>
+            <div class="vulnerability-badges">
+                <span class="badge badge-critical">🚨 Critical: $critical</span>
+                <span class="badge badge-high">⚠️ High: $high</span>
+                <span class="badge badge-moderate"> ▶️ Moderate: $moderate</span>
+                <span class="badge badge-low"> ↘️ Low: $low</span>
+                <span class="badge badge-info">ℹ️ Info: $info</span>
+                <span class="badge badge-total">📈 Total: $total</span>
+            </div>
+        </section>
 
-    <section class="global-recap">
-        <h2>Global Vulnerabilities Recap</h2>
-        <p>
-            <span class="badge badge-critical">Critical: $critical</span>
-            <span class="badge badge-high">High: $high</span>
-            <span class="badge badge-moderate">Moderate: $moderate</span>
-            <span class="badge badge-low">Low: $low</span>
-            <span class="badge badge-info">Info: $info</span>
-            <strong>Total: $total</strong>
-        </p>
-    </section>
-
-    $repo_sections
+        <div id="repos">
+            $repo_sections
+        </div>
+    </div>
 </body>
 </html>

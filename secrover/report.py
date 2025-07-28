@@ -35,6 +35,13 @@ def generate_html_report_from_template(results, output_path):
     audit_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     severity_order = ["critical", "high", "moderate", "low", "info"]
+    severity_emojis = {
+        "critical": "🚨",
+        "high": "⚠️",
+        "moderate": "▶️",
+        "low": "↘️",
+        "info": "ℹ️",
+    }
     repo_sections = []
 
     for repo_name, repo_data in results.items():
@@ -59,27 +66,35 @@ def generate_html_report_from_template(results, output_path):
 
             # Build severity list sorted by severity order
             severity_html = "".join(
-                f"<span class=\"badge badge-{level}\">{level.capitalize()}: {severity.get(level, 0)}</span>"
+                f"<span class=\"badge badge-{level}\">{severity_emojis.get(level, '')} {level.capitalize()}: {severity.get(level, 0)}</span>"
                 for level in severity_order
             )
+            severity_html += f"<span class=\"badge badge-total\">📈 Total: {vulns}</span>"
 
-            packages_html = "<ul>" + "".join(f"<li>{pkg}</li>" for pkg in sorted(
-                packages)) + "</ul>" if packages else "<p>None</p>"
-            abandoned_html = "<ul>" + "".join(f"<li>{pkg}</li>" for pkg in sorted(
-                abandoned)) + "</ul>" if abandoned else "<p>None</p>"
+            packages_html = "".join(f"<div>{pkg}</div>" for pkg in sorted(
+                packages)) + "" if packages else "<p class=\"no-issues mb-0\">None - All clear! 🎉</p>"
+            abandoned_html = "".join(f"<div>{pkg}</div>" for pkg in sorted(
+                abandoned)) + "" if abandoned else "<p class=\"no-issues mb-0\">None - All clear! 🎉</p>"
 
             section = f"""
             <div class="project-card">
-                <h2>{repo_name}</h2>
-                <p>{description}</p>
-                <h3>"{tool_name}" audit</h3>
-                <p><strong>Total vulnerabilities:</strong> {vulns}</p>
-                <p><strong>By severity:</strong></p>
-                <p>{severity_html}</p>
-                <p><strong>Impacted packages:</strong></p>
-                {packages_html}
-                <p><strong>Abandoned packages:</strong></p>
-                {abandoned_html}
+                <div class="project-header">
+                    <h3>{repo_name}</h3>
+                    <span>{tool_name}</span>
+                </div>
+                <p class="project-description">{description}</p>
+                <p><strong>🎯 Severity Breakdown:</strong></p>
+                <div class="vulnerability-badges mb-20">
+                    {severity_html}
+                </div>
+                <p><strong>📦 Impacted Packages:</strong></p>
+                <div class="packages-list mb-20">
+                    {packages_html}
+                </div>
+                <p><strong>📦 Abandoned packages:</strong></p>
+                <div class="packages-list">
+                    {abandoned_html}
+                </div>
             </div>
             """
             repo_sections.append(section)
