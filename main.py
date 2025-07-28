@@ -65,10 +65,12 @@ def main():
             print(f"  Impacted packages: {summary['packages_impacted']}")
             if tool == "composer" and summary.get("abandoned_packages"):
                 print(f"  Abandoned packages: {summary['abandoned_packages']}")
+        print()
 
+    print()
     generate_html_report_from_template(all_results, output_path)
 
-    print("All repos processed.")
+    print("\nAll repos processed.")
 
 
 if __name__ == "__main__":

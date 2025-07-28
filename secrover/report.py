@@ -139,4 +139,4 @@ def generate_html_report_from_template(results, output_path):
     with open(os.path.join(output_path, "vulnerabilities.html"), "w", encoding="utf-8") as f:
         f.write(output_html)
 
-    print(f"HTML report generated in {output_path}")
+    print(f"HTML report generated in \"{output_path}\" folder")
