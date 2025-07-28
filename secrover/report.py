@@ -59,7 +59,7 @@ def generate_html_report_from_template(results, output_path):
 
             # Build severity list sorted by severity order
             severity_html = "".join(
-                f"<li class='severity-{level}'>{level.capitalize()}: {severity.get(level, 0)}</li>"
+                f"<span class=\"badge badge-{level}\">{level.capitalize()}: {severity.get(level, 0)}</span>"
                 for level in severity_order
             )
 
@@ -72,10 +72,10 @@ def generate_html_report_from_template(results, output_path):
             <div class="project-card">
                 <h2>{repo_name}</h2>
                 <p>{description}</p>
-                <h3>{tool_name.capitalize()} audit</h3>
+                <h3>"{tool_name}" audit</h3>
                 <p><strong>Total vulnerabilities:</strong> {vulns}</p>
                 <p><strong>By severity:</strong></p>
-                <ul>{severity_html}</ul>
+                <p>{severity_html}</p>
                 <p><strong>Impacted packages:</strong></p>
                 {packages_html}
                 <p><strong>Abandoned packages:</strong></p>
