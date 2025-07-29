@@ -59,6 +59,7 @@ def get_ssl_info(domain, port=443, timeout=5):
                 cert = ssock.getpeercert()
                 not_after = datetime.strptime(
                     cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
+                not_after = not_after.replace(tzinfo=timezone.utc)
                 now = datetime.now(timezone.utc)
                 days_remaining = (not_after - now).days
 
