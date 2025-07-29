@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Code Report{% endblock %}
+
+{% block content %}
+    <section id="global-recap">
+        <h1>📄 Code Report</h1>
+        <div class="vulnerability-badges">
+            {% for level in severity_order %}
+            <span class="badge badge-{{ level }}">
+                {{ severity_emojis[level] }} {{ level.capitalize() }}: {{ global_summary[level] }}
+            </span>
+            {% endfor %}
+            <span class="badge badge-total">📈 Total: {{ global_summary.total }}</span>
+        </div>
+    </section>
+
+    <div id="repos">
+        {% for repo_name, repo_data in data.items() %}
+            <div class="project-card">
+               <div class="project-header">
+                    <h3>{{ repo_name }}</h3>
+                    <span class="badge-small badge-basic">{{ repo_data.language }}</span>
+                </div>
+                <p class="project-description">{{ repo_data.description }}</p>
+
+                {% if repo_data.error %}
+                    <p class="error">❌ Scan failed: {{ repo_data.error }}</p>
+                {% else %}
+                    <p><strong>🎯 Severity Breakdown:</strong></p>
+                    <div class="vulnerability-badges mb-20">
+                        {% for level in severity_order %}
+                        <span class="badge badge-{{ level }}">
+                            {{ severity_emojis[level] }} {{ level.capitalize() }}: {{ repo_data.findings_by_severity.get(level, 0) }}
+                        </span>
+                        {% endfor %}
+                        <span class="badge badge-total">📈 Total: {{ repo_data.findings_count }}</span>
+                    </div>
+
+                    <p><strong>🕵️ Findings Details:</strong></p>
+                    <div class="packages-list">
+                        {% if repo_data.findings %}
+                            {% for finding in repo_data.findings %}
+                            <div class="{{ finding.severity }}">
+                                <strong>{{ finding.rule_id or "Unknown Rule" }}</strong> —
+                                {{ finding.message | truncate(100) }}
+                                <br>
+                                <small>
+                                    File: {{ finding.location.file or "N/A" }}:{{ finding.location.line or "?" }},
+                                    Severity: {{ finding.severity | capitalize }}
+                                </small>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="no-issues mb-0">None - All clear!</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+   
+{% endblock %}

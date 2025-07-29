@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 RUN python -m ensurepip --upgrade && \
     pip install --upgrade pip
 
-# Install pip-audit globally
+# Install pip deps
 RUN pip install pip-audit
 
 # Install PHP and Composer
@@ -40,6 +40,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
 RUN sh /uv-installer.sh && rm /uv-installer.sh
 ENV PATH="/root/.local/bin/:$PATH"
+
+# Install opengrep
+RUN curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.sh | bash
 
 # Create working directory
 WORKDIR /app

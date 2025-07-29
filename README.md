@@ -21,6 +21,7 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 | Category        | Checks                                                 | Supported languages        |
 | --------------- | ------------------------------------------------------ | -------------------------- |
 | 📦 Dependencies | Vulnerability check                                    | PHP, JavaScript and Python |
+| 📄 Code         | Static check                                           | All languages supported by opengrep |
 | 🌐 Domains      | SSL certificate, HTTP→HTTPS Redirect, HSTS header, TLS versions, Open Ports | -     |
 
 ## 🖼️ Screenshots
@@ -83,6 +84,18 @@ This will:
 * Read the list of repositories from your `config.yaml`
 * Clone and analyze them
 * Generate a full **HTML security report** into the `output/` folder
+
+## 🫶 Thanks and Acknowledgments
+
+This project benefits from the fantastic work of several open-source projects:
+
+- Python & pip-audit
+- PHP & Composer
+- Node.js & npm
+- uv
+- opengrep
+
+A big thanks to all the maintainers and contributors behind these amazing projects, without whom this project wouldn't be possible!
 
 ## 📄 License
 

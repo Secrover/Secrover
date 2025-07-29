@@ -4,6 +4,7 @@ from pathlib import Path
 
 from secrover.config import load_config
 from secrover.audits.dependencies import check_dependencies
+from secrover.audits.code import check_code
 from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
 from secrover.constants import VERSION
@@ -56,8 +57,12 @@ def main():
     print("\n1 / Dependencies check")
     check_dependencies(repos, output_path)
 
-    # 2 - Domains
-    print("\n2 / Domains check")
+    # 2 - Code
+    print("\n2 / Code check")
+    check_code(repos, output_path)
+
+    # 3 - Domains
+    print("\n3 / Domains check")
     check_domains(domains, output_path)
 
     end_time = time.perf_counter()  # End timer
