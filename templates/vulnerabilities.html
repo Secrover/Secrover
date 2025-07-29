@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Vulnerability Report{% endblock %}
+{% block title %}Vulnerabilities Report{% endblock %}
 
 {% block content %}
     <section id="global-recap">
-        <h1>🔍 Vulnerabilities Recap</h1>
+        <h1>🔍 Vulnerabilities Report</h1>
         <div class="vulnerability-badges">
             {% for level in severity_order %}
             <span class="badge badge-{{ level }}">
