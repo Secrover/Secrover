@@ -1,6 +1,6 @@
 import ssl
 import socket
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 import requests
 
@@ -59,7 +59,7 @@ def get_ssl_info(domain, port=443, timeout=5):
                 cert = ssock.getpeercert()
                 not_after = datetime.strptime(
                     cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
-                now = datetime.utcnow()
+                now = datetime.now(timezone.utc)
                 days_remaining = (not_after - now).days
 
                 issuer_raw = cert.get("issuer", [])
