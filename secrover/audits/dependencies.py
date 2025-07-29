@@ -18,6 +18,38 @@ severity_emojis = {
 }
 
 
+def init_severity_counts():
+    return {sev: 0 for sev in severity_order}
+
+
+def normalize_severity(severity: str):
+    sev = (severity or "info").lower()
+    return sev if sev in severity_order else "info"
+
+
+def severity_rank(sev):
+    return severity_order.index(normalize_severity(sev))
+
+
+def merge_severity(existing, new):
+    return new if severity_rank(new) < severity_rank(existing) else existing
+
+
+def build_audit_summary(severity_counts, package_map, extras=None):
+    packages_impacted = [
+        {"name": name, "severity": sev}
+        for name, sev in sorted(package_map.items())
+    ]
+    result = {
+        "total_vulnerabilities": sum(severity_counts.values()),
+        "vulnerabilities_by_severity": severity_counts,
+        "packages_impacted": packages_impacted,
+    }
+    if extras:
+        result.update(extras)
+    return result
+
+
 def check_dependencies(repos, output_path):
     data = {}
     for repo in repos:
@@ -34,12 +66,13 @@ def check_dependencies(repos, output_path):
             "description": repo_description,
             "audit": audit_results
         }
-        # Print nicely
+
         print(f"\n{language} audit summary for {repo_name}:")
         print(
             f"  Total vulnerabilities: {audit_results['total_vulnerabilities']}")
         print(f"  By severity: {audit_results['vulnerabilities_by_severity']}")
-        print(f"  Impacted packages: {audit_results['packages_impacted']}")
+        print(
+            f"  Impacted packages: {[pkg['name'] for pkg in audit_results['packages_impacted']]}")
         if language == "composer" and audit_results.get("abandoned_packages"):
             print(
                 f"  Abandoned packages: {audit_results['abandoned_packages']}")
@@ -56,7 +89,6 @@ def check_dependencies(repos, output_path):
 
 
 def run_pip_audit(repo_path: Path):
-    # Detect if Python project exists by common files
     if not any((repo_path / fname).exists() for fname in ["requirements.txt", "pyproject.toml"]):
         print(
             f"No Python dependency files found in {repo_path}, skipping pip audit.")
@@ -75,29 +107,24 @@ def run_pip_audit(repo_path: Path):
             return None
 
         audit_data = json.loads(result.stdout)
-
         if not isinstance(audit_data, dict) or "dependencies" not in audit_data:
             print(
                 f"Unexpected pip-audit JSON format in {repo_path}: {audit_data}")
             return None
 
-        severity_counts = {sev: 0 for sev in severity_order}
-        packages = set()
+        severity_counts = init_severity_counts()
+        packages = {}
 
         for dep in audit_data["dependencies"]:
-            vulns = dep.get("vulns", [])
-            for vuln in vulns:
-                severity = vuln.get("severity", "info").lower()
-                if severity not in severity_counts:
-                    severity = "info"
+            name = dep.get("name")
+            for vuln in dep.get("vulns", []):
+                severity = normalize_severity(vuln.get("severity"))
                 severity_counts[severity] += 1
-                packages.add(dep.get("name"))
+                if name:
+                    current = packages.get(name, "info")
+                    packages[name] = merge_severity(current, severity)
 
-        return {
-            "total_vulnerabilities": sum(severity_counts.values()),
-            "vulnerabilities_by_severity": severity_counts,
-            "packages_impacted": sorted(packages),
-        }
+        return build_audit_summary(severity_counts, packages)
 
     except json.JSONDecodeError as e:
         print(f"Failed to parse pip-audit output as JSON: {e}")
@@ -109,8 +136,7 @@ def run_pip_audit(repo_path: Path):
 
 
 def run_npm_audit(repo_path: Path):
-    package_json = repo_path / "package.json"
-    if not package_json.exists():
+    if not (repo_path / "package.json").exists():
         print(f"No package.json found in {repo_path}, skipping npm audit.")
         return None
 
@@ -123,24 +149,19 @@ def run_npm_audit(repo_path: Path):
             check=False
         )
         audit_data = json.loads(result.stdout)
-
         vulns = audit_data.get("vulnerabilities", {})
-        packages = set()
-        severity_counts = {
-            "critical": 0, "high": 0, "moderate": 0, "low": 0, "info": 0
-        }
+
+        severity_counts = init_severity_counts()
+        packages = {}
 
         for pkg, details in vulns.items():
             count = details.get("vulnerabilities", 1)
-            severity = details.get("severity", "info").lower()
-            severity_counts[severity if severity in severity_counts else "info"] += count
-            packages.add(pkg)
+            severity = normalize_severity(details.get("severity"))
+            severity_counts[severity] += count
+            current = packages.get(pkg, "info")
+            packages[pkg] = merge_severity(current, severity)
 
-        return {
-            "total_vulnerabilities": sum(severity_counts.values()),
-            "vulnerabilities_by_severity": severity_counts,
-            "packages_impacted": sorted(packages)
-        }
+        return build_audit_summary(severity_counts, packages)
 
     except json.JSONDecodeError as e:
         print(f"Failed to parse npm audit output as JSON: {e}")
@@ -152,8 +173,7 @@ def run_npm_audit(repo_path: Path):
 
 
 def run_composer_audit(repo_path: Path):
-    composer_lock = repo_path / "composer.lock"
-    if not composer_lock.exists():
+    if not (repo_path / "composer.lock").exists():
         print(
             f"No composer.lock found in {repo_path}, skipping composer audit.")
         return None
@@ -175,24 +195,18 @@ def run_composer_audit(repo_path: Path):
         advisories = audit_data.get("advisories", [])
         abandoned = audit_data.get("abandoned", [])
 
-        packages = set()
-        severity_counts = {
-            "critical": 0, "high": 0, "moderate": 0, "low": 0, "info": 0
-        }
+        severity_counts = init_severity_counts()
+        packages = {}
 
         for vuln in advisories:
-            severity = vuln.get("severity", "info").lower()
-            severity_counts[severity if severity in severity_counts else "info"] += 1
+            severity = normalize_severity(vuln.get("severity"))
+            severity_counts[severity] += 1
             pkg_name = vuln.get("package", {}).get("name")
             if pkg_name:
-                packages.add(pkg_name)
+                current = packages.get(pkg_name, "info")
+                packages[pkg_name] = merge_severity(current, severity)
 
-        return {
-            "total_vulnerabilities": sum(severity_counts.values()),
-            "vulnerabilities_by_severity": severity_counts,
-            "packages_impacted": sorted(packages),
-            "abandoned_packages": abandoned
-        }
+        return build_audit_summary(severity_counts, packages, {"abandoned_packages": abandoned})
 
     except subprocess.CalledProcessError as e:
         print(f"composer audit command failed in {repo_path}: {e}")
@@ -216,6 +230,9 @@ def run_language_audit(language_str, repo_path, repo_name):
     elif "Python" in language_str:
         print(f"Running pip audit on {repo_name}...")
         summary = run_pip_audit(repo_path)
+    else:
+        print(f"No supported language found for {repo_name}, skipping.")
+        return None
 
     return summary
 
@@ -228,6 +245,6 @@ def aggregate_global_summary(data):
             sev = audit.get("vulnerabilities_by_severity", {})
             for level in severity_order:
                 global_counts[level] += sev.get(level, 0)
-        global_counts["total"] = sum(global_counts[level]
-                                     for level in severity_order)
+    global_counts["total"] = sum(global_counts[level]
+                                 for level in severity_order)
     return global_counts

@@ -47,8 +47,8 @@
                     <p><strong>📦 Impacted Packages:</strong></p>
                     <div class="packages-list mb-20">
                         {% if audit.packages_impacted %}
-                            {% for pkg in audit.packages_impacted | sort %}
-                            <div>{{ pkg }}</div>
+                            {% for pkg in audit.packages_impacted %}
+                            <div class="{{ pkg.severity }}">{{ pkg.name }}</div>
                             {% endfor %}
                         {% else %}
                             <p class="no-issues mb-0">None - All clear!</p>
