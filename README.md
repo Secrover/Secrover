@@ -10,10 +10,11 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 ## 🔍 Features
 
 - 🔒 **Security Audits**: Scans your project dependencies and your domains to identify possible vulnerabilities.
-- 🧠 **Human-readable Reports**: Generates clean, clear, and actionable reports that are easy to understand.
-- ⚡ **Easy to Use**: Just a simple config file where you list your repositories to get started quickly.
+- 📊 **Sharable Dashboards**: Generate dashboards you can easily share with clients, teams, or stakeholders — ideal for reporting and collaboration.
+- 🧠 **Human-readable Reports**:  Clean, actionable, and easy-to-understand reports — even for non-technical audiences.
+- ⚡ **Easy to Use**: Just a simple config file where you list your repositories and your domains to get started quickly.
 - 💻 **Cross-platform**: Works seamlessly on Linux, macOS, and Windows.
-- 🌟 **More to come**: We’re constantly working on new features to enhance your security audits.
+- 🌟 **Actively Maintained**:  We’re constantly adding new features and improvements to help you stay ahead of threats.
 
 ### Languages supported:
 - PHP
