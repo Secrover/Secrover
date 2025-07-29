@@ -11,6 +11,7 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 - 🔒 **Security Audits**: Scans your project dependency files to identify known vulnerabilities.
 - 🧠 **Human-readable Reports**: Generates clean, clear, and actionable reports that are easy to understand.
+- ⚡ **Easy to Use**: Just a simple config file where you list your repositories to get started quickly.
 - 💻 **Cross-platform**: Works seamlessly on Linux, macOS, and Windows.
 
 ## 🖼️ Screenshot
