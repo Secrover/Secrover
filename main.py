@@ -4,6 +4,7 @@ from pathlib import Path
 
 from secrover.config import load_config
 from secrover.audits.vulnerabilities import check_vulnerabilities
+from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
 
 
@@ -37,6 +38,7 @@ def main():
     print(f"Report will be saved to: {output_path}")
 
     repos = config["repos"]
+    domains = config["domains"]
 
     #  Clone repos
     clone_repos(repos)
@@ -45,6 +47,9 @@ def main():
 
     # 1 - Vulnerabilities
     check_vulnerabilities(repos, output_path)
+
+    # 2 - Domains
+    check_domains(domains, output_path)
 
 
 if __name__ == "__main__":

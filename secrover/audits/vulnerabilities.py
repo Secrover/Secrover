@@ -2,13 +2,23 @@ import subprocess
 import json
 
 from secrover.git import get_repo_name_from_url
-from secrover.report import generate_html_report_from_template
+from secrover.report import generate_html_report
 from secrover.languages import detect_language_by_files
 from secrover.constants import REPOS_FOLDER
+from collections import defaultdict
+
+severity_order = ["critical", "high", "moderate", "low", "info"]
+severity_emojis = {
+    "critical": "🚨",
+    "high": "⚠️",
+    "moderate": "▶️",
+    "low": "↘️",
+    "info": "ℹ️",
+}
 
 
 def check_vulnerabilities(repos, output_path):
-    all_results = {}
+    data = {}
     for repo in repos:
         repo_name = repo.get("name") or get_repo_name_from_url(repo["url"])
         repo_description = repo.get("description") or ""
@@ -18,7 +28,7 @@ def check_vulnerabilities(repos, output_path):
         print(f"Detected language(s) for '{repo_name}': {language}")
 
         audit_results = run_language_audits(language, repo_path, repo_name)
-        all_results[repo_name] = {
+        data[repo_name] = {
             "description": repo_description,
             "audits": audit_results
         }
@@ -33,10 +43,14 @@ def check_vulnerabilities(repos, output_path):
                 print(f"  Abandoned packages: {summary['abandoned_packages']}")
         print()
 
-    print()
-    generate_html_report_from_template(all_results, output_path)
-
     print("\nAll repos processed.")
+
+    generate_html_report("vulnerabilities", {
+        "data": data,
+        "severity_order": severity_order,
+        "severity_emojis": severity_emojis,
+        "global_summary": aggregate_global_summary(data),
+    }, output_path)
 
 
 def run_npm_audit(repo_path):
@@ -153,3 +167,16 @@ def run_language_audits(language_str, repo_path, repo_name):
             results["composer"] = composer_summary
 
     return results
+
+
+def aggregate_global_summary(results):
+    global_counts = defaultdict(int)
+    for repo_data in results.values():
+        audits = repo_data.get("audits", {})
+        for audit_summary in audits.values():
+            sev = audit_summary.get("vulnerabilities_by_severity", {})
+            for level in severity_order:
+                global_counts[level] += sev.get(level, 0)
+    global_counts["total"] = sum(global_counts[level]
+                                 for level in severity_order)
+    return global_counts

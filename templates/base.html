@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Secrover - Security Audit Report</title>
+    <title>Secrover - {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="data:image/svg+xml;base64,{{ favicon_b64 }}" type="image/svg+xml">
     <style>
@@ -53,7 +53,7 @@
             border-collapse: collapse;
             border-spacing: 0;
         }
-
+        /* End of css reset */
         :root {
         --main-color: #638eed;;
         }
@@ -80,6 +80,34 @@
         h1 { font-size: 1.8em; }
         h3 { font-size: 1.4em; }
         a { font-weight: bold; color: var(--main-color); text-decoration: none; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            font-size: 14px;
+            background-color: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        thead {
+            background-color: #f1f3f5;
+        }
+        thead th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: bold;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+        tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f3f5;
+            color: #333;
+        }
+        td span {
+            font-size: 13px;
+        }
         #logo { height: 40px; }
         #audit-info { 
             text-align: right;

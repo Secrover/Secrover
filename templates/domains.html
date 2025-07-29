@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Domains Report{% endblock %}
+
+{% block content %}
+    <section class="global-recap">
+        <h1 class="mb-0">🌐 Domains Report</h1>
+    </section>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Domain</th>
+                <th>Status</th>
+                <th>Expires</th>
+                <th>Days Left</th>
+                <th>Issuer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    <td>{{ row.domain }}</td>
+                    <td>{{ "✅ Valid" if row.valid else "❌ Invalid" }}</td>
+                    <td>{{ row.not_after if row.valid else "-" }}</td>
+                    <td>{{ row.days_remaining if row.valid else "-" }}</td>
+                    <td>
+                        {% if row.valid %}
+                            {{ row.issuer.values() | join(', ') }}
+                        {% else %}
+                            <span style="color: red">{{ row.error }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+</table>
+{% endblock %}

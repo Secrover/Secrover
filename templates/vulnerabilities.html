@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
+{% block title %}Vulnerability Report{% endblock %}
+
 {% block content %}
     <section class="global-recap">
-        <h1>🔍 Global Vulnerabilities Recap</h1>
+        <h1>🔍 Vulnerabilities Recap</h1>
         <div class="vulnerability-badges">
             {% for level in severity_order %}
             <span class="badge badge-{{ level }}">
@@ -14,7 +16,7 @@
     </section>
 
     <div id="repos">
-        {% for repo_name, repo_data in results.items() %}
+        {% for repo_name, repo_data in data.items() %}
             {% set description = repo_data.description %}
             {% set audits = repo_data.audits %}
             {% if not audits %}
