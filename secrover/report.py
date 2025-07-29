@@ -42,7 +42,7 @@ def render_badges(severity, total):
 def render_packages_list(packages):
     if packages:
         return "".join(f"<div>{pkg}</div>" for pkg in sorted(packages))
-    return "<p class=\"no-issues mb-0\">None - All clear! 🎉</p>"
+    return "<p class=\"no-issues mb-0\">None - All clear!</p>"
 
 
 def render_card_header(repo_name, tool_name=None):
