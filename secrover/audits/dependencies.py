@@ -28,20 +28,21 @@ def check_dependencies(repos, output_path):
         language = detect_language_by_files(repo_path)
         print(f"Detected language(s) for '{repo_name}': {language}")
 
-        audit_results = run_language_audits(language, repo_path, repo_name)
+        audit_results = run_language_audit(language, repo_path, repo_name)
         data[repo_name] = {
+            "language": language,
             "description": repo_description,
-            "audits": audit_results
+            "audit": audit_results
         }
         # Print nicely
-        for tool, summary in audit_results.items():
-            print(f"\n{tool} audit summary for {repo_name}:")
+        print(f"\n{language} audit summary for {repo_name}:")
+        print(
+            f"  Total vulnerabilities: {audit_results['total_vulnerabilities']}")
+        print(f"  By severity: {audit_results['vulnerabilities_by_severity']}")
+        print(f"  Impacted packages: {audit_results['packages_impacted']}")
+        if language == "composer" and audit_results.get("abandoned_packages"):
             print(
-                f"  Total vulnerabilities: {summary['total_vulnerabilities']}")
-            print(f"  By severity: {summary['vulnerabilities_by_severity']}")
-            print(f"  Impacted packages: {summary['packages_impacted']}")
-            if tool == "composer" and summary.get("abandoned_packages"):
-                print(f"  Abandoned packages: {summary['abandoned_packages']}")
+                f"  Abandoned packages: {audit_results['abandoned_packages']}")
         print()
 
     print("\nAll repos processed.")
@@ -57,7 +58,8 @@ def check_dependencies(repos, output_path):
 def run_pip_audit(repo_path: Path):
     # Detect if Python project exists by common files
     if not any((repo_path / fname).exists() for fname in ["requirements.txt", "pyproject.toml"]):
-        print(f"No Python dependency files found in {repo_path}, skipping pip audit.")
+        print(
+            f"No Python dependency files found in {repo_path}, skipping pip audit.")
         return None
 
     try:
@@ -75,7 +77,8 @@ def run_pip_audit(repo_path: Path):
         audit_data = json.loads(result.stdout)
 
         if not isinstance(audit_data, dict) or "dependencies" not in audit_data:
-            print(f"Unexpected pip-audit JSON format in {repo_path}: {audit_data}")
+            print(
+                f"Unexpected pip-audit JSON format in {repo_path}: {audit_data}")
             return None
 
         severity_counts = {sev: 0 for sev in severity_order}
@@ -203,36 +206,28 @@ def run_composer_audit(repo_path: Path):
     return None
 
 
-def run_language_audits(language_str, repo_path, repo_name):
-    results = {}
-
+def run_language_audit(language_str, repo_path, repo_name):
     if "JavaScript" in language_str:
         print(f"Running npm audit on {repo_name}...")
-        npm_summary = run_npm_audit(repo_path)
-        if npm_summary:
-            results["npm"] = npm_summary
+        summary = run_npm_audit(repo_path)
     elif "PHP" in language_str:
         print(f"Running composer audit on {repo_name}...")
-        composer_summary = run_composer_audit(repo_path)
-        if composer_summary:
-            results["composer"] = composer_summary
+        summary = run_composer_audit(repo_path)
     elif "Python" in language_str:
         print(f"Running pip audit on {repo_name}...")
-        pip_summary = run_pip_audit(repo_path)
-        if pip_summary:
-            results["pip"] = pip_summary
+        summary = run_pip_audit(repo_path)
 
-    return results
+    return summary
 
 
-def aggregate_global_summary(results):
+def aggregate_global_summary(data):
     global_counts = defaultdict(int)
-    for repo_data in results.values():
-        audits = repo_data.get("audits", {})
-        for audit_summary in audits.values():
-            sev = audit_summary.get("vulnerabilities_by_severity", {})
+    for repo_data in data.values():
+        audit = repo_data.get("audit", {})
+        if audit:
+            sev = audit.get("vulnerabilities_by_severity", {})
             for level in severity_order:
                 global_counts[level] += sev.get(level, 0)
-    global_counts["total"] = sum(global_counts[level]
-                                 for level in severity_order)
+        global_counts["total"] = sum(global_counts[level]
+                                     for level in severity_order)
     return global_counts

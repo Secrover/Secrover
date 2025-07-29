@@ -17,24 +17,22 @@
 
     <div id="repos">
         {% for repo_name, repo_data in data.items() %}
-            {% set description = repo_data.description %}
-            {% set audits = repo_data.audits %}
-            {% if not audits %}
-            <div class="project-card">
-                <div class="project-header">
-                    <h3>{{ repo_name }}</h3>
-                </div>
-                <p class="project-description">{{ description }}</p>
-                <p class="mb-0">No audit data available.</p>
-            </div>
-            {% else %}
-                {% for tool_name, audit in audits.items() %}
+            {% set audit = repo_data.audit %}
+            {% if not audit %}
                 <div class="project-card">
                     <div class="project-header">
                         <h3>{{ repo_name }}</h3>
-                        <span class="badge-small badge-basic">{{ tool_name }}</span>
                     </div>
-                    <p class="project-description">{{ description }}</p>
+                    <p class="project-description">{{ repo_data.description }}</p>
+                    <p class="mb-0">No audit data available.</p>
+                </div>
+            {% else %}
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>{{ repo_name }}</h3>
+                        <span class="badge-small badge-basic">{{ repo_data.language }}</span>
+                    </div>
+                    <p class="project-description">{{ repo_data.description }}</p>
 
                     <p><strong>🎯 Severity Breakdown:</strong></p>
                     <div class="vulnerability-badges mb-20">
@@ -57,6 +55,7 @@
                         {% endif %}
                     </div>
 
+                    {% if 'abandoned_packages' in audit %}
                     <p><strong>📦 Abandoned Packages:</strong></p>
                     <div class="packages-list">
                         {% if audit.abandoned_packages %}
@@ -64,11 +63,11 @@
                             <div>{{ pkg }}</div>
                             {% endfor %}
                         {% else %}
-                            <p class="no-issues mb-0">None - All clear!</p>
+                            <p class="no-issues mb-0">None – All clear!</p>
                         {% endif %}
                     </div>
+                    {% endif %}
                 </div>
-                {% endfor %}
             {% endif %}
         {% endfor %}
     </div>

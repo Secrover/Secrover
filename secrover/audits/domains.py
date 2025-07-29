@@ -11,12 +11,12 @@ from secrover.report import generate_html_report
 def is_domain_active(domain, timeout=3):
     """
     Check if a domain is active by trying HTTPS then HTTP GET requests.
-    Returns True if any responds with status code < 400, else False.
+    Returns True if any responds with status code < 404, else False.
     """
     for scheme in ["https", "http"]:
         try:
             resp = requests.get(f"{scheme}://{domain}", timeout=timeout)
-            if resp.status_code < 400:
+            if resp.status_code < 404:
                 return True
         except Exception:
             continue
