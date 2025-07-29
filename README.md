@@ -16,7 +16,16 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 - 💻 **Cross-platform**: Works seamlessly on Linux, macOS, and Windows.
 - 🌟 **Actively Maintained**:  We’re constantly adding new features and improvements to help you stay ahead of threats.
 
-### Languages supported:
+### Audits
+- **Vulnerabilities**
+  - Dependency check
+
+- **Domains**
+  - SSL certificate
+  - HSTS header
+  - TLS versions
+
+### Supported languages:
 - PHP
 - JavaScript
 - Python
