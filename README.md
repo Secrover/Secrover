@@ -7,6 +7,12 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 # Secrover
 
+## 🔍 Features
+
+- 🔒 Security Audits: Scans your project dependency files to identify known vulnerabilities.
+- 🧠 Human-readable Reports: Generates clean, clear, and actionable reports that are easy to understand.
+- 💻 Cross-platform: Works seamlessly on Linux, macOS, and Windows.
+
 ## 🖼️ Screenshot
 
 <a href="https://github.com/Huluti/Secrover/blob/main/assets/screenshot.png">
