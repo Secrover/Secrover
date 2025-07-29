@@ -47,6 +47,7 @@ Create a new repo with a `config.yaml` file inside where you will list the repos
 ```yaml
 domains:
   - my-domain.com
+  - subdomain.my-domain.com
 repos:
   - url: git@github.com:your-org/your-repo
     description: "Short description of the project"
