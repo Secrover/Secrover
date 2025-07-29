@@ -1,5 +1,6 @@
-from pathlib import Path
 from git import Repo
+
+from secrover.constants import REPOS_FOLDER
 
 
 def get_repo_name_from_url(url):
@@ -10,13 +11,13 @@ def get_repo_name_from_url(url):
     return repo_name
 
 
-def clone_repos(repos, base_dir: Path):
-    base_dir.mkdir(parents=True, exist_ok=True)
+def clone_repos(repos):
+    REPOS_FOLDER.mkdir(parents=True, exist_ok=True)
     for repo in repos:
         repo_url = repo["url"]
         branch = repo.get("branch", "main")
         repo_name = repo.get("name") or get_repo_name_from_url(repo_url)
-        dest_path = base_dir / repo_name
+        dest_path = REPOS_FOLDER / repo_name
 
         if dest_path.exists():
             print(

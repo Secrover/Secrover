@@ -1,6 +1,43 @@
 import subprocess
 import json
 
+from secrover.git import get_repo_name_from_url
+from secrover.report import generate_html_report_from_template
+from secrover.languages import detect_language_by_files
+from secrover.constants import REPOS_FOLDER
+
+
+def check_vulnerabilities(repos, output_path):
+    all_results = {}
+    for repo in repos:
+        repo_name = repo.get("name") or get_repo_name_from_url(repo["url"])
+        repo_description = repo.get("description") or ""
+        repo_path = REPOS_FOLDER / repo_name
+
+        language = detect_language_by_files(repo_path)
+        print(f"Detected language(s) for '{repo_name}': {language}")
+
+        audit_results = run_language_audits(language, repo_path, repo_name)
+        all_results[repo_name] = {
+            "description": repo_description,
+            "audits": audit_results
+        }
+        # Print nicely
+        for tool, summary in audit_results.items():
+            print(f"\n{tool} audit summary for {repo_name}:")
+            print(
+                f"  Total vulnerabilities: {summary['total_vulnerabilities']}")
+            print(f"  By severity: {summary['vulnerabilities_by_severity']}")
+            print(f"  Impacted packages: {summary['packages_impacted']}")
+            if tool == "composer" and summary.get("abandoned_packages"):
+                print(f"  Abandoned packages: {summary['abandoned_packages']}")
+        print()
+
+    print()
+    generate_html_report_from_template(all_results, output_path)
+
+    print("\nAll repos processed.")
+
 
 def run_npm_audit(repo_path):
     package_json = repo_path / "package.json"
