@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="data:image/svg+xml;base64,{{ favicon_b64 }}" type="image/svg+xml">
     <style>
+        html {
+            box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
         /* http://meyerweb.com/eric/tools/css/reset/ 
         v2.0 | 20110126
         License: none (public domain)
@@ -73,7 +80,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #e9ecef;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             padding: 0 0 40px 0;
         }
         h1, h2, h3 { color: #333; margin-bottom: 20px; font-weight: bold; }
@@ -144,7 +151,27 @@
             font-size: 12px;
             font-weight: 500;
         }
-        .global-recap {
+        #menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 40px;
+
+            a {
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-weight: 600;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                background: var(--main-color); 
+                color: #fff;
+                text-decoration: none;
+            }
+        }
+        #global-recap {
             margin-bottom: 40px;
             background: #fff;
             border-radius: 16px;
@@ -232,6 +259,11 @@
                 <p><em>Audit run on: {{ audit_datetime }} with <a href="https://github.com/Huluti/Secrover">Secrover</a></em></p>
             </div>
         </div>
+
+        <nav id="menu">
+            <a href="vulnerabilities_report.html">🔍 Vulnerabilities</a>
+            <a href="domains_report.html">🌐 Domains</a>
+        </nav>
         
         {% block content %}{% endblock %}
     </div>
