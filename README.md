@@ -9,9 +9,9 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 ## 🔍 Features
 
-- 🔒 Security Audits: Scans your project dependency files to identify known vulnerabilities.
-- 🧠 Human-readable Reports: Generates clean, clear, and actionable reports that are easy to understand.
-- 💻 Cross-platform: Works seamlessly on Linux, macOS, and Windows.
+- 🔒 **Security Audits**: Scans your project dependency files to identify known vulnerabilities.
+- 🧠 **Human-readable Reports**: Generates clean, clear, and actionable reports that are easy to understand.
+- 💻 **Cross-platform**: Works seamlessly on Linux, macOS, and Windows.
 
 ## 🖼️ Screenshot
 
