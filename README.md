@@ -30,11 +30,12 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 - JavaScript
 - Python
 
-## 🖼️ Screenshot
+## 🖼️ Screenshots
 
-<a href="https://github.com/Huluti/Secrover/blob/main/assets/screenshot.png">
-  <img src="https://github.com/Huluti/Secrover/blob/main/assets/screenshot.png" height="400" alt="Secrover" />
-</a>
+| Dependencies Audit                                                                                                                                                                                            | Domains Audit                                                                                                                                                                                   |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <a href="https://github.com/Huluti/Secrover/blob/main/assets/dependencies.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/dependencies.png" height="400" alt="Dependencies Audit" /> </a> | <a href="https://github.com/Huluti/Secrover/blob/main/assets/domains.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/domains.png" height="400" alt="Domains Audit" /> </a>  |
+
 
 ## 📁 Configuration
 
