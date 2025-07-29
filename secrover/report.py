@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from string import Template
 from collections import defaultdict
 from datetime import datetime
@@ -18,7 +18,6 @@ def aggregate_global_summary(results):
     """
     Aggregate vulnerability counts across all repos and tools.
     """
-    severity_order = ["critical", "high", "moderate", "low", "info"]
     global_counts = defaultdict(int)
 
     for repo_data in results.values():
@@ -98,13 +97,13 @@ def render_project_card(repo_name, description, tool_name=None, audit=None):
     """
 
 
-def generate_html_report_from_template(results, output_path):
-    template_path = "templates/vulnerabilities.html"
-    if not os.path.exists(template_path):
+def generate_html_report_from_template(results, output_path: Path):
+    template_path = Path("templates/vulnerabilities.html")
+
+    if not template_path.exists():
         raise FileNotFoundError(f"Template file not found: {template_path}")
 
-    with open(template_path, "r", encoding="utf-8") as f:
-        template_content = f.read()
+    template_content = template_path.read_text(encoding="utf-8")
 
     audit_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     repo_sections = []
@@ -135,8 +134,8 @@ def generate_html_report_from_template(results, output_path):
         audit_datetime=audit_datetime,
     )
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(os.path.join(output_path, "vulnerabilities.html"), "w", encoding="utf-8") as f:
-        f.write(output_html)
+    output_path.mkdir(parents=True, exist_ok=True)
+    report_file = output_path / "vulnerabilities.html"
+    report_file.write_text(output_html, encoding="utf-8")
 
     print(f"HTML report generated in \"{output_path}\" folder")

@@ -1,5 +1,6 @@
 import argparse
-import os
+
+from pathlib import Path
 
 from secrover.config import load_config
 from secrover.audits import run_language_audits
@@ -23,8 +24,8 @@ def main():
 
     args = parser.parse_args()
 
-    config_path = args.config
-    output_path = args.output
+    config_path = Path(args.config).resolve()
+    output_path = Path(args.output).resolve()
 
     try:
         config = load_config(config_path)
@@ -36,7 +37,7 @@ def main():
     print(f"Report will be saved to: {output_path}")
 
     repos = config["repos"]
-    base_dir = "repos"
+    base_dir = Path("repos")
 
     clone_repos(repos, base_dir=base_dir)
 
@@ -44,7 +45,7 @@ def main():
     for repo in repos:
         repo_name = repo.get("name") or get_repo_name_from_url(repo["url"])
         repo_description = repo.get("description") or ""
-        repo_path = os.path.join(base_dir, repo_name)
+        repo_path = base_dir / repo_name
 
         language = detect_language_by_files(repo_path)
         print(f"Detected language(s) for '{repo_name}': {language}")
