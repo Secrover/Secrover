@@ -8,8 +8,9 @@ def detect_language_by_files(repo_path: Path):
         return "Unknown (repo path not found)"
 
     lang_files = {
-        "JavaScript": {"package.json", "yarn.lock"},
+        "JavaScript": {"package.json"},
         "PHP": {"composer.json"},
+        "Python": {"requirements.txt", "pyproject.toml"},
     }
 
     detected = [lang for lang, markers in lang_files.items()

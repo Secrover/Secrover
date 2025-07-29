@@ -18,6 +18,13 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     ca-certificates
 
+# Ensure pip is installed/upgraded
+RUN python -m ensurepip --upgrade && \
+    pip install --upgrade pip
+
+# Install pip-audit globally
+RUN pip install pip-audit
+
 # Install PHP and Composer
 RUN apt-get install -y php-cli
 RUN curl -sS https://getcomposer.org/installer | php && \

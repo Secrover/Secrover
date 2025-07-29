@@ -15,6 +15,11 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 - 💻 **Cross-platform**: Works seamlessly on Linux, macOS, and Windows.
 - 🌟 **More to come**: We’re constantly working on new features to enhance your security audits.
 
+### Languages supported:
+- PHP
+- JavaScript
+- Python
+
 ## 🖼️ Screenshot
 
 <a href="https://github.com/Huluti/Secrover/blob/main/assets/screenshot.png">

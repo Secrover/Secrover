@@ -1,5 +1,6 @@
 import subprocess
 import json
+from pathlib import Path
 
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
@@ -53,7 +54,58 @@ def check_vulnerabilities(repos, output_path):
     }, output_path)
 
 
-def run_npm_audit(repo_path):
+def run_pip_audit(repo_path: Path):
+    # Detect if Python project exists by common files
+    if not any((repo_path / fname).exists() for fname in ["requirements.txt", "pyproject.toml"]):
+        print(f"No Python dependency files found in {repo_path}, skipping pip audit.")
+        return None
+
+    try:
+        result = subprocess.run(
+            ["pip-audit", "--format", "json"],
+            cwd=repo_path,
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if not result.stdout.strip():
+            print(f"pip-audit returned no output in {repo_path}")
+            return None
+
+        audit_data = json.loads(result.stdout)
+
+        if not isinstance(audit_data, dict) or "dependencies" not in audit_data:
+            print(f"Unexpected pip-audit JSON format in {repo_path}: {audit_data}")
+            return None
+
+        severity_counts = {sev: 0 for sev in severity_order}
+        packages = set()
+
+        for dep in audit_data["dependencies"]:
+            vulns = dep.get("vulns", [])
+            for vuln in vulns:
+                severity = vuln.get("severity", "info").lower()
+                if severity not in severity_counts:
+                    severity = "info"
+                severity_counts[severity] += 1
+                packages.add(dep.get("name"))
+
+        return {
+            "total_vulnerabilities": sum(severity_counts.values()),
+            "vulnerabilities_by_severity": severity_counts,
+            "packages_impacted": sorted(packages),
+        }
+
+    except json.JSONDecodeError as e:
+        print(f"Failed to parse pip-audit output as JSON: {e}")
+        print(f"Output was:\n{result.stdout}")
+    except Exception as e:
+        print(f"pip-audit failed unexpectedly: {e}")
+
+    return None
+
+
+def run_npm_audit(repo_path: Path):
     package_json = repo_path / "package.json"
     if not package_json.exists():
         print(f"No package.json found in {repo_path}, skipping npm audit.")
@@ -96,7 +148,7 @@ def run_npm_audit(repo_path):
     return None
 
 
-def run_composer_audit(repo_path):
+def run_composer_audit(repo_path: Path):
     composer_lock = repo_path / "composer.lock"
     if not composer_lock.exists():
         print(
@@ -159,12 +211,16 @@ def run_language_audits(language_str, repo_path, repo_name):
         npm_summary = run_npm_audit(repo_path)
         if npm_summary:
             results["npm"] = npm_summary
-
-    if "PHP" in language_str:
+    elif "PHP" in language_str:
         print(f"Running composer audit on {repo_name}...")
         composer_summary = run_composer_audit(repo_path)
         if composer_summary:
             results["composer"] = composer_summary
+    elif "Python" in language_str:
+        print(f"Running pip audit on {repo_name}...")
+        pip_summary = run_pip_audit(repo_path)
+        if pip_summary:
+            results["pip"] = pip_summary
 
     return results
 
