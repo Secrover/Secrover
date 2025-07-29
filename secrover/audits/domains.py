@@ -8,6 +8,21 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from secrover.report import generate_html_report
 
 
+def is_domain_active(domain, timeout=3):
+    """
+    Check if a domain is active by trying HTTPS then HTTP GET requests.
+    Returns True if any responds with status code < 400, else False.
+    """
+    for scheme in ["https", "http"]:
+        try:
+            resp = requests.get(f"{scheme}://{domain}", timeout=timeout)
+            if resp.status_code < 400:
+                return True
+        except Exception:
+            continue
+    return False
+
+
 def is_port_open(domain, port):
     try:
         with socket.create_connection((domain, port), timeout=0.5):
@@ -49,7 +64,7 @@ def check_open_ports(domain):
             port, is_open = future.result()
             if is_open:
                 open_ports.append(port)
-    return {"open_ports": sorted(open_ports)}
+    return sorted(open_ports)
 
 
 def check_hsts(domain):
@@ -91,9 +106,7 @@ def check_tls_versions(domain, port=443):
         except Exception:
             pass  # Not supported
 
-    return {
-        "supported_tls_versions": supported
-    }
+    return supported
 
 
 def get_ssl_info(domain, port=443, timeout=5):
@@ -113,7 +126,6 @@ def get_ssl_info(domain, port=443, timeout=5):
                     key: value for pair in issuer_raw for key, value in pair}
 
                 return {
-                    "domain": domain,
                     "valid": True,
                     "issuer": issuer,
                     "not_after": not_after.isoformat(),
@@ -121,7 +133,6 @@ def get_ssl_info(domain, port=443, timeout=5):
                 }
     except Exception as e:
         return {
-            "domain": domain,
             "valid": False,
             "error": str(e)
         }
@@ -134,14 +145,47 @@ def check_domains(domains, output_path: Path):
     total = len(domains)
     for i, domain in enumerate(domains, 1):
         print(f"[{i}/{total}] Scanning domain: {domain} ...")
-        info = get_ssl_info(domain)
-        if info["valid"]:
-            info.update(check_hsts(domain))
-            info.update(check_tls_versions(domain))
-            info.update(check_open_ports(domain))
+        info = {
+            "domain": domain,
+            "active": False,
+            "https_available": False,
+            "supported_tls_versions": [],
+            "hsts_present": False,
+            "open_ports": [],
+            "valid": False,
+            "issuer": {},
+            "not_after": None,
+            "days_remaining": None,
+            "error": None,
+        }
+
+        info["active"] = is_domain_active(domain)
+        if info["active"]:
+            info["open_ports"] = check_open_ports(domain)
+            info["https_available"] = 443 in info["open_ports"]
+            if info["https_available"]:
+                ssl_info = get_ssl_info(domain)
+                info["valid"] = ssl_info.get("valid", False)
+                info["error"] = ssl_info.get("error")
+                if info["valid"]:
+                    info["issuer"] = ssl_info.get("issuer", {})
+                    info["not_after"] = ssl_info.get("not_after")
+                    info["days_remaining"] = ssl_info.get("days_remaining")
+                    # Only check HSTS and TLS versions if SSL is valid
+                    info["hsts_present"] = check_hsts(
+                        domain).get("hsts_present", False)
+                    info["supported_tls_versions"] = check_tls_versions(domain)
+                else:
+                    # SSL invalid — keep default empty or False values for HSTS and TLS versions
+                    info["hsts_present"] = False
+                    info["supported_tls_versions"] = []
+            else:
+                # HTTPS not available: keep SSL info defaults
+                pass
         else:
-            # even if SSL invalid, ports may be open
-            info.update(check_open_ports(domain))
+            # Domain inactive: keep all defaults
+            pass
+
         data.append(info)
 
     generate_html_report("domains", {

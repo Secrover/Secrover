@@ -11,7 +11,9 @@
         <thead>
             <tr>
                 <th>Domain</th>
-                <th>Status</th>
+                <th>Active</th>
+                <th>HTTPS Available</th>
+                <th>Cert Valid</th>
                 <th>Expires</th>
                 <th>Days Left</th>
                 <th>Issuer</th>
@@ -24,39 +26,65 @@
             {% for row in data %}
                 <tr>
                     <td>{{ row.domain }}</td>
-                    <td>{{ "✅ Valid" if row.valid else "❌ Invalid" }}</td>
+                    <td>{{ "✅ Active" if row.active else "❌ Inactive" }}</td>
+                    <td>
+                        {% if not row.active %}
+                            -
+                        {% else %}
+                            {{ "✅ Yes" if row.https_available else "❌ No" }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if row.https_available %}
+                            {% if row.valid %}
+                                ✅ Valid
+                            {% else %}
+                                ❌ Invalid
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
                     <td>{{ row.not_after if row.valid else "-" }}</td>
                     <td>{{ row.days_remaining if row.valid else "-" }}</td>
                     <td>
                         {% if row.valid %}
                             {{ row.issuer.values() | join(', ') }}
                         {% else %}
-                            <span style="color: red">{{ row.error }}</span>
+                            {% if row.error %}
+                                <span style="color: red;">{{ row.error }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td>
-                        {% if row.valid %}
+                        {% if row.https_available %}
                             {{ "✅ Present" if row.hsts_present else "❌ Missing" }}
                         {% else %}
                             -
                         {% endif %}
                     </td>
                     <td>
-                        {% if row.valid %}
+                        {% if row.https_available %}
                             {% if row.supported_tls_versions %}
                                 {{ row.supported_tls_versions | join(', ') }}
                             {% else %}
-                                <span style="color: orange">None</span>
+                                <span style="color: orange;">None</span>
                             {% endif %}
                         {% else %}
                             -
                         {% endif %}
                     </td>
                     <td>
-                        {% if row.open_ports is defined and row.open_ports %}
-                            {{ row.open_ports | join(', ') }}
+                        {% if not row.active %}
+                            -
                         {% else %}
-                            <span style="color: gray;">None</span>
+                            {% if row.open_ports %}
+                                {{ row.open_ports | join(', ') }}
+                            {% else %}
+                                <span style="color: gray;">None</span>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>
