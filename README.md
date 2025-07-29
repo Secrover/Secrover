@@ -26,10 +26,9 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 ## 🖼️ Screenshots
 
-| Dependencies Audit                                                                                                                                                                                            | Domains Audit                                                                                                                                                                                   |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <a href="https://github.com/Huluti/Secrover/blob/main/assets/dependencies.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/dependencies.png" height="400" alt="Dependencies Audit" /> </a> | <a href="https://github.com/Huluti/Secrover/blob/main/assets/domains.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/domains.png" height="400" alt="Domains Audit" /> </a>  |
-
+| Dependencies Audit | Code audit | Domains Audit |
+| --- | --- | --- |
+| <a href="https://github.com/Huluti/Secrover/blob/main/assets/dependencies.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/dependencies.png" height="400" alt="Dependencies Audit" /> </a> | <a href="https://github.com/Huluti/Secrover/blob/main/assets/code.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/dependencies.png" height="400" alt="Code Audit" /> </a> | <a href="https://github.com/Huluti/Secrover/blob/main/assets/domains.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/domains.png" height="400" alt="Domains Audit" /> </a> |
 
 ## 📁 Configuration
 
