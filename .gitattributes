@@ -1,0 +1,8 @@
+# Set default behavior to normalize line endings to LF in repo
+* text=auto eol=lf
+
+# Force LF line endings for shell scripts and code files
+*.sh text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
