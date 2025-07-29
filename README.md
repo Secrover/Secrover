@@ -17,14 +17,11 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 - 🌟 **Actively Maintained**:  We’re constantly adding new features and improvements to help you stay ahead of threats.
 
 ### Audits
-- **📦 Dependencies**
-  - Vulnerability check
 
-- **🌐 Domains**
-  - SSL certificate
-  - HSTS header
-  - TLS versions
-  - Open Ports
+| Category        | Checks                                                 |
+| --------------- | ------------------------------------------------------ |
+| 📦 Dependencies | Vulnerability check                                    |
+| 🌐 Domains      | SSL certificate, HSTS header, TLS versions, Open Ports |
 
 ### Supported languages:
 - PHP
