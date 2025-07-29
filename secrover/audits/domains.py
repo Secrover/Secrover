@@ -8,6 +8,20 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from secrover.report import generate_html_report
 
 
+def check_http_to_https_redirect(domain):
+    url = f"http://{domain}"
+    try:
+        # We use 'allow_redirects=False' to catch the first response redirect header
+        response = requests.get(url, allow_redirects=False, timeout=5)
+        if response.status_code in range(300, 400):
+            location = response.headers.get('Location', '')
+            if location.startswith('https://'):
+                return True
+        return False
+    except requests.RequestException:
+        return False
+
+
 def is_domain_active(domain, timeout=3):
     """
     Check if a domain is active by trying HTTPS then HTTP GET requests.
@@ -149,6 +163,7 @@ def check_domains(domains, output_path: Path):
             "domain": domain,
             "active": False,
             "https_available": False,
+            "http_to_https_redirect": False,
             "supported_tls_versions": [],
             "hsts_present": False,
             "open_ports": [],
@@ -163,6 +178,12 @@ def check_domains(domains, output_path: Path):
         if info["active"]:
             info["open_ports"] = check_open_ports(domain)
             info["https_available"] = 443 in info["open_ports"]
+
+            # Check HTTP to HTTPS redirect only if port 80 is open
+            if 80 in info["open_ports"]:
+                info["http_to_https_redirect"] = check_http_to_https_redirect(
+                    domain)
+
             if info["https_available"]:
                 ssl_info = get_ssl_info(domain)
                 info["valid"] = ssl_info.get("valid", False)
@@ -188,6 +209,4 @@ def check_domains(domains, output_path: Path):
 
         data.append(info)
 
-    generate_html_report("domains", {
-        "data": data,
-    }, output_path)
+    generate_html_report("domains", {"data": data}, output_path)

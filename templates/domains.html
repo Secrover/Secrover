@@ -14,6 +14,7 @@
                 <th>Active</th>
                 <th>HTTPS Available</th>
                 <th>Cert Valid</th>
+                <th>HTTP→HTTPS Redirect</th>
                 <th>Expires</th>
                 <th>Days Left</th>
                 <th>Issuer</th>
@@ -43,6 +44,13 @@
                             {% endif %}
                         {% else %}
                             -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not row.active %}
+                            -
+                        {% else %}
+                            {{ "✅ Yes" if row.http_to_https_redirect else "❌ No" }}
                         {% endif %}
                     </td>
                     <td>{{ row.not_after if row.valid else "-" }}</td>
