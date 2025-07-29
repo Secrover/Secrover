@@ -18,7 +18,7 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 ### Audits
 - **📦 Dependencies**
-  - Vulnerabbility check
+  - Vulnerability check
 
 - **🌐 Domains**
   - SSL certificate
