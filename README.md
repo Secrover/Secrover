@@ -18,15 +18,10 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 ### Audits
 
-| Category        | Checks                                                 |
-| --------------- | ------------------------------------------------------ |
-| 📦 Dependencies | Vulnerability check                                    |
-| 🌐 Domains      | SSL certificate, HSTS header, TLS versions, Open Ports |
-
-### Supported languages:
-- PHP
-- JavaScript
-- Python
+| Category        | Checks                                                 | Supported languages        |
+| --------------- | ------------------------------------------------------ | -------------------------- |
+| 📦 Dependencies | Vulnerability check                                    | PHP, JavaScript and Python |
+| 🌐 Domains      | SSL certificate, HSTS header, TLS versions, Open Ports | -                          |
 
 ## 🖼️ Screenshots
 
