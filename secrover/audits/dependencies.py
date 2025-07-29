@@ -52,33 +52,25 @@ def build_audit_summary(severity_counts, package_map, extras=None):
 
 def check_dependencies(repos, output_path):
     data = {}
-    for repo in repos:
+    total = len(repos)
+    for i, repo in enumerate(repos, 1):
         repo_name = repo.get("name") or get_repo_name_from_url(repo["url"])
+        print(f"[{i}/{total}] Scanning repo: {repo_name} ...")
         repo_description = repo.get("description") or ""
         repo_path = REPOS_FOLDER / repo_name
 
         language = detect_language_by_files(repo_path)
-        print(f"Detected language(s) for '{repo_name}': {language}")
+        if language:
+            print(f"Detected language for '{repo_name}': {language}")
 
-        audit_results = run_language_audit(language, repo_path, repo_name)
-        data[repo_name] = {
-            "language": language,
-            "description": repo_description,
-            "audit": audit_results
-        }
-
-        print(f"\n{language} audit summary for {repo_name}:")
-        print(
-            f"  Total vulnerabilities: {audit_results['total_vulnerabilities']}")
-        print(f"  By severity: {audit_results['vulnerabilities_by_severity']}")
-        print(
-            f"  Impacted packages: {[pkg['name'] for pkg in audit_results['packages_impacted']]}")
-        if language == "composer" and audit_results.get("abandoned_packages"):
-            print(
-                f"  Abandoned packages: {audit_results['abandoned_packages']}")
-        print()
-
-    print("\nAll repos processed.")
+            audit_results = run_language_audit(language, repo_path)
+            data[repo_name] = {
+                "language": language,
+                "description": repo_description,
+                "audit": audit_results
+            }
+        else:
+            print(f"No supported language found for {repo_name}, skipping.")
 
     generate_html_report("dependencies", {
         "data": data,
@@ -220,19 +212,13 @@ def run_composer_audit(repo_path: Path):
     return None
 
 
-def run_language_audit(language_str, repo_path, repo_name):
+def run_language_audit(language_str, repo_path):
     if "JavaScript" in language_str:
-        print(f"Running npm audit on {repo_name}...")
         summary = run_npm_audit(repo_path)
     elif "PHP" in language_str:
-        print(f"Running composer audit on {repo_name}...")
         summary = run_composer_audit(repo_path)
     elif "Python" in language_str:
-        print(f"Running pip audit on {repo_name}...")
         summary = run_pip_audit(repo_path)
-    else:
-        print(f"No supported language found for {repo_name}, skipping.")
-        return None
 
     return summary
 

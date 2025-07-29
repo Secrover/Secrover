@@ -1,14 +1,17 @@
 import argparse
-
+import time
 from pathlib import Path
 
 from secrover.config import load_config
 from secrover.audits.dependencies import check_dependencies
 from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
+from secrover.constants import VERSION
 
 
 def main():
+    start_time = time.perf_counter()  # Start timer
+
     # Program options
     parser = argparse.ArgumentParser(description="Secrover Security Scanner")
     parser.add_argument(
@@ -34,22 +37,33 @@ def main():
         print(e)
         exit(1)
 
-    print(f"Using config: {config_path}")
-    print(f"Report will be saved to: {output_path}")
+    print(f"----- Secrover (Version {VERSION}) -----")
+
+    print(f"- Using config: {config_path}")
+    print(f"- Reports will be saved in: {output_path}")
 
     repos = config["repos"]
     domains = config["domains"]
 
     #  Clone repos
+    print("\n# Clone repos")
     clone_repos(repos)
 
     # Audits
+    print("\n# Launching checks")
 
     # 1 - Dependencies
+    print("\n1 / Dependencies check")
     check_dependencies(repos, output_path)
 
     # 2 - Domains
+    print("\n2 / Domains check")
     check_domains(domains, output_path)
+
+    end_time = time.perf_counter()  # End timer
+    seconds = end_time - start_time
+
+    print(f"\nAll check have finished in {seconds:.2f} seconds.")
 
 
 if __name__ == "__main__":
