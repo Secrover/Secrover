@@ -4,7 +4,52 @@ from datetime import datetime, timezone
 from pathlib import Path
 import requests
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from secrover.report import generate_html_report
+
+
+def is_port_open(domain, port):
+    try:
+        with socket.create_connection((domain, port), timeout=0.5):
+            return port, True
+    except Exception:
+        return port, False
+
+
+def check_open_ports(domain):
+    # Common ports to test
+    ports = [
+        21,    # FTP
+        22,    # SSH
+        23,    # Telnet
+        25,    # SMTP
+        53,    # DNS
+        80,    # HTTP
+        110,   # POP3
+        143,   # IMAP
+        443,   # HTTPS
+        465,   # SMTPS
+        587,   # SMTP (mail submission)
+        993,   # IMAPS
+        995,   # POP3S
+        3306,  # MySQL
+        3389,  # RDP (Windows Remote Desktop)
+        5900,  # VNC
+        6379,  # Redis
+        8080,  # HTTP alternative port
+        8443,  # HTTPS alternative port
+        27017  # MongoDB
+    ]
+
+    open_ports = []
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = [executor.submit(
+            is_port_open, domain, port) for port in ports]
+        for future in as_completed(futures):
+            port, is_open = future.result()
+            if is_open:
+                open_ports.append(port)
+    return {"open_ports": sorted(open_ports)}
 
 
 def check_hsts(domain):
@@ -86,12 +131,17 @@ def check_domains(domains, output_path: Path):
     output_path.mkdir(parents=True, exist_ok=True)
     data = []
 
-    for domain in domains:
+    total = len(domains)
+    for i, domain in enumerate(domains, 1):
+        print(f"[{i}/{total}] Scanning domain: {domain} ...")
         info = get_ssl_info(domain)
         if info["valid"]:
             info.update(check_hsts(domain))
             info.update(check_tls_versions(domain))
-
+            info.update(check_open_ports(domain))
+        else:
+            # even if SSL invalid, ports may be open
+            info.update(check_open_ports(domain))
         data.append(info)
 
     generate_html_report("domains", {

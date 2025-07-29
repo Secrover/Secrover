@@ -17,6 +17,7 @@
                 <th>Issuer</th>
                 <th>HSTS</th>
                 <th>TLS Versions</th>
+                <th>Open Ports</th>
             </tr>
         </thead>
         <tbody>
@@ -49,6 +50,13 @@
                             {% endif %}
                         {% else %}
                             -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if row.open_ports is defined and row.open_ports %}
+                            {{ row.open_ports | join(', ') }}
+                        {% else %}
+                            <span style="color: gray;">None</span>
                         {% endif %}
                     </td>
                 </tr>

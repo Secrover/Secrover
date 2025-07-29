@@ -24,6 +24,7 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
   - SSL certificate
   - HSTS header
   - TLS versions
+  - Open Ports
 
 ### Supported languages:
 - PHP
