@@ -18,17 +18,3 @@ jobs:
 
       - name: Build Docker image (Linux)
         run: docker build -t secrover .
-
-  build-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Enable Docker support on Windows
-        run: |
-          net start com.docker.service
-          docker version
-
-      - name: Build Docker image (Windows)
-        run: docker build -t secrover .
