@@ -18,7 +18,7 @@ severity_emojis = {
 }
 
 
-def check_vulnerabilities(repos, output_path):
+def check_dependencies(repos, output_path):
     data = {}
     for repo in repos:
         repo_name = repo.get("name") or get_repo_name_from_url(repo["url"])
@@ -46,7 +46,7 @@ def check_vulnerabilities(repos, output_path):
 
     print("\nAll repos processed.")
 
-    generate_html_report("vulnerabilities", {
+    generate_html_report("dependencies", {
         "data": data,
         "severity_order": severity_order,
         "severity_emojis": severity_emojis,

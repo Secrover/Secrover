@@ -17,10 +17,10 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 - 🌟 **Actively Maintained**:  We’re constantly adding new features and improvements to help you stay ahead of threats.
 
 ### Audits
-- **Vulnerabilities**
-  - Dependency check
+- **📦 Dependencies**
+  - Vulnerabbility check
 
-- **Domains**
+- **🌐 Domains**
   - SSL certificate
   - HSTS header
   - TLS versions

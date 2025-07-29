@@ -3,7 +3,7 @@ import argparse
 from pathlib import Path
 
 from secrover.config import load_config
-from secrover.audits.vulnerabilities import check_vulnerabilities
+from secrover.audits.dependencies import check_dependencies
 from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
 
@@ -45,8 +45,8 @@ def main():
 
     # Audits
 
-    # 1 - Vulnerabilities
-    check_vulnerabilities(repos, output_path)
+    # 1 - Dependencies
+    check_dependencies(repos, output_path)
 
     # 2 - Domains
     check_domains(domains, output_path)
