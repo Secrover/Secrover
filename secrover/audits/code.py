@@ -15,7 +15,7 @@ severity_order = ["high", "moderate", "low"]
 severity_emojis = {
     "high": "🔥",
     "moderate": "⚠️",
-    "low": "🔹",
+    "low": "↘️",
 }
 
 

@@ -64,7 +64,12 @@
         :root {
         --main-color: #638eed;;
         }
-        body { font-family: Arial, sans-serif; margin: 20px; background: var(--main-color); color: #222; }
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: var(--main-color);
+            color: #222;
+        }
         #main {
             margin: 40px;
             background: rgba(255, 255, 255, 0.95);
@@ -82,6 +87,20 @@
             border-bottom: 2px solid #e9ecef;
             margin-bottom: 30px;
             padding: 0 0 40px 0;
+        }
+        #footer {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 0 20px 20px 20px;
+            text-align: center;
+            justify-content: center;
+            color: #fff;
+
+            a {
+                color: #fff;
+            }
         }
         h1, h2, h3 { color: #333; margin-bottom: 20px; font-weight: bold; }
         h1 { font-size: 1.8em; }
@@ -256,7 +275,9 @@
 <body>
     <div id="main">
         <div id="header">
-            <img id="logo" src="data:image/svg+xml;base64,{{ logo_b64 }}" alt="Secrover" />
+            <a href="index.html">
+                <img id="logo" src="data:image/svg+xml;base64,{{ logo_b64 }}" alt="Secrover" />
+            </a>
             <div id="audit-info">
                 <p class="mb-10"><strong>Security Audit Report</strong></p>
                 <p><em>Audit run on: {{ audit_datetime }} with <a href="https://github.com/Huluti/Secrover">Secrover</a></em></p>
@@ -271,5 +292,9 @@
         
         {% block content %}{% endblock %}
     </div>
+    <footer id="footer">
+        <a href="https://github.com/Huluti/Secrover">GitHub project</a>
+        <a href="https://github.com/Huluti/Secrover/issues">Report an issue</a>
+    </footer>
 </body>
 </html>

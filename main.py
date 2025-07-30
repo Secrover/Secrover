@@ -7,6 +7,7 @@ from secrover.audits.dependencies import check_dependencies
 from secrover.audits.code import check_code
 from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
+from secrover.report import generate_html_report
 from secrover.constants import VERSION
 
 
@@ -64,6 +65,9 @@ def main():
     # 3 - Domains
     print("\n3 / Domains check")
     check_domains(domains, output_path)
+
+    # Main report
+    generate_html_report("index", {}, output_path)
 
     end_time = time.perf_counter()  # End timer
     seconds = end_time - start_time

@@ -27,7 +27,7 @@
             {% for row in data %}
                 <tr>
                     <td>{{ row.domain }}</td>
-                    <td>{{ "✅ Active" if row.active else "❌ Inactive" }}</td>
+                    <td>{{ "✅ Yes" if row.active else "❌ No" }}</td>
                     <td>
                         {% if not row.active %}
                             -
@@ -38,9 +38,9 @@
                     <td>
                         {% if row.https_available %}
                             {% if row.valid %}
-                                ✅ Valid
+                                ✅ Yes
                             {% else %}
-                                ❌ Invalid
+                                ❌ No
                             {% endif %}
                         {% else %}
                             -
@@ -68,7 +68,7 @@
                     </td>
                     <td>
                         {% if row.https_available %}
-                            {{ "✅ Present" if row.hsts_present else "❌ Missing" }}
+                            {{ "✅ Yes" if row.hsts_present else "❌ No" }}
                         {% else %}
                             -
                         {% endif %}

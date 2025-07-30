@@ -23,7 +23,10 @@ def generate_html_report(report_type: str, results, output_path: Path):
 
     output_html = template.render(context)
     output_path.mkdir(parents=True, exist_ok=True)
-    report_file = output_path / f"{report_type}_report.html"
+    if report_type == "index":
+        report_file = output_path / f"{report_type}.html"
+    else:
+        report_file = output_path / f"{report_type}_report.html"
     report_file.write_text(output_html, encoding="utf-8")
 
     print(f"\n{report_type.capitalize()} HTML report generated in \"{output_path}\" folder.")
