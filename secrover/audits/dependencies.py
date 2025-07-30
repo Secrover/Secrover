@@ -50,7 +50,7 @@ def build_audit_summary(severity_counts, package_map, extras=None):
     return result
 
 
-def check_dependencies(repos, output_path):
+def check_dependencies(repos, output_path: Path):
     data = {}
     total = len(repos)
     for i, repo in enumerate(repos, 1):
@@ -72,12 +72,17 @@ def check_dependencies(repos, output_path):
         else:
             print(f"No supported language found for {repo_name}, skipping.")
 
+    summary = aggregate_global_summary(data)
+    summary.update({"nbRepos": total})
+
     generate_html_report("dependencies", {
         "data": data,
         "severity_order": severity_order,
         "severity_emojis": severity_emojis,
-        "global_summary": aggregate_global_summary(data),
+        "global_summary": summary,
     }, output_path)
+
+    return summary
 
 
 def run_pip_audit(repo_path: Path):

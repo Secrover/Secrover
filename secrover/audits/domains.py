@@ -209,4 +209,10 @@ def check_domains(domains, output_path: Path):
 
         data.append(info)
 
+    summary = {
+        "nbDomains": total,
+    }
+
     generate_html_report("domains", {"data": data}, output_path)
+
+    return summary

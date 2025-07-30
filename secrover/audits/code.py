@@ -1,5 +1,7 @@
 import subprocess
 import json
+from pathlib import Path
+
 
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
@@ -65,7 +67,7 @@ def aggregate_global_summary(data):
     return summary
 
 
-def check_code(repos, output_path):
+def check_code(repos, output_path: Path):
     data = {}
     total = len(repos)
     for i, repo in enumerate(repos, 1):
@@ -132,11 +134,14 @@ def check_code(repos, output_path):
                 "findings": [],
             }
 
-    global_summary = aggregate_global_summary(data)
+    summary = aggregate_global_summary(data)
+    summary.update({"nbRepos": total})
 
     generate_html_report("code", {
         "data": data,
         "severity_order": severity_order,
         "severity_emojis": severity_emojis,
-        "global_summary": global_summary,
+        "global_summary": summary,
     }, output_path)
+
+    return summary

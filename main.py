@@ -56,18 +56,22 @@ def main():
 
     # 1 - Dependencies
     print("\n1 / Dependencies check")
-    check_dependencies(repos, output_path)
+    dependencies_summary = check_dependencies(repos, output_path)
 
     # 2 - Code
     print("\n2 / Code check")
-    check_code(repos, output_path)
+    code_summary = check_code(repos, output_path)
 
     # 3 - Domains
     print("\n3 / Domains check")
-    check_domains(domains, output_path)
+    domains_summary = check_domains(domains, output_path)
 
     # Main report
-    generate_html_report("index", {}, output_path)
+    generate_html_report("index", {
+        "dependencies_summary": dependencies_summary,
+        "code_summary": code_summary,
+        "domains_summary": domains_summary,
+    }, output_path)
 
     end_time = time.perf_counter()  # End timer
     seconds = end_time - start_time

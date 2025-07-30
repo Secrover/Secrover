@@ -1,11 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Report{% endblock %}
+{% block title %}Report Overview{% endblock %}
 
 {% block content %}
+<section id="global-recap">
+    <h1>📊 Report Overview</h1>
 
-    <section id="global-recap">
-        <h1>🔒 Security Report</h1>
-    </section>
-   
+    <div class="overview-container">
+        <div class="card">
+            <h2>📦 Dependencies</h2>
+            <div class="count">{{ dependencies_summary.nbRepos }}</div>
+            <div class="label">Repositories scanned</div>
+        </div>
+
+        <div class="card">
+            <h2>📝 Code</h2>
+            <div class="count">{{ code_summary.nbRepos }}</div>
+            <div class="label">Repositories scanned</div>
+        </div>
+
+        <div class="card">
+            <h2>🌐 Domains</h2>
+            <div class="count">{{ domains_summary.nbDomains }}</div>
+            <div class="label">Domains scanned</div>
+        </div>
+    </div>
+</section>
 {% endblock %}

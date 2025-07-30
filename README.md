@@ -21,7 +21,7 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 | Category        | Checks                                                 | Supported languages        |
 | --------------- | ------------------------------------------------------ | -------------------------- |
 | 📦 Dependencies | Vulnerability check                                    | PHP, JavaScript and Python |
-| 📄 Code         | Static check                                           | All languages supported by opengrep |
+| 📝 Code         | Static check                                           | All languages supported by opengrep |
 | 🌐 Domains      | SSL certificate, HTTP→HTTPS Redirect, HSTS header, TLS versions, Open Ports | -     |
 
 ## 🖼️ Screenshots

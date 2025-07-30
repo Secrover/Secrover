@@ -195,6 +195,34 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             border: 1px solid #e9ecef;
         }
+        .overview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .card {
+            flex: 1 1 250px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .card .count {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .card .label {
+            color: #777;
+            font-size: 0.9rem;
+        }
         #repos { display: grid; gap: 40px; grid-template-columns: repeat(2, 1fr); }
         .project-card::before {
             content: '';
@@ -285,16 +313,17 @@
         </div>
 
         <nav id="menu">
+            <a href="dependencies_report.html">📊 Overview</a>
             <a href="dependencies_report.html">📦 Dependencies</a>
-            <a href="code_report.html">📄 Code</a>
+            <a href="code_report.html">📝 Code</a>
             <a href="domains_report.html">🌐 Domains</a>
         </nav>
         
         {% block content %}{% endblock %}
     </div>
     <footer id="footer">
-        <a href="https://github.com/Huluti/Secrover">GitHub project</a>
-        <a href="https://github.com/Huluti/Secrover/issues">Report an issue</a>
+        <a href="https://github.com/Huluti/Secrover" target="_blank">GitHub project</a>
+        <a href="https://github.com/Huluti/Secrover/issues" target="_blank">Report an issue</a>
     </footer>
 </body>
 </html>
