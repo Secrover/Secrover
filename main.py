@@ -47,24 +47,39 @@ def main():
     repos = config["repos"]
     domains = config["domains"]
 
-    #  Clone repos
+    # Clone repos
     print("\n# Clone repos")
-    repos = clone_repos(repos)
+    if repos:
+        repos = clone_repos(repos)
+    else:
+        print("No repositories to clone.")
 
     # Audits
     print("\n# Launching checks")
 
     # 1 - Dependencies
-    print("\n1 / Dependencies check")
-    dependencies_summary = check_dependencies(repos, output_path)
+    if repos:
+        print("\n1 / Dependencies check")
+        dependencies_summary = check_dependencies(repos, output_path)
+    else:
+        print("\n1 / Dependencies check skipped (no repositories).")
+        dependencies_summary = None
 
     # 2 - Code
-    print("\n2 / Code check")
-    code_summary = check_code(repos, output_path)
+    if repos:
+        print("\n2 / Code check")
+        code_summary = check_code(repos, output_path)
+    else:
+        print("\n2 / Code check skipped (no repositories).")
+        code_summary = None
 
     # 3 - Domains
-    print("\n3 / Domains check")
-    domains_summary = check_domains(domains, output_path)
+    if domains:
+        print("\n3 / Domains check")
+        domains_summary = check_domains(domains, output_path)
+    else:
+        print("\n3 / Domains check skipped (no domains).")
+        domains_summary = None
 
     # Main report
     generate_html_report("index", {
@@ -76,7 +91,7 @@ def main():
     end_time = time.perf_counter()  # End timer
     seconds = end_time - start_time
 
-    print(f"\nAll check have finished in {seconds:.2f} seconds.")
+    print(f"\nAll checks have finished in {seconds:.2f} seconds.")
 
 
 if __name__ == "__main__":

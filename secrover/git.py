@@ -22,6 +22,7 @@ def clone_repos(repos):
         dest_path = REPOS_FOLDER / repo_name
 
         if dest_path.exists():
+            valid_repos.append(repo)
             print(
                 f"Repo '{repo_name}' already exists at {dest_path}, skipping clone.")
             continue
