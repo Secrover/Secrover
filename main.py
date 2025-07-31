@@ -44,8 +44,8 @@ def main():
     print(f"- Using config: {config_path}")
     print(f"- Reports will be saved in: {output_path}")
 
-    repos = config["repos"]
-    domains = config["domains"]
+    repos = config.get("repos", [])
+    domains = config.get("domains", [])
 
     # Clone repos
     print("\n# Clone repos")

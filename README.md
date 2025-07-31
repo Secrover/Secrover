@@ -52,22 +52,6 @@ repos:
 ## 🐳 Install with Docker
 
 You can run Secrover easily using Docker without installing any local dependencies.
-
-### 1. Clone the Secrover project
-
-```bash
-git clone https://github.com/Huluti/Secrover
-cd Secrover
-```
-
-### 2. Build the Docker image
-
-```bash
-docker build -t secrover .
-```
-
-## ▶️ Usage
-
 From your external project directory (the one containing `config.yaml`), run:
 
 ```bash
@@ -75,7 +59,7 @@ docker run --rm \
   -v "$(pwd)/config.yaml:/app/config.yaml" \
   -v "$(pwd)/output:/output" \
   -e CONFIG_FILE=config.yaml \
-  secrover
+  huluti/secrover
 ```
 
 This will:
