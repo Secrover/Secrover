@@ -43,7 +43,7 @@
                             {% for finding in repo_data.findings %}
                             <div class="{{ finding.severity }}">
                                 <strong>{{ finding.rule_id or "Unknown Rule" }}</strong> —
-                                {{ finding.message | truncate(100) }}
+                                {{ finding.message }}
                                 <br>
                                 <small>
                                     File: {{ finding.location.file or "N/A" }}:{{ finding.location.line or "?" }},
