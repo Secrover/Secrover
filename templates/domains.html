@@ -21,6 +21,7 @@
                 <th>HSTS</th>
                 <th>TLS Versions</th>
                 <th>Open Ports</th>
+                <th>Security Headers</th>
             </tr>
         </thead>
         <tbody>
@@ -94,6 +95,20 @@
                                 <span style="color: gray;">None</span>
                             {% endif %}
                         {% endif %}
+                    </td>
+                    <td>
+                       <span title="Content Security Policy: helps prevent cross-site scripting and other code injection attacks">
+                        {{ row.csp and 'CSP ✅' or 'CSP ❌' }}
+                        </span>
+                        <span title="X-Content-Type-Options: prevents browsers from MIME-sniffing a response away from the declared content-type">
+                        {{ row.x_content_type_options and 'XCTO ✅' or 'XCTO ❌' }}
+                        </span><br>
+                        <span title="X-Frame-Options: protects against clickjacking by controlling whether the site can be framed">
+                        {{ row.x_frame_options and 'XFO ✅' or 'XFO ❌' }}
+                        </span>
+                        <span title="Referrer-Policy: controls how much referrer information is sent with requests">
+                        {{ row.referrer_policy and 'Referrer ✅' or 'Referrer ❌' }}
+                        </span>
                     </td>
                 </tr>
             {% endfor %}

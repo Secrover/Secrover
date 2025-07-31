@@ -81,19 +81,58 @@ def check_open_ports(domain):
     return sorted(open_ports)
 
 
-def check_hsts(domain):
+def check_security_headers(url):
+    """
+    Fetch response headers from the given full URL (including scheme),
+    and extract key security headers.
+    """
     try:
-        response = requests.get(f"https://{domain}", timeout=5)
-        hsts = response.headers.get("Strict-Transport-Security")
+        response = requests.get(url, timeout=5)
+        headers = response.headers
+
         return {
-            "hsts_present": bool(hsts),
-            "hsts_value": hsts or ""
+            "hsts_present": bool(headers.get("Strict-Transport-Security")),
+            "hsts_value": headers.get("Strict-Transport-Security", ""),
+            "csp": headers.get("Content-Security-Policy"),
+            "x_content_type_options": headers.get("X-Content-Type-Options"),
+            "x_frame_options": headers.get("X-Frame-Options"),
+            "referrer_policy": headers.get("Referrer-Policy"),
         }
     except Exception as e:
         return {
             "hsts_present": False,
+            "hsts_value": "",
+            "csp": None,
+            "x_content_type_options": None,
+            "x_frame_options": None,
+            "referrer_policy": None,
             "error": str(e)
         }
+
+
+def analyze_security_headers(headers):
+    issues = {}
+
+    csp = headers.get("csp")
+    if not csp:
+        issues["Content-Security-Policy"] = "Missing"
+    elif "*" in csp:
+        issues["Content-Security-Policy"] = f"Weak CSP policy: {csp}"
+
+    xcto = headers.get("x_content_type_options")
+    if xcto != "nosniff":
+        issues["X-Content-Type-Options"] = f"Expected 'nosniff', got '{xcto}'"
+
+    xfo = headers.get("x_frame_options")
+    if xfo not in ("DENY", "SAMEORIGIN"):
+        issues["X-Frame-Options"] = f"Expected 'DENY' or 'SAMEORIGIN', got '{xfo}'"
+
+    rp = headers.get("referrer_policy")
+    secure_values = ["no-referrer", "strict-origin", "same-origin"]
+    if rp not in secure_values:
+        issues["Referrer-Policy"] = f"Expected one of {secure_values}, got '{rp}'"
+
+    return issues
 
 
 def check_tls_versions(domain, port=443):
@@ -166,6 +205,11 @@ def check_domains(domains, output_path: Path, enabled_checks):
             "http_to_https_redirect": False,
             "supported_tls_versions": [],
             "hsts_present": False,
+            "hsts_value": "",
+            "csp": None,
+            "x_content_type_options": None,
+            "x_frame_options": None,
+            "referrer_policy": None,
             "open_ports": [],
             "valid": False,
             "issuer": {},
@@ -188,21 +232,30 @@ def check_domains(domains, output_path: Path, enabled_checks):
                 ssl_info = get_ssl_info(domain)
                 info["valid"] = ssl_info.get("valid", False)
                 info["error"] = ssl_info.get("error")
+
                 if info["valid"]:
+                    url = f"https://{domain}"
                     info["issuer"] = ssl_info.get("issuer", {})
                     info["not_after"] = ssl_info.get("not_after")
                     info["days_remaining"] = ssl_info.get("days_remaining")
-                    # Only check HSTS and TLS versions if SSL is valid
-                    info["hsts_present"] = check_hsts(
-                        domain).get("hsts_present", False)
                     info["supported_tls_versions"] = check_tls_versions(domain)
                 else:
-                    # SSL invalid — keep default empty or False values for HSTS and TLS versions
-                    info["hsts_present"] = False
-                    info["supported_tls_versions"] = []
+                    # SSL invalid but HTTPS port is open, fallback to HTTP
+                    url = f"http://{domain}"
             else:
-                # HTTPS not available: keep SSL info defaults
-                pass
+                # HTTPS not available, fallback to HTTP
+                url = f"http://{domain}"
+
+            # Check security headers for the chosen URL (https if SSL valid, else http)
+            sec_headers = check_security_headers(url)
+            info["hsts_present"] = sec_headers.get("hsts_present", False)
+            info["hsts_value"] = sec_headers.get("hsts_value", "")
+            info["csp"] = sec_headers.get("csp")
+            info["x_content_type_options"] = sec_headers.get(
+                "x_content_type_options")
+            info["x_frame_options"] = sec_headers.get("x_frame_options")
+            info["referrer_policy"] = sec_headers.get("referrer_policy")
+
         else:
             # Domain inactive: keep all defaults
             pass
