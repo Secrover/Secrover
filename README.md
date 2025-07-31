@@ -7,6 +7,11 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 # Secrover
 
+![GitHub last commit](https://img.shields.io/github/last-commit/huluti/secrover)
+![Docker Pulls](https://img.shields.io/docker/pulls/huluti/secrover)
+![Docker Stars](https://img.shields.io/docker/stars/huluti/secrover)
+
+
 ## 🔍 Features
 
 - 🔒 **Security Audits**: Scans your project dependencies and your domains to identify possible vulnerabilities.
