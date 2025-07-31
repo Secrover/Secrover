@@ -41,7 +41,7 @@ def main():
         print(f"Error loading config: {e}")
         exit(1)
 
-    print(f"----- Secrover (Version {VERSION}) -----")
+    print(f"----- Secrover ({VERSION}) -----")
 
     print(f"- Using config: {config_path}")
     print(f"- Reports will be saved in: {output_path}")

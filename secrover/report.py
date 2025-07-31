@@ -2,7 +2,7 @@ import base64
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from datetime import datetime
-
+from secrover.constants import VERSION
 
 def get_base64_image(path: Path) -> str:
     with path.open("rb") as img_file:
@@ -15,6 +15,7 @@ def generate_html_report(report_type: str, results, output_path: Path):
     template = env.get_template(f"{report_type}.html")
 
     context = {
+        "version": VERSION,
         "audit_datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "logo_b64": get_base64_image(Path("assets/secrover.svg")),
         "favicon_b64": get_base64_image(Path("assets/favicon.svg")),
