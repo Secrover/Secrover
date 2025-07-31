@@ -50,7 +50,7 @@ def build_audit_summary(severity_counts, package_map, extras=None):
     return result
 
 
-def check_dependencies(repos, output_path: Path):
+def check_dependencies(repos, output_path: Path, enabled_checks):
     data = {}
     total = len(repos)
     for i, repo in enumerate(repos, 1):
@@ -80,6 +80,7 @@ def check_dependencies(repos, output_path: Path):
         "severity_order": severity_order,
         "severity_emojis": severity_emojis,
         "global_summary": summary,
+        "enabled_checks": enabled_checks
     }, output_path)
 
     return summary

@@ -105,7 +105,17 @@
         h1, h2, h3 { color: #333; margin-bottom: 20px; font-weight: bold; }
         h1 { font-size: 1.8em; }
         h3 { font-size: 1.4em; }
-        a { font-weight: bold; color: var(--main-color); text-decoration: none; }
+        a { 
+            font-weight: bold; 
+            color: var(--main-color); 
+            text-decoration: none; 
+
+            &.disabled {
+                pointer-events: none;
+                opacity: 0.5;
+                cursor: default;
+            }
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -185,6 +195,10 @@
                 background: var(--main-color); 
                 color: #fff;
                 text-decoration: none;
+
+                &.disabled {
+                    opacity: 0.6;
+                }
             }
         }
         #global-recap {
@@ -314,9 +328,9 @@
 
         <nav id="menu">
             <a href="index.html">📊 Overview</a>
-            <a href="dependencies_report.html">📦 Dependencies</a>
-            <a href="code_report.html">📝 Code</a>
-            <a href="domains_report.html">🌐 Domains</a>
+            <a href="dependencies_report.html" {% if not enabled_checks.dependencies %}class="disabled" aria-disabled="true"{% endif %}>📦 Dependencies</a>
+            <a href="code_report.html" {% if not enabled_checks.code %}class="disabled" aria-disabled="true"{% endif %}>📝 Code</a>
+            <a href="domains_report.html" {% if not enabled_checks.domains %}class="disabled" aria-disabled="true"{% endif %}>🌐 Domains</a>
         </nav>
         
         {% block content %}{% endblock %}
