@@ -1,4 +1,5 @@
 from git import Repo
+from git.exc import GitCommandError
 
 from secrover.constants import REPOS_FOLDER
 
@@ -12,6 +13,7 @@ def get_repo_name_from_url(url):
 
 
 def clone_repos(repos):
+    valid_repos = []
     REPOS_FOLDER.mkdir(parents=True, exist_ok=True)
     for repo in repos:
         repo_url = repo["url"]
@@ -25,4 +27,9 @@ def clone_repos(repos):
             continue
 
         print(f"Cloning {repo_url} into {dest_path} (branch {branch}) ...")
-        Repo.clone_from(repo_url, dest_path, branch=branch)
+        try:
+            Repo.clone_from(repo_url, dest_path, branch=branch)
+            valid_repos.append(repo)
+        except Exception as error:
+            print(f"Can't clone {repo_url}:", error)
+    return valid_repos

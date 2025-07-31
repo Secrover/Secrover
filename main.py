@@ -49,7 +49,7 @@ def main():
 
     #  Clone repos
     print("\n# Clone repos")
-    clone_repos(repos)
+    repos = clone_repos(repos)
 
     # Audits
     print("\n# Launching checks")
