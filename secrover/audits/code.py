@@ -79,7 +79,7 @@ def check_code(repos, output_path: Path):
 
         try:
             result = subprocess.run(
-                ["semgrep", "scan", "--sarif"],
+                ["opengrep", "scan", "--sarif"],
                 cwd=repo_path,
                 capture_output=True,
                 text=True,
