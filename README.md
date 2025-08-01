@@ -62,15 +62,15 @@ Secrover supports cloning **private repositories via HTTPS** using a **GitHub Pe
 
 > We currently support **HTTPS only** (SSH is not yet supported).
 
-###### 1. 🧾 Create a GitHub Personal Access Token
+##### 1. 🧾 Create a GitHub Personal Access Token
 
 * Go to your GitHub account:
   👉 [https://github.com/settings/tokens](https://github.com/settings/tokens)
 * Click **"Generate new token"** (fine-grained)
 * Give it a name like `Secrover`
 * Choose "Only select repositories" and select the private repos Secrover needs to clone
-   * Under **Repository permissions**, grant:
-     * **Contents: Read-only**
+  * Under **Repository permissions**, grant:
+    * **Contents: Read-only**
 * Generate and **copy** the token
 
 ##### 2. 📄 Create a `.env` file
