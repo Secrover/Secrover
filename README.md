@@ -84,7 +84,7 @@ GITHUB_TOKEN=yourgeneratedtokenhere
 > **⚠️ Do not share this file or commit it to version control.**
 > Add `.env` to your `.gitignore` file to prevent accidental leaks.
 
-## 🐳 Install with Docker
+## 🐳 Install & run with Docker
 
 You can run Secrover easily using Docker without installing any local dependencies.
 
