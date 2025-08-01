@@ -37,7 +37,7 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 ## 📁 Configuration
 
-Create a new repo with a `config.yaml` file inside where you will list the repositories to scan.
+Create a new folder/repo with a `config.yaml` file inside where you will list your repositories and domains to scan.
 
 ### Example:
 
@@ -69,8 +69,8 @@ docker run --rm \
 
 This will:
 
-* Read the list of repositories from your `config.yaml`
-* Clone and analyze them
+* Read the list of repositories and domains from your `config.yaml`
+* Clone repositories, scan them, as well as your domains
 * Generate a full **HTML security report** into the `output/` folder
 
 ## 🫶 Thanks and Acknowledgments
