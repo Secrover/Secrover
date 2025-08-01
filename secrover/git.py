@@ -35,7 +35,7 @@ def clone_repos(repos, token):
         original_url = repo["url"]
         normalized_url = normalize_repo_url(original_url)
         if token:
-            repo_url = inject_token_into_url(normalized_url, token)
+            normalized_url = inject_token_into_url(normalized_url, token)
         branch = repo.get("branch", "main")
         repo_name = repo.get("name") or get_repo_name_from_url(
             repo["url"])  # use original URL to name folder
