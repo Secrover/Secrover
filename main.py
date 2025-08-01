@@ -46,6 +46,7 @@ def main():
     print(f"- Using config: {config_path}")
     print(f"- Reports will be saved in: {output_path}")
 
+    project = config.get("project", [])
     repos = config.get("repos", [])
     domains = config.get("domains", [])
 
@@ -69,7 +70,7 @@ def main():
     if repos:
         print("\n1 / Dependencies check")
         dependencies_summary = check_dependencies(
-            repos, output_path, enabled_checks)
+            project, repos, output_path, enabled_checks)
     else:
         print("\n1 / Dependencies check skipped (no repositories).")
         dependencies_summary = None
@@ -77,7 +78,7 @@ def main():
     # 2 - Code
     if repos:
         print("\n2 / Code check")
-        code_summary = check_code(repos, output_path, enabled_checks)
+        code_summary = check_code(project, repos, output_path, enabled_checks)
     else:
         print("\n2 / Code check skipped (no repositories).")
         code_summary = None
@@ -85,7 +86,8 @@ def main():
     # 3 - Domains
     if domains:
         print("\n3 / Domains check")
-        domains_summary = check_domains(domains, output_path, enabled_checks)
+        domains_summary = check_domains(
+            project, domains, output_path, enabled_checks)
     else:
         print("\n3 / Domains check skipped (no domains).")
         domains_summary = None
@@ -93,6 +95,7 @@ def main():
     # Only generate the main report if any check was run
     if any(enabled_checks.values()):
         generate_html_report("index", {
+            "project": project,
             "dependencies_summary": dependencies_summary,
             "code_summary": code_summary,
             "domains_summary": domains_summary,

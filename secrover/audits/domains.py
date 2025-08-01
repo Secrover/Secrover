@@ -191,7 +191,7 @@ def get_ssl_info(domain, port=443, timeout=5):
         }
 
 
-def check_domains(domains, output_path: Path, enabled_checks):
+def check_domains(project, domains, output_path: Path, enabled_checks):
     output_path.mkdir(parents=True, exist_ok=True)
     data = []
 
@@ -267,6 +267,7 @@ def check_domains(domains, output_path: Path, enabled_checks):
     }
 
     generate_html_report("domains", {
+        "project": project,
         "data": data,
         "enabled_checks": enabled_checks
     }, output_path)

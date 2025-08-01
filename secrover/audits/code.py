@@ -67,7 +67,7 @@ def aggregate_global_summary(data):
     return summary
 
 
-def check_code(repos, output_path: Path, enabled_checks):
+def check_code(project, repos, output_path: Path, enabled_checks):
     data = {}
     total = len(repos)
     for i, repo in enumerate(repos, 1):
@@ -138,6 +138,7 @@ def check_code(repos, output_path: Path, enabled_checks):
     summary.update({"nbRepos": total})
 
     generate_html_report("code", {
+        "project": project,
         "data": data,
         "severity_order": severity_order,
         "severity_emojis": severity_emojis,

@@ -42,6 +42,8 @@ Create a new folder/repo with a `config.yaml` file inside where you will list yo
 ### Example:
 
 ```yaml
+project:
+  name: My project
 domains:
   - my-domain.com
   - subdomain.my-domain.com

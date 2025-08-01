@@ -326,8 +326,13 @@
                 <img id="logo" src="data:image/svg+xml;base64,{{ logo_b64 }}" alt="Secrover" />
             </a>
             <div id="audit-info">
-                <p class="mb-10"><strong>Security Audit Report</strong></p>
-                <p><em>Audit run on: {{ audit_datetime }} with <a href="https://github.com/Huluti/Secrover">Secrover</a> ({{ version }})</em></p>
+                <p class="mb-10">
+                    <strong>Security Audit Report</strong>
+                    {% if project and 'name' in project %}
+                        for <strong>{{ project.name }}</strong>
+                    {% endif %}
+                </p>
+                <p><em>Audit run on {{ audit_datetime }} with <a href="https://github.com/Huluti/Secrover">Secrover</a> ({{ version }})</em></p>
             </div>
         </div>
 
