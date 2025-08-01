@@ -5,35 +5,47 @@
 {% block content %}
     <section id="global-recap">
         <h1>📝 Code Report</h1>
-        <div class="vulnerability-badges">
-            {% for level in severity_order %}
-            <span class="badge badge-{{ level }}">
-                {{ severity_emojis[level] }} {{ level.capitalize() }}: {{ global_summary[level] }}
-            </span>
-            {% endfor %}
-            <span class="badge badge-total">📈 Total: {{ global_summary.total }}</span>
+         <div class="card severity-dots">
+            <div>
+                {% for level in severity_order %}
+                <span class="severity-dot">
+                    <span class="dot dot-{{ level }}"></span>
+                    <span>
+                        <strong>{{ global_summary[level] }}</strong>
+                        {{ level.capitalize() }}
+                    </span>
+                </span>
+                {% endfor %}
+            </div>
+            <span><strong>{{ global_summary.total }}</strong> vulnerabilities</span>
         </div>
     </section>
 
     <div id="repos">
         {% for repo_name, repo_data in data.items() %}
-            <div class="project-card">
+            <div class="card project-card">
                <div class="project-header">
                     <h3>{{ repo_name }}</h3>
-                    <span class="badge-small badge-basic">{{ repo_data.language }}</span>
+                    <span class="badge badge-small">{{ repo_data.language }}</span>
                 </div>
                 <p class="project-description">{{ repo_data.description }}</p>
 
                 {% if repo_data.error %}
                     <p class="error">❌ Scan failed: {{ repo_data.error }}</p>
                 {% else %}
-                    <div class="vulnerability-badges mb-20">
-                        {% for level in severity_order %}
-                        <span class="badge badge-{{ level }}">
-                            {{ severity_emojis[level] }} {{ level.capitalize() }}: {{ repo_data.findings_by_severity.get(level, 0) }}
-                        </span>
-                        {% endfor %}
-                        <span class="badge badge-total">📈 Total: {{ repo_data.findings_count }}</span>
+                    <div class="severity-dots mb-20">
+                        <div>
+                            {% for level in severity_order %}
+                            <span class="severity-dot">
+                                <span class="dot dot-{{ level }}"></span>
+                                <span>
+                                    <strong>{{ repo_data.findings_by_severity.get(level, 0) }}</strong>
+                                    {{ level.capitalize() }}
+                                </span>
+                            </span>
+                            {% endfor %}
+                        </div>
+                        <span><strong>{{ repo_data.findings_count }}</strong> vulnerabilities</span>
                     </div>
 
                     <p><strong>🕵️ Findings Details:</strong></p>

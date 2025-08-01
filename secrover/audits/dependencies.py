@@ -9,13 +9,6 @@ from secrover.constants import REPOS_FOLDER
 from collections import defaultdict
 
 severity_order = ["critical", "high", "moderate", "low", "info"]
-severity_emojis = {
-    "critical": "🚨",
-    "high": "⚠️",
-    "moderate": "▶️",
-    "low": "↘️",
-    "info": "ℹ️",
-}
 
 
 def init_severity_counts():
@@ -79,7 +72,6 @@ def check_dependencies(project, repos, output_path: Path, enabled_checks):
         "project": project,
         "data": data,
         "severity_order": severity_order,
-        "severity_emojis": severity_emojis,
         "global_summary": summary,
         "enabled_checks": enabled_checks
     }, output_path)

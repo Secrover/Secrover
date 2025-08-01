@@ -14,12 +14,6 @@ sarif_to_severity = {
     "note": "low",
 }
 severity_order = ["high", "moderate", "low"]
-severity_emojis = {
-    "high": "🔥",
-    "moderate": "⚠️",
-    "low": "↘️",
-}
-
 
 def parse_sarif_findings(sarif_data):
     findings = []
@@ -141,7 +135,6 @@ def check_code(project, repos, output_path: Path, enabled_checks):
         "project": project,
         "data": data,
         "severity_order": severity_order,
-        "severity_emojis": severity_emojis,
         "global_summary": summary,
         "enabled_checks": enabled_checks
     }, output_path)

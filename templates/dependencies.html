@@ -5,13 +5,19 @@
 {% block content %}
     <section id="global-recap">
         <h1>📦 Dependencies Report</h1>
-        <div class="vulnerability-badges">
-            {% for level in severity_order %}
-            <span class="badge badge-{{ level }}">
-                {{ severity_emojis[level] }} {{ level.capitalize() }}: {{ global_summary[level] }}
-            </span>
-            {% endfor %}
-            <span class="badge badge-total">📈 Total: {{ global_summary.total }}</span>
+        <div class="card severity-dots">
+            <div>
+                {% for level in severity_order %}
+                <span class="severity-dot">
+                    <span class="dot dot-{{ level }}"></span>
+                    <span>
+                        <strong>{{ global_summary[level] }}</strong> 
+                        {{ level.capitalize() }}
+                    </span>
+                </span>
+                {% endfor %}
+            </div>
+            <span><strong>{{ global_summary.total }}</strong> vulnerabilities</span>
         </div>
     </section>
 
@@ -19,7 +25,7 @@
         {% for repo_name, repo_data in data.items() %}
             {% set audit = repo_data.audit %}
             {% if not audit %}
-                <div class="project-card">
+                <div class="card project-card">
                     <div class="project-header">
                         <h3>{{ repo_name }}</h3>
                     </div>
@@ -27,24 +33,30 @@
                     <p class="mb-0">No audit data available.</p>
                 </div>
             {% else %}
-                <div class="project-card">
+                <div class="card project-card">
                     <div class="project-header">
                         <h3>{{ repo_name }}</h3>
-                        <span class="badge-small badge-basic">{{ repo_data.language }}</span>
+                        <span class="badge badge-small">{{ repo_data.language }}</span>
                     </div>
                     <p class="project-description">{{ repo_data.description }}</p>
 
-                    <div class="vulnerability-badges mb-20">
-                        {% for level in severity_order %}
-                        <span class="badge badge-{{ level }}">
-                            {{ severity_emojis[level] }} {{ level.capitalize() }}: {{ audit.vulnerabilities_by_severity.get(level, 0) }}
-                        </span>
-                        {% endfor %}
-                        <span class="badge badge-total">📈 Total: {{ audit.total_vulnerabilities }}</span>
+                    <div class="severity-dots mb-20">
+                        <div>
+                            {% for level in severity_order %}
+                            <span class="severity-dot">
+                                <span class="dot dot-{{ level }}"></span>
+                                <span>
+                                    <strong>{{ audit.vulnerabilities_by_severity.get(level, 0) }}</strong> 
+                                    {{ level.capitalize() }}
+                                </span>
+                            </span>
+                            {% endfor %}
+                        </div>
+                        <span><strong>{{ audit.total_vulnerabilities }}</strong> vulnerabilities</span> 
                     </div>
 
                     <p><strong>📦 Impacted Packages:</strong></p>
-                    <div class="packages-list mb-20">
+                    <div class="packages-list">
                         {% if audit.packages_impacted %}
                             {% for pkg in audit.packages_impacted %}
                             <div class="{{ pkg.severity }}">{{ pkg.name }}</div>
@@ -55,7 +67,7 @@
                     </div>
 
                     {% if 'abandoned_packages' in audit %}
-                    <p><strong>📦 Abandoned Packages:</strong></p>
+                    <p class="mt-20"><strong>📦 Abandoned Packages:</strong></p>
                     <div class="packages-list">
                         {% if audit.abandoned_packages %}
                             {% for pkg in audit.abandoned_packages | sort %}
