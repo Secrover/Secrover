@@ -48,7 +48,7 @@ domains:
   - my-domain.com
   - subdomain.my-domain.com
 repos:
-  - url: git@github.com:your-org/your-repo
+  - url: https://github.com/your-org/your-repo
     description: "Short description of the project"
     branch: "main"
 
@@ -56,13 +56,61 @@ repos:
     description: "Another awesome project"
 ```
 
+#### 🔐 Accessing Private Repositories
+
+Secrover supports cloning **private repositories via HTTPS** using a **GitHub Personal Access Token (PAT)**.
+
+> We currently support **HTTPS only** (SSH is not yet supported).
+
+###### 1. 🧾 Create a GitHub Personal Access Token
+
+* Go to your GitHub account:
+  👉 [https://github.com/settings/tokens](https://github.com/settings/tokens)
+* Click **"Generate new token"** (fine-grained)
+* Give it a name like `Secrover`
+* Choose "Only select repositories" and select the private repos Secrover needs to clone
+   * Under **Repository permissions**, grant:
+     * **Contents: Read-only**
+* Generate and **copy** the token
+
+##### 2. 📄 Create a `.env` file
+
+In the same directory as your `config.yaml`, create a `.env` file:
+
+```env
+GITHUB_TOKEN=yourgeneratedtokenhere
+```
+
+> **⚠️ Do not share this file or commit it to version control.**
+> Add `.env` to your `.gitignore` file to prevent accidental leaks.
+
 ## 🐳 Install with Docker
 
 You can run Secrover easily using Docker without installing any local dependencies.
+
 From your external project directory (the one containing `config.yaml`), run:
 
+### ▶️ With private repositories (.env required)
+
+If you're scanning private GitHub repositories, create a `.env` file containing your GitHub token (see [🔐 Accessing Private Repositories](#-accessing-private-repositories)).
+
+Then run:
+
 ```bash
-docker run --rm \
+docker pull huluti/secrover && docker run --rm \
+  --env-file .env \
+  -v "$(pwd)/config.yaml:/app/config.yaml" \
+  -v "$(pwd)/output:/output" \
+  -e CONFIG_FILE=config.yaml \
+  huluti/secrover
+```
+
+### ▶️ Without private repositories (.env not needed)
+
+If you're only scanning public repos, you can skip the `.env` file:
+
+```bash
+docker pull huluti/secrover && docker run --rm \
   -v "$(pwd)/config.yaml:/app/config.yaml" \
   -v "$(pwd)/output:/output" \
   -e CONFIG_FILE=config.yaml \

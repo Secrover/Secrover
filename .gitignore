@@ -9,6 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
+# Custom
 config.yaml
 repos/
 output/
+.env

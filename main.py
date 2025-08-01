@@ -1,6 +1,8 @@
 import argparse
 import time
 from pathlib import Path
+from dotenv import load_dotenv
+from os import getenv
 
 from secrover.config import load_config
 from secrover.audits.dependencies import check_dependencies
@@ -13,6 +15,10 @@ from secrover.constants import VERSION
 
 def main():
     start_time = time.perf_counter()  # Start timer
+
+    # Env vars
+    load_dotenv()
+    token = getenv("GITHUB_TOKEN")
 
     # Program options
     parser = argparse.ArgumentParser(description="Secrover Security Scanner")
@@ -53,7 +59,7 @@ def main():
     # Clone repos
     print("\n# Clone repos")
     if repos:
-        repos = clone_repos(repos)
+        repos = clone_repos(repos, token)
     else:
         print("No repositories to clone.")
 
