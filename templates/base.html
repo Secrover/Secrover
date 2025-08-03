@@ -62,7 +62,9 @@
         }
         /* End of css reset */
         :root {
-            --main-color: #638eed;;
+            --main-color: #638eed;
+            --success-color: #059669;
+            --error-color: #ef4444;
         }
         body { 
             font-family: 'Noto Sans', Arial, sans-serif; 
@@ -117,6 +119,7 @@
             }
         }
         table {
+            text-align: left;
             width: 100%;
             border-collapse: separate;
             table-layout: fixed;
@@ -129,8 +132,7 @@
         }
         thead {
             th {
-                text-align: center;
-                padding: 15px 5px;
+                padding: 15px 10px;
                 font-weight: bold;
                 color: #495057;
                 vertical-align: middle;
@@ -147,9 +149,9 @@
             }
         }
         tbody td {
-            text-align: center;
-            padding: 15px 5px;
+            padding: 15px 10px;
             border-bottom: 1px solid #f1f3f5;
+            border-right: 1px solid #f1f3f5;
             color: #333;
             vertical-align: middle;
             line-height: 1.4em;
@@ -162,20 +164,36 @@
         }
         .badge {
             padding: 8px 16px;
-            border-radius: 20px;
+            border-radius: 4px;
             font-weight: 600;
             font-size: 14px;
             display: flex;
             align-items: center;
             gap: 6px;
-            background: #f8f9fa;
+            background-color: #f8f9fa;
             color: #6c757d;
-        }
-        .badge-small {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
+
+            &.badge-small {
+                padding: 4px 12px;
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            &.badge-small {
+                padding: 2px 4px;
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            &.badge-success {
+                background: #dcfce7;
+                color: #166534;
+            }
+
+            &.badge-error {
+                background: #fee2e2;
+                color: #991b1b;
+            }
         }
         .severity-dots {
             display: flex;
@@ -201,14 +219,18 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
+
+            &.dot-critical { background: #ef4444; }
+            &.dot-high { background: #f97316; }
+            &.dot-moderate { background: #eab308; }
+            &.dot-low { background: #22c55e; }
+            &.dot-info { background: #3b82f6; }
+            &.dot-total { background: var(--main-color); }
+            &.dot-basic { background: #f8f9fa; color: #6c757d;}
+            &.dot-success { background: var(--success-color); }
+            &.dot-error { background: var(--success-error); }
         }
-        .dot-critical { background: #ef4444; }
-        .dot-high { background: #f97316; }
-        .dot-moderate { background: #eab308; }
-        .dot-low { background: #22c55e; }
-        .dot-info { background: #3b82f6; }
-        .dot-total { background: var(--main-color); }
-        .dot-basic { background: #f8f9fa; color: #6c757d;}
+        
         #menu {
             display: flex;
             flex-wrap: wrap;
@@ -311,17 +333,35 @@
             &.info { border-color: #17a2b8; }
         }
         .no-issues {
-            color: #28a745;
             font-weight: 500;
             font-style: italic;
         }
+
+        /* Helpers */
+        .d-flex {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .d-wrap {
+            flex-wrap: wrap;
+        }
+
         strong {
             font-weight: bold;
         }
+
         .mt-20 { margin-top: 20px; }
         .mb-20 { margin-bottom: 20px; }
         .mb-10 { margin-bottom: 10px; }
         .mb-0 { margin-bottom: 0 !important; }
+
+        .success {
+            color: var(--success-color);
+        }
+        .error {
+            color: var(--error-color);
+        }
 
         @media screen and (max-width: 1024px) {
             #repos {

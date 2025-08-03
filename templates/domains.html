@@ -11,12 +11,11 @@
         <thead>
             <tr>
                 <th>Domain</th>
-                <th>Active</th>
-                <th>HTTPS Available</th>
-                <th>Cert Valid</th>
+                <th>Status</th>
+                <th>HTTPS</th>
+                <th>Certificate</th>
                 <th>HTTP→HTTPS Redirect</th>
-                <th>Expires</th>
-                <th>Days Left</th>
+                <th>Expiry</th>
                 <th>Issuer</th>
                 <th>HSTS</th>
                 <th>TLS Versions</th>
@@ -27,51 +26,93 @@
         <tbody>
             {% for row in data %}
                 <tr>
-                    <td>{{ row.domain }}</td>
-                    <td>{{ "✅ Yes" if row.active else "❌ No" }}</td>
+                    <td><strong>{{ row.domain }}</strong></td>
                     <td>
-                        {% if not row.active %}
-                            -
+                        {% if row.active %}
+                            <div class="d-flex success">
+                                <span class="dot dot-success"></span>
+                                Active
+                            </div>
                         {% else %}
-                            {{ "✅ Yes" if row.https_available else "❌ No" }}
+                            <div class="d-flex error">
+                                <span class="dot dot-error"></span>
+                                Inactive
+                            </div>
                         {% endif %}
                     </td>
                     <td>
                         {% if row.https_available %}
-                            {% if row.valid %}
-                                ✅ Yes
-                            {% else %}
-                                ❌ No
-                            {% endif %}
+                            <div class="d-flex success">
+                                <span class="dot dot-success"></span>
+                                Yes
+                            </div>
                         {% else %}
-                            -
+                            <div class="d-flex error">
+                                <span class="dot dot-error"></span>
+                                No
+                            </div>
                         {% endif %}
                     </td>
                     <td>
-                        {% if not row.active %}
+                        {% if not row.active or not row.https_available %}
                             -
                         {% else %}
-                            {{ "✅ Yes" if row.http_to_https_redirect else "❌ No" }}
+                            {% if row.valid %}
+                                <div class="d-flex success">
+                                    <span class="dot dot-success"></span>
+                                    Valid
+                                </div>
+                            {% else %}
+                                <div class="d-flex error">
+                                    <span class="dot dot-error"></span>
+                                    Invalid
+                                </div>
+                            {% endif %}
                         {% endif %}
                     </td>
-                    <td>{{ row.not_after if row.valid else "-" }}</td>
-                    <td>{{ row.days_remaining if row.valid else "-" }}</td>
+                    <td>
+                        {% if not row.active or not row.https_available %}
+                            -
+                        {% else %}
+                            {% if row.http_to_https_redirect %}
+                                <div class="d-flex success">
+                                    <span class="dot dot-success"></span>
+                                    Yes
+                                </div>
+                            {% else %}
+                                <div class="d-flex error">
+                                    <span class="dot dot-error"></span>
+                                    No
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ row.not_after if row.valid else "-" }}<br>
+                        ({{ row.days_remaining if row.valid else "-" }} days)</td>
+                    </td>
                     <td>
                         {% if row.valid %}
                             {{ row.issuer.values() | join(', ') }}
                         {% else %}
-                            {% if row.error %}
-                                <span style="color: red;">{{ row.error }}</span>
-                            {% else %}
-                                -
-                            {% endif %}
+                            -
                         {% endif %}
                     </td>
                     <td>
-                        {% if row.https_available %}
-                            {{ "✅ Yes" if row.hsts_present else "❌ No" }}
-                        {% else %}
+                        {% if not row.active or not row.https_available %}
                             -
+                        {% else %}
+                            {% if row.hsts_present %}
+                                <div class="d-flex success">
+                                    <span class="dot dot-success"></span>
+                                    Yes
+                                </div>
+                            {% else %}
+                                <div class="d-flex error">
+                                    <span class="dot dot-error"></span>
+                                    No
+                                </div>
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td>
@@ -79,7 +120,7 @@
                             {% if row.supported_tls_versions %}
                                 {{ row.supported_tls_versions | join(', ') }}
                             {% else %}
-                                <span style="color: orange;">None</span>
+                                -
                             {% endif %}
                         {% else %}
                             -
@@ -92,23 +133,33 @@
                             {% if row.open_ports %}
                                 {{ row.open_ports | join(', ') }}
                             {% else %}
-                                <span style="color: gray;">None</span>
+                                -
                             {% endif %}
                         {% endif %}
                     </td>
                     <td>
-                       <span title="Content Security Policy: helps prevent cross-site scripting and other code injection attacks">
-                        {{ row.csp and 'CSP ✅' or 'CSP ❌' }}
-                        </span>
-                        <span title="X-Content-Type-Options: prevents browsers from MIME-sniffing a response away from the declared content-type">
-                        {{ row.x_content_type_options and 'XCTO ✅' or 'XCTO ❌' }}
-                        </span><br>
-                        <span title="X-Frame-Options: protects against clickjacking by controlling whether the site can be framed">
-                        {{ row.x_frame_options and 'XFO ✅' or 'XFO ❌' }}
-                        </span>
-                        <span title="Referrer-Policy: controls how much referrer information is sent with requests">
-                        {{ row.referrer_policy and 'Referrer ✅' or 'Referrer ❌' }}
-                        </span>
+                        <div class="d-flex d-wrap">
+                            <span title="Content Security Policy: helps prevent cross-site scripting and other code injection attacks">
+                                <span class="badge badge-small {{ 'badge-success' if row.csp else 'badge-error' }}">
+                                    CSP
+                                </span>
+                            </span>
+                            <span title="X-Content-Type-Options: prevents browsers from MIME-sniffing a response away from the declared content-type">
+                                <span class="badge badge-small {{ 'badge-success' if row.x_content_type_options else 'badge-error' }}">
+                                    XCTO
+                                </span>
+                            </span>
+                            <span title="X-Frame-Options: protects against clickjacking by controlling whether the site can be framed">
+                                <span class="badge badge-small {{ 'badge-success' if row.x_frame_options else 'badge-error' }}">
+                                    XFO
+                                </span>
+                            </span>
+                            <span title="Referrer-Policy: controls how much referrer information is sent with requests">
+                                <span class="badge badge-small {{ 'badge-success' if row.referrer_policy else 'badge-error' }}">
+                                    Referrer
+                                </span>
+                            </span>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}

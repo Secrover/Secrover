@@ -181,7 +181,7 @@ def get_ssl_info(domain, port=443, timeout=5):
                 return {
                     "valid": True,
                     "issuer": issuer,
-                    "not_after": not_after.isoformat(),
+                    "not_after": not_after.date().isoformat(),
                     "days_remaining": days_remaining
                 }
     except Exception as e:
