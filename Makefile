@@ -1,3 +1,3 @@
 publish:
-	docker build -t huluti/secrover .
-	docker push huluti/secrover
+	docker build -t secrover/secrover .
+	docker push secrover/secrover
