@@ -5,7 +5,7 @@ def detect_language_by_files(repo_path: Path):
     try:
         files = set(p.name for p in repo_path.iterdir() if p.is_file())
     except FileNotFoundError:
-        return "Unknown (repo path not found)"
+        return None
 
     lang_files = {
         "JavaScript": {"package.json"},
@@ -15,4 +15,4 @@ def detect_language_by_files(repo_path: Path):
 
     detected = [lang for lang, markers in lang_files.items()
                 if markers & files]
-    return ", ".join(detected) if detected else "Unknown"
+    return ", ".join(detected) if detected else None

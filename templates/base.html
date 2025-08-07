@@ -6,13 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="data:image/svg+xml;base64,{{ favicon_b64 }}" type="image/svg+xml">
     <style>
-        html {
-            box-sizing: border-box;
-        }
-        *, *:before, *:after {
-            box-sizing: inherit;
-        }
-
         /* http://meyerweb.com/eric/tools/css/reset/ 
         v2.0 | 20110126
         License: none (public domain)
@@ -61,6 +54,12 @@
             border-spacing: 0;
         }
         /* End of css reset */
+        html {
+            box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
         :root {
             --main-color: #638eed;
             --success-color: #059669;
@@ -89,6 +88,9 @@
             border-bottom: 2px solid #e9ecef;
             margin-bottom: 30px;
             padding: 0 0 40px 0;
+
+
+            #logo { height: 40px; }
         }
         #footer {
             display: flex;
@@ -157,7 +159,6 @@
             vertical-align: middle;
             line-height: 1.4em;
         }
-        #logo { height: 40px; }
         #audit-info { 
             text-align: right;
             color: #666;
@@ -384,7 +385,7 @@
                         for <strong>{{ project.name }}</strong>
                     {% endif %}
                 </p>
-                <p><em>Audit run on {{ audit_datetime }} with <a href="https://github.com/Huluti/Secrover" target="_blank">Secrover</a> ({{ version }})</em></p>
+                <p><em>Audit run on {{ audit_datetime }} with <a href="https://secrover.org" target="_blank">Secrover</a> ({{ version }})</em></p>
             </div>
         </div>
 
@@ -398,8 +399,9 @@
         {% block content %}{% endblock %}
     </div>
     <footer id="footer">
-        <a href="https://github.com/Huluti/Secrover" target="_blank">GitHub project</a>
-        <a href="https://github.com/Huluti/Secrover/issues" target="_blank">Report an issue</a>
+        <a href="https://secrover.org" target="_blank">Website</a>
+        <a href="https://github.com/Secrover/Secrover" target="_blank">GitHub project</a>
+        <a href="https://github.com/Secrover/Secrover/issues" target="_blank">Report an issue</a>
     </footer>
 </body>
 </html>
