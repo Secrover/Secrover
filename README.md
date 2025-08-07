@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/Huluti/Secrover/blob/main/assets/secrover.png" height="40" alt="Secrover" />
+    <img src="https://github.com/Secrover/Secrover/blob/main/assets/secrover.png" height="40" alt="Secrover" />
 </p>
 
 Secrover is a free and open-source tool that generates security audit reports for your projects.
@@ -7,9 +7,9 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 # Secrover
 
-![GitHub last commit](https://img.shields.io/github/last-commit/huluti/secrover)
-![Docker Pulls](https://img.shields.io/docker/pulls/huluti/secrover)
-![Docker Stars](https://img.shields.io/docker/stars/huluti/secrover)
+![GitHub last commit](https://img.shields.io/github/last-commit/secrover/secrover)
+![Docker Pulls](https://img.shields.io/docker/pulls/secrover/secrover)
+![Docker Stars](https://img.shields.io/docker/stars/secrover/secrover)
 
 
 ## 🔍 Features
@@ -33,7 +33,7 @@ We believe that security should not be locked behind paywalls or costly SaaS sol
 
 | Dependencies Audit | Code Audit | Domains Audit |
 | --- | --- | --- |
-| <a href="https://github.com/Huluti/Secrover/blob/main/assets/dependencies.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/dependencies.png" height="200" alt="Dependencies Audit" /> </a> | <a href="https://github.com/Huluti/Secrover/blob/main/assets/code.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/code.png" height="200" alt="Code Audit" /> </a> | <a href="https://github.com/Huluti/Secrover/blob/main/assets/domains.png"> <img src="https://github.com/Huluti/Secrover/blob/main/assets/domains.png" height="200" alt="Domains Audit" /> </a> |
+| <a href="https://github.com/Secrover/Secrover/blob/main/assets/dependencies.png"> <img src="https://github.com/Secrover/Secrover/blob/main/assets/dependencies.png" height="200" alt="Dependencies Audit" /> </a> | <a href="https://github.com/Secrover/Secrover/blob/main/assets/code.png"> <img src="https://github.com/Secrover/Secrover/blob/main/assets/code.png" height="200" alt="Code Audit" /> </a> | <a href="https://github.com/Secrover/Secrover/blob/main/assets/domains.png"> <img src="https://github.com/Secrover/Secrover/blob/main/assets/domains.png" height="200" alt="Domains Audit" /> </a> |
 
 ## 📁 Configuration
 
@@ -64,8 +64,7 @@ Secrover supports cloning **private repositories via HTTPS** using a **GitHub Pe
 
 ##### 1. 🧾 Create a GitHub Personal Access Token
 
-* Go to your GitHub account:
-  👉 [https://github.com/settings/tokens](https://github.com/settings/tokens)
+* Go to [your GitHub account](https://github.com/settings/tokens)
 * Click **"Generate new token"** (fine-grained)
 * Give it a name like `Secrover`
 * Choose "Only select repositories" and select the private repos Secrover needs to clone
@@ -97,12 +96,12 @@ If you're scanning private GitHub repositories, create a `.env` file containing 
 Then run:
 
 ```bash
-docker pull huluti/secrover && docker run --rm \
+docker pull secrover/secrover && docker run --rm \
   --env-file .env \
   -v "$(pwd)/config.yaml:/app/config.yaml" \
   -v "$(pwd)/output:/output" \
   -e CONFIG_FILE=config.yaml \
-  huluti/secrover
+  secrover/secrover
 ```
 
 ### ▶️ Without private repositories (.env not needed)
@@ -110,11 +109,11 @@ docker pull huluti/secrover && docker run --rm \
 If you're only scanning public repos, you can skip the `.env` file:
 
 ```bash
-docker pull huluti/secrover && docker run --rm \
+docker pull secrover/secrover && docker run --rm \
   -v "$(pwd)/config.yaml:/app/config.yaml" \
   -v "$(pwd)/output:/output" \
   -e CONFIG_FILE=config.yaml \
-  huluti/secrover
+  secrover/secrover
 ```
 
 This will:
