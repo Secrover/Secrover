@@ -2,15 +2,13 @@
     <img src="https://github.com/Secrover/Secrover/blob/main/assets/secrover.png" height="40" alt="Secrover" />
 </p>
 
-Secrover is a free and open-source tool that generates security audit reports for your projects.
-We believe that security should not be locked behind paywalls or costly SaaS solutions — everyone deserves access to quality security insights and actionable, good reporting.
+Secrover is a free and open-source tool that generates clear, professional security audit reports — without paywalls or proprietary SaaS. Just useful insights you can trust and share.
 
 # Secrover
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/secrover/secrover)
 ![Docker Pulls](https://img.shields.io/docker/pulls/secrover/secrover)
 ![Docker Stars](https://img.shields.io/docker/stars/secrover/secrover)
-
 
 ## 🔍 Features
 
