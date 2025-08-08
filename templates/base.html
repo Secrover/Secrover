@@ -67,7 +67,7 @@
         }
         body { 
             font-family: 'Noto Sans', Arial, sans-serif; 
-            margin: 20px; 
+            margin-bottom: 20px; 
             background: #fff;
             color: #222;
         }
@@ -366,8 +366,18 @@
         }
 
         @media screen and (max-width: 1024px) {
+            #main {
+                padding: 20px;
+            }
+
             #repos {
                 grid-template-columns: repeat(1,1fr);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            #main {
+                margin: 20px;
             }
         }
     </style>
