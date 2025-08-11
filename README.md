@@ -137,3 +137,6 @@ A big thanks to all the maintainers and contributors behind these amazing projec
 Secrover is released under the **GNU General Public License v3.0 (GPL-3.0)**.
 
 👉 [Read the full license here](https://www.gnu.org/licenses/gpl-3.0.en.html)
+
+## ⭐ Stargazers over time
+[![Stargazers over time](https://starchart.cc/Secrover/Secrover.svg?variant=adaptive)](https://starchart.cc/Secrover/Secrover)
