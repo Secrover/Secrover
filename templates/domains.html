@@ -90,7 +90,9 @@
                         </td>
                         <td>
                             {{ row.not_after if row.valid else "-" }}<br>
-                            ({{ row.days_remaining if row.valid else "-" }} days)</td>
+                            {% if row.valid %}
+                                ({{ row.days_remaining }} days)
+                            {% endif %}
                         </td>
                         <td>
                             {% if row.valid %}
