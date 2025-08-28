@@ -103,7 +103,6 @@ def check_code(project, repos, output_path: Path, enabled_checks):
             data[repo_name] = {
                 "language": language,
                 "description": repo_description,
-                "sarif": sarif_data,
                 "findings_count": total_findings,
                 "findings_by_severity": findings_by_severity,
                 "findings": detailed_findings,
