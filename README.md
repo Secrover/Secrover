@@ -53,7 +53,10 @@ This setup makes it easy to run Secrover on a schedule (e.g. daily or weekly), s
 
 ➡️ You can copy the workflow from the [demo repository’s `.github/workflows/secrover.yml`](https://github.com/secrover/secrover-demo/blob/main/.github/workflows/secrover.yml) to get started quickly.
 
-## 📁 Configuration
+## 🔰 Getting Started
+
+Secrover is designed to be simple: configure what you want to scan, then run it with Docker.  
+Within minutes, you’ll have a professional **HTML security report** you can share.
 
 Create a new folder/repo with a `config.yaml` file inside where you will list your repositories and domains to scan.
 
