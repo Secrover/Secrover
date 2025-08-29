@@ -108,7 +108,7 @@ GITHUB_TOKEN=yourgeneratedtokenhere
 
 You can run Secrover easily using Docker without installing any local dependencies.
 
-From your external project directory (the one containing `config.yaml`), run:
+From the folder where you created your `config.yaml`, run:
 
 ### ▶️ With private repositories (.env required)
 
