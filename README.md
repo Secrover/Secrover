@@ -33,6 +33,26 @@ Secrover is a free and open-source tool that generates clear, professional secur
 | --- | --- | --- |
 | <a href="https://github.com/Secrover/Secrover/blob/main/assets/dependencies.png"> <img src="https://github.com/Secrover/Secrover/blob/main/assets/dependencies.png" height="200" alt="Dependencies Audit" /> </a> | <a href="https://github.com/Secrover/Secrover/blob/main/assets/code.png"> <img src="https://github.com/Secrover/Secrover/blob/main/assets/code.png" height="200" alt="Code Audit" /> </a> | <a href="https://github.com/Secrover/Secrover/blob/main/assets/domains.png"> <img src="https://github.com/Secrover/Secrover/blob/main/assets/domains.png" height="200" alt="Domains Audit" /> </a> |
 
+## 🚀 Demo
+
+You can see Secrover in action right now:
+
+- 📂 Example GitHub repository: [secrover-demo](https://github.com/secrover/secrover-demo)  
+- 📊 Live generated report: [demo.secrover.org](https://demo.secrover.org)
+
+### How the demo works
+
+The demo repository uses **GitHub Actions** to automatically:
+
+1. Pull the latest version of Secrover (via Docker).
+2. Run security scans on Secrover repositories and domains.
+3. Generate an **HTML security report**.
+4. Deploy the report to **GitHub Pages**, making it publicly accessible.
+
+This setup makes it easy to run Secrover on a schedule (e.g. daily or weekly), so your reports are always up-to-date and shareable with your team or community.
+
+➡️ You can copy the workflow from the [demo repository’s `.github/workflows/secrover.yml`](https://github.com/secrover/secrover-demo/blob/main/.github/workflows/secrover.yml) to get started quickly.
+
 ## 📁 Configuration
 
 Create a new folder/repo with a `config.yaml` file inside where you will list your repositories and domains to scan.
