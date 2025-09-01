@@ -23,17 +23,17 @@ Secrover is a free and open-source tool that generates clear, professional secur
 
 | Category        | Checks                                                 | Supported languages        |
 | --------------- | ------------------------------------------------------ | -------------------------- |
-| 📦 Dependencies | Vulnerability check                                    | PHP, JavaScript and Python |
-| 📝 Code         | Static check                                           | All languages supported by opengrep |
-| 🌐 Domains      | SSL certificate, HTTP→HTTPS Redirect, HSTS header, TLS versions, Open Ports, Security Headers | -     |
+| Dependencies | Vulnerability check                                    | PHP, JavaScript and Python |
+| Code         | Static check                                           | All languages supported by opengrep |
+| Domains      | SSL certificate, HTTP→HTTPS Redirect, HSTS header, TLS versions, Open Ports, Security Headers | -     |
 
-## 🖼️ Screenshots
+## Screenshots
 
 | Dependencies Audit | Code Audit | Domains Audit |
 | --- | --- | --- |
 | <a href="https://github.com/Secrover/Secrover/blob/main/assets/dependencies.png"> <img src="https://github.com/Secrover/Secrover/blob/main/assets/dependencies.png" height="200" alt="Dependencies Audit" /> </a> | <a href="https://github.com/Secrover/Secrover/blob/main/assets/code.png"> <img src="https://github.com/Secrover/Secrover/blob/main/assets/code.png" height="200" alt="Code Audit" /> </a> | <a href="https://github.com/Secrover/Secrover/blob/main/assets/domains.png"> <img src="https://github.com/Secrover/Secrover/blob/main/assets/domains.png" height="200" alt="Domains Audit" /> </a> |
 
-## 🚀 Demo
+## Demo
 
 You can see Secrover in action right now:
 
@@ -53,7 +53,7 @@ This setup makes it easy to run Secrover on a schedule (e.g. daily or weekly), s
 
 ➡️ You can copy the workflow from the [demo repository’s `.github/workflows/secrover.yml`](https://github.com/secrover/secrover-demo/blob/main/.github/workflows/secrover.yml) to get started quickly.
 
-## 🔰 Getting Started
+## Getting Started
 
 Secrover is designed to be simple: configure what you want to scan, then run it with Docker.  
 Within minutes, you’ll have a professional **HTML security report** you can share.
@@ -77,13 +77,13 @@ repos:
     description: "Another awesome project"
 ```
 
-#### 🔐 Accessing Private Repositories
+#### Accessing Private Repositories
 
 Secrover supports cloning **private repositories via HTTPS** using a **GitHub Personal Access Token (PAT)**.
 
 > We currently support **HTTPS only** (SSH is not yet supported).
 
-##### 1. 🧾 Create a GitHub Personal Access Token
+##### 1. Create a GitHub Personal Access Token
 
 * Go to [your GitHub account](https://github.com/settings/tokens)
 * Click **"Generate new token"** (fine-grained)
@@ -93,7 +93,7 @@ Secrover supports cloning **private repositories via HTTPS** using a **GitHub Pe
     * **Contents: Read-only**
 * Generate and **copy** the token
 
-##### 2. 📄 Create a `.env` file
+##### 2. Create a `.env` file
 
 In the same directory as your `config.yaml`, create a `.env` file:
 
@@ -104,15 +104,15 @@ GITHUB_TOKEN=yourgeneratedtokenhere
 > **⚠️ Do not share this file or commit it to version control.**
 > Add `.env` to your `.gitignore` file to prevent accidental leaks.
 
-## 🐳 Install & run with Docker
+## Install & run with Docker
 
 You can run Secrover easily using Docker without installing any local dependencies.
 
 From the folder where you created your `config.yaml`, run:
 
-### ▶️ With private repositories (.env required)
+### With private repositories (.env required)
 
-If you're scanning private GitHub repositories, create a `.env` file containing your GitHub token (see [🔐 Accessing Private Repositories](#-accessing-private-repositories)).
+If you're scanning private GitHub repositories, create a `.env` file containing your GitHub token (see [Accessing Private Repositories](#-accessing-private-repositories)).
 
 Then run:
 
@@ -125,7 +125,7 @@ docker pull secrover/secrover && docker run --rm \
   secrover/secrover
 ```
 
-### ▶️ Without private repositories (.env not needed)
+### Without private repositories (.env not needed)
 
 If you're only scanning public repos, you can skip the `.env` file:
 
@@ -143,7 +143,7 @@ This will:
 * Clone repositories, scan them, as well as your domains
 * Generate a full **HTML security report** into the `output/` folder
 
-## 🫶 Thanks and Acknowledgments
+## Thanks and Acknowledgments
 
 This project benefits from the fantastic work of several open-source projects:
 
@@ -155,11 +155,11 @@ This project benefits from the fantastic work of several open-source projects:
 
 A big thanks to all the maintainers and contributors behind these amazing projects, without whom this project wouldn't be possible!
 
-## 📄 License
+## License
 
 Secrover is released under the **GNU General Public License v3.0 (GPL-3.0)**.
 
 👉 [Read the full license here](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-## ⭐ Stargazers over time
+## Stargazers over time
 [![Stargazers over time](https://starchart.cc/Secrover/Secrover.svg?variant=adaptive)](https://starchart.cc/Secrover/Secrover)
