@@ -125,7 +125,8 @@ def check_tls_versions(domain, port=443):
         "TLSv1.3": ssl.TLSVersion.TLSv1_3,
     }
 
-    supported = []
+    insecure_versions = {"TLSv1", "TLSv1.1"}
+    result = {}
 
     for label, version in versions.items():
         try:
@@ -137,11 +138,14 @@ def check_tls_versions(domain, port=443):
 
             with socket.create_connection((domain, port), timeout=5) as sock:
                 with ctx.wrap_socket(sock, server_hostname=domain):
-                    supported.append(label)
+                    # Include only supported versions
+                    result[label] = {
+                        "secure": label not in insecure_versions
+                    }
         except Exception:
-            pass  # Not supported
+            pass  # Skip unsupported versions
 
-    return supported
+    return result
 
 
 def get_ssl_info(domain, port=443, timeout=5):
@@ -180,7 +184,7 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
             "active": False,
             "https_available": False,
             "http_to_https_redirect": False,
-            "supported_tls_versions": [],
+            "tls_versions": [],
             "hsts_present": False,
             "hsts_value": "",
             "csp": None,
@@ -218,7 +222,7 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
                     info["issuer"] = ssl_info.get("issuer", {})
                     info["not_after"] = ssl_info.get("not_after")
                     info["days_remaining"] = ssl_info.get("days_remaining")
-                    info["supported_tls_versions"] = check_tls_versions(domain)
+                    info["tls_versions"] = check_tls_versions(domain)
                 else:
                     # SSL invalid but HTTPS port is open, fallback to HTTP
                     url = f"http://{domain}"

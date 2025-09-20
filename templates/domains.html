@@ -118,16 +118,14 @@
                                 {% endif %}
                             {% endif %}
                         </td>
-                        <td>
-                            {% if row.https_available %}
-                                {% if row.supported_tls_versions %}
-                                    {{ row.supported_tls_versions | join(', ') }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            {% else %}
-                                -
-                            {% endif %}
+                        <td class="limit-size">
+                            <div class="d-flex d-wrap">
+                                {% for version, info in row.tls_versions.items() %}
+                                    <span class="badge badge-small {{ 'badge-success' if info.secure else 'badge-error' }}">
+                                        {{ version }}
+                                    </span>
+                                {% endfor %}
+                            </div>
                         </td>
                         <td>
                             {% if not row.active %}
@@ -140,7 +138,7 @@
                                 {% endif %}
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="limit-size">
                             <div class="d-flex d-wrap">
                                 <span title="Helps prevent cross-site scripting and other code injection attacks">
                                     <span class="badge badge-small {{ 'badge-success' if row.csp else 'badge-error' }}">
