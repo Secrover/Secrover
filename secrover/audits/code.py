@@ -15,6 +15,7 @@ sarif_to_severity = {
 }
 severity_order = ["high", "moderate", "low"]
 
+
 def parse_sarif_findings(sarif_data):
     findings = []
     for run in sarif_data.get("runs", []):
@@ -25,23 +26,33 @@ def parse_sarif_findings(sarif_data):
             rule_id = result.get("ruleId", "Unknown Rule")
             locations = result.get("locations", [])
             if locations:
-                loc = locations[0].get("physicalLocation", {}).get(
-                    "artifactLocation", {}).get("uri", "Unknown file")
-                start_line = locations[0].get("physicalLocation", {}).get(
-                    "region", {}).get("startLine")
+                loc = (
+                    locations[0]
+                    .get("physicalLocation", {})
+                    .get("artifactLocation", {})
+                    .get("uri", "Unknown file")
+                )
+                start_line = (
+                    locations[0]
+                    .get("physicalLocation", {})
+                    .get("region", {})
+                    .get("startLine")
+                )
             else:
                 loc = "Unknown file"
                 start_line = None
 
-            findings.append({
-                "severity": severity,
-                "rule_id": rule_id,
-                "message": message,
-                "location": {
-                    "file": loc,
-                    "line": start_line,
+            findings.append(
+                {
+                    "severity": severity,
+                    "rule_id": rule_id,
+                    "message": message,
+                    "location": {
+                        "file": loc,
+                        "line": start_line,
+                    },
                 }
-            })
+            )
     return findings
 
 
@@ -77,7 +88,7 @@ def check_code(project, repos, output_path: Path, enabled_checks):
                 cwd=repo_path,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
             )
             sarif_data = json.loads(result.stdout)
             runs = sarif_data.get("runs", [])
@@ -130,12 +141,16 @@ def check_code(project, repos, output_path: Path, enabled_checks):
     summary = aggregate_global_summary(data)
     summary.update({"nbRepos": total})
 
-    generate_html_report("code", {
-        "project": project,
-        "data": data,
-        "severity_order": severity_order,
-        "global_summary": summary,
-        "enabled_checks": enabled_checks
-    }, output_path)
+    generate_html_report(
+        "code",
+        {
+            "project": project,
+            "data": data,
+            "severity_order": severity_order,
+            "global_summary": summary,
+            "enabled_checks": enabled_checks,
+        },
+        output_path,
+    )
 
     return summary

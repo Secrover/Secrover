@@ -1,0 +1,21 @@
+name: Linter
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run lint
+        run: make lint
+
+      - name: Check formatting
+        run: make format-check

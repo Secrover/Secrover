@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime
 from secrover.constants import VERSION
 
+
 def get_base64_image(path: Path) -> str:
     with path.open("rb") as img_file:
         return base64.b64encode(img_file.read()).decode("utf-8")
@@ -30,4 +31,6 @@ def generate_html_report(report_type: str, results, output_path: Path):
         report_file = output_path / f"{report_type}_report.html"
     report_file.write_text(output_html, encoding="utf-8")
 
-    print(f"\n{report_type.capitalize()} HTML report generated in \"{output_path}\" folder.")
+    print(
+        f'\n{report_type.capitalize()} HTML report generated in "{output_path}" folder.'
+    )

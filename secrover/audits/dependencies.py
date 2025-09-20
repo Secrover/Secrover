@@ -30,8 +30,7 @@ def merge_severity(existing, new):
 
 def build_audit_summary(severity_counts, package_map, extras=None):
     packages_impacted = [
-        {"name": name, "severity": sev}
-        for name, sev in sorted(package_map.items())
+        {"name": name, "severity": sev} for name, sev in sorted(package_map.items())
     ]
     result = {
         "total_vulnerabilities": sum(severity_counts.values()),
@@ -60,7 +59,7 @@ def check_dependencies(project, repos, output_path: Path, enabled_checks):
             data[repo_name] = {
                 "language": language,
                 "description": repo_description,
-                "audit": audit_results
+                "audit": audit_results,
             }
         else:
             print(f"No supported language found for {repo_name}, skipping.")
@@ -68,21 +67,26 @@ def check_dependencies(project, repos, output_path: Path, enabled_checks):
     summary = aggregate_global_summary(data)
     summary.update({"nbRepos": total})
 
-    generate_html_report("dependencies", {
-        "project": project,
-        "data": data,
-        "severity_order": severity_order,
-        "global_summary": summary,
-        "enabled_checks": enabled_checks
-    }, output_path)
+    generate_html_report(
+        "dependencies",
+        {
+            "project": project,
+            "data": data,
+            "severity_order": severity_order,
+            "global_summary": summary,
+            "enabled_checks": enabled_checks,
+        },
+        output_path,
+    )
 
     return summary
 
 
 def run_pip_audit(repo_path: Path):
-    if not any((repo_path / fname).exists() for fname in ["requirements.txt", "pyproject.toml"]):
-        print(
-            f"No Python dependency files found in {repo_path}, skipping pip audit.")
+    if not any(
+        (repo_path / fname).exists() for fname in ["requirements.txt", "pyproject.toml"]
+    ):
+        print(f"No Python dependency files found in {repo_path}, skipping pip audit.")
         return None
 
     try:
@@ -91,7 +95,7 @@ def run_pip_audit(repo_path: Path):
             cwd=repo_path,
             capture_output=True,
             text=True,
-            check=False
+            check=False,
         )
         if not result.stdout.strip():
             print(f"pip-audit returned no output in {repo_path}")
@@ -99,8 +103,7 @@ def run_pip_audit(repo_path: Path):
 
         audit_data = json.loads(result.stdout)
         if not isinstance(audit_data, dict) or "dependencies" not in audit_data:
-            print(
-                f"Unexpected pip-audit JSON format in {repo_path}: {audit_data}")
+            print(f"Unexpected pip-audit JSON format in {repo_path}: {audit_data}")
             return None
 
         severity_counts = init_severity_counts()
@@ -137,7 +140,7 @@ def run_npm_audit(repo_path: Path):
             cwd=repo_path,
             capture_output=True,
             text=True,
-            check=False
+            check=False,
         )
         audit_data = json.loads(result.stdout)
         vulns = audit_data.get("vulnerabilities", {})
@@ -165,8 +168,7 @@ def run_npm_audit(repo_path: Path):
 
 def run_composer_audit(repo_path: Path):
     if not (repo_path / "composer.lock").exists():
-        print(
-            f"No composer.lock found in {repo_path}, skipping composer audit.")
+        print(f"No composer.lock found in {repo_path}, skipping composer audit.")
         return None
 
     try:
@@ -175,7 +177,7 @@ def run_composer_audit(repo_path: Path):
             cwd=repo_path,
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         output = result.stdout.strip()
         if not output:
@@ -197,15 +199,16 @@ def run_composer_audit(repo_path: Path):
                 current = packages.get(pkg_name, "info")
                 packages[pkg_name] = merge_severity(current, severity)
 
-        return build_audit_summary(severity_counts, packages, {"abandoned_packages": abandoned})
+        return build_audit_summary(
+            severity_counts, packages, {"abandoned_packages": abandoned}
+        )
 
     except subprocess.CalledProcessError as e:
         print(f"composer audit command failed in {repo_path}: {e}")
         if e.stderr:
             print(f"stderr: {e.stderr}")
     except json.JSONDecodeError as e:
-        print(
-            f"Failed to parse composer audit output as JSON in {repo_path}: {e}")
+        print(f"Failed to parse composer audit output as JSON in {repo_path}: {e}")
         print(f"Output was:\n{result.stdout}")
 
     return None
@@ -230,6 +233,5 @@ def aggregate_global_summary(data):
             sev = audit.get("vulnerabilities_by_severity", {})
             for level in severity_order:
                 global_counts[level] += sev.get(level, 0)
-    global_counts["total"] = sum(global_counts[level]
-                                 for level in severity_order)
+    global_counts["total"] = sum(global_counts[level] for level in severity_order)
     return global_counts

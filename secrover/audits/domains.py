@@ -14,8 +14,8 @@ def check_http_to_https_redirect(domain):
         # We use 'allow_redirects=False' to catch the first response redirect header
         response = requests.get(url, allow_redirects=False, timeout=5)
         if response.status_code in range(300, 400):
-            location = response.headers.get('Location', '')
-            if location.startswith('https://'):
+            location = response.headers.get("Location", "")
+            if location.startswith("https://"):
                 return True
         return False
     except requests.RequestException:
@@ -48,32 +48,31 @@ def is_port_open(domain, port):
 def check_open_ports(domain):
     # Common ports to test
     ports = [
-        21,    # FTP
-        22,    # SSH
-        23,    # Telnet
-        25,    # SMTP
-        53,    # DNS
-        80,    # HTTP
-        110,   # POP3
-        143,   # IMAP
-        443,   # HTTPS
-        465,   # SMTPS
-        587,   # SMTP (mail submission)
-        993,   # IMAPS
-        995,   # POP3S
+        21,  # FTP
+        22,  # SSH
+        23,  # Telnet
+        25,  # SMTP
+        53,  # DNS
+        80,  # HTTP
+        110,  # POP3
+        143,  # IMAP
+        443,  # HTTPS
+        465,  # SMTPS
+        587,  # SMTP (mail submission)
+        993,  # IMAPS
+        995,  # POP3S
         3306,  # MySQL
         3389,  # RDP (Windows Remote Desktop)
         5900,  # VNC
         6379,  # Redis
         8080,  # HTTP alternative port
         8443,  # HTTPS alternative port
-        27017  # MongoDB
+        27017,  # MongoDB
     ]
 
     open_ports = []
     with ThreadPoolExecutor(max_workers=10) as executor:
-        futures = [executor.submit(
-            is_port_open, domain, port) for port in ports]
+        futures = [executor.submit(is_port_open, domain, port) for port in ports]
         for future in as_completed(futures):
             port, is_open = future.result()
             if is_open:
@@ -106,33 +105,8 @@ def check_security_headers(url):
             "x_content_type_options": None,
             "x_frame_options": None,
             "referrer_policy": None,
-            "error": str(e)
+            "error": str(e),
         }
-
-
-def analyze_security_headers(headers):
-    issues = {}
-
-    csp = headers.get("csp")
-    if not csp:
-        issues["Content-Security-Policy"] = "Missing"
-    elif "*" in csp:
-        issues["Content-Security-Policy"] = f"Weak CSP policy: {csp}"
-
-    xcto = headers.get("x_content_type_options")
-    if xcto != "nosniff":
-        issues["X-Content-Type-Options"] = f"Expected 'nosniff', got '{xcto}'"
-
-    xfo = headers.get("x_frame_options")
-    if xfo not in ("DENY", "SAMEORIGIN"):
-        issues["X-Frame-Options"] = f"Expected 'DENY' or 'SAMEORIGIN', got '{xfo}'"
-
-    rp = headers.get("referrer_policy")
-    secure_values = ["no-referrer", "strict-origin", "same-origin"]
-    if rp not in secure_values:
-        issues["Referrer-Policy"] = f"Expected one of {secure_values}, got '{rp}'"
-
-    return issues
 
 
 def check_tls_versions(domain, port=443):
@@ -168,27 +142,22 @@ def get_ssl_info(domain, port=443, timeout=5):
         with socket.create_connection((domain, port), timeout=timeout) as sock:
             with context.wrap_socket(sock, server_hostname=domain) as ssock:
                 cert = ssock.getpeercert()
-                not_after = datetime.strptime(
-                    cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
+                not_after = datetime.strptime(cert["notAfter"], "%b %d %H:%M:%S %Y %Z")
                 not_after = not_after.replace(tzinfo=timezone.utc)
                 now = datetime.now(timezone.utc)
                 days_remaining = (not_after - now).days
 
                 issuer_raw = cert.get("issuer", [])
-                issuer = {
-                    key: value for pair in issuer_raw for key, value in pair}
+                issuer = {key: value for pair in issuer_raw for key, value in pair}
 
                 return {
                     "valid": True,
                     "issuer": issuer,
                     "not_after": not_after.date().isoformat(),
-                    "days_remaining": days_remaining
+                    "days_remaining": days_remaining,
                 }
     except Exception as e:
-        return {
-            "valid": False,
-            "error": str(e)
-        }
+        return {"valid": False, "error": str(e)}
 
 
 def check_domains(project, domains, output_path: Path, enabled_checks):
@@ -225,8 +194,7 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
 
             # Check HTTP to HTTPS redirect only if port 80 is open
             if 80 in info["open_ports"]:
-                info["http_to_https_redirect"] = check_http_to_https_redirect(
-                    domain)
+                info["http_to_https_redirect"] = check_http_to_https_redirect(domain)
 
             if info["https_available"]:
                 ssl_info = get_ssl_info(domain)
@@ -251,8 +219,7 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
             info["hsts_present"] = sec_headers.get("hsts_present", False)
             info["hsts_value"] = sec_headers.get("hsts_value", "")
             info["csp"] = sec_headers.get("csp")
-            info["x_content_type_options"] = sec_headers.get(
-                "x_content_type_options")
+            info["x_content_type_options"] = sec_headers.get("x_content_type_options")
             info["x_frame_options"] = sec_headers.get("x_frame_options")
             info["referrer_policy"] = sec_headers.get("referrer_policy")
 
@@ -266,10 +233,10 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
         "nbDomains": total,
     }
 
-    generate_html_report("domains", {
-        "project": project,
-        "data": data,
-        "enabled_checks": enabled_checks
-    }, output_path)
+    generate_html_report(
+        "domains",
+        {"project": project, "data": data, "enabled_checks": enabled_checks},
+        output_path,
+    )
 
     return summary

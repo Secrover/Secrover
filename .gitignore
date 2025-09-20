@@ -9,6 +9,9 @@ wheels/
 # Virtual environments
 .venv
 
+# Docker
+.docker-built
+
 # Custom
 config.yaml
 repos/
