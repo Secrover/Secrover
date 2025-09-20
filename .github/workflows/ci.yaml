@@ -1,15 +1,32 @@
-name: Build & Publish Docker Image
+name: CI
 
 on:
   push:
-    branches: [main]
-    tags: ["*"]   # trigger also on git tags
+    branches: [ main ]
+    tags: ["*"]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
-  build-and-publish:
+  checks:
+    name: Checks
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Run lint
+        run: make lint
+
+      - name: Check formatting
+        run: make format-check
+
+  build-and-publish:
+    name: Build & Publish Docker Image
+    runs-on: ubuntu-latest
+    needs: checks
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
