@@ -167,6 +167,21 @@
                                         Permissions-Policy
                                     </span>
                                 </span>
+                                <span title="Prevents cross-origin resources from being loaded without permission (COEP)">
+                                    <span class="badge badge-small {{ 'badge-success' if row.coep else 'badge-error' }}">
+                                        Cross-Origin-Embedder-Policy
+                                    </span>
+                                </span>
+                                <span title="Opt-in to cross-origin isolation in the browser (COOP)">
+                                    <span class="badge badge-small {{ 'badge-success' if row.coop else 'badge-error' }}">
+                                        Cross-Origin-Opener-Policy
+                                    </span>
+                                </span>
+                                <span title="Specifies who can load this resource (CORP)">
+                                    <span class="badge badge-small {{ 'badge-success' if row.corp else 'badge-error' }}">
+                                        Cross-Origin-Resource-Policy
+                                    </span>
+                                </span>
                             </div>
                         </td>
                     </tr>

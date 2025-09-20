@@ -97,6 +97,9 @@ def check_security_headers(url):
             "x_frame_options": headers.get("X-Frame-Options"),
             "referrer_policy": headers.get("Referrer-Policy"),
             "permissions_policy": headers.get("Permissions-Policy"),
+            "coep": headers.get("Cross-Origin-Embedder-Policy"),
+            "coop": headers.get("Cross-Origin-Opener-Policy"),
+            "corp": headers.get("Cross-Origin-Resource-Policy"),
         }
     except Exception as e:
         return {
@@ -107,6 +110,9 @@ def check_security_headers(url):
             "x_frame_options": None,
             "referrer_policy": None,
             "permissions_policy": None,
+            "coep": None,
+            "coop": None,
+            "corp": None,
             "error": str(e),
         }
 
@@ -182,6 +188,9 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
             "x_frame_options": None,
             "referrer_policy": None,
             "permissions_policy": None,
+            "coep": None,
+            "coop": None,
+            "corp": None,
             "open_ports": [],
             "valid": False,
             "issuer": {},
@@ -226,6 +235,9 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
             info["x_frame_options"] = sec_headers.get("x_frame_options")
             info["referrer_policy"] = sec_headers.get("referrer_policy")
             info["permissions_policy"] = sec_headers.get("permissions_policy")
+            info["coep"] = sec_headers.get("coep")
+            info["coop"] = sec_headers.get("coop")
+            info["corp"] = sec_headers.get("corp")
 
         else:
             # Domain inactive: keep all defaults
