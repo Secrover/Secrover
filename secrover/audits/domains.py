@@ -139,9 +139,7 @@ def check_tls_versions(domain, port=443):
             with socket.create_connection((domain, port), timeout=5) as sock:
                 with ctx.wrap_socket(sock, server_hostname=domain):
                     # Include only supported versions
-                    result[label] = {
-                        "secure": label not in insecure_versions
-                    }
+                    result[label] = {"secure": label not in insecure_versions}
         except Exception:
             pass  # Skip unsupported versions
 
