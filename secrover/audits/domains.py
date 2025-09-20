@@ -96,6 +96,7 @@ def check_security_headers(url):
             "x_content_type_options": headers.get("X-Content-Type-Options"),
             "x_frame_options": headers.get("X-Frame-Options"),
             "referrer_policy": headers.get("Referrer-Policy"),
+            "permissions_policy": headers.get("Permissions-Policy"),
         }
     except Exception as e:
         return {
@@ -105,6 +106,7 @@ def check_security_headers(url):
             "x_content_type_options": None,
             "x_frame_options": None,
             "referrer_policy": None,
+            "permissions_policy": None,
             "error": str(e),
         }
 
@@ -179,6 +181,7 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
             "x_content_type_options": None,
             "x_frame_options": None,
             "referrer_policy": None,
+            "permissions_policy": None,
             "open_ports": [],
             "valid": False,
             "issuer": {},
@@ -222,6 +225,7 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
             info["x_content_type_options"] = sec_headers.get("x_content_type_options")
             info["x_frame_options"] = sec_headers.get("x_frame_options")
             info["referrer_policy"] = sec_headers.get("referrer_policy")
+            info["permissions_policy"] = sec_headers.get("permissions_policy")
 
         else:
             # Domain inactive: keep all defaults
