@@ -119,13 +119,15 @@
                             {% endif %}
                         </td>
                         <td class="limit-size">
-                            <div class="d-flex d-wrap">
-                                {% for version, info in row.tls_versions.items() %}
-                                    <span class="badge badge-small {{ 'badge-success' if info.secure else 'badge-error' }}">
-                                        {{ version }}
-                                    </span>
-                                {% endfor %}
-                            </div>
+                            {% if row.tls_versions %}
+                                <div class="d-flex d-wrap">
+                                    {% for version, info in row.tls_versions.items() %}
+                                        <span class="badge badge-small {{ 'badge-success' if info.secure else 'badge-error' }}">
+                                            {{ version }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </td>
                         <td>
                             {% if not row.active %}
