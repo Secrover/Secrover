@@ -1,4 +1,4 @@
 from pathlib import Path
 
-VERSION = "2"
+VERSION = "0.2"
 REPOS_FOLDER = Path("repos")
