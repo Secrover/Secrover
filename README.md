@@ -108,7 +108,7 @@ GITHUB_TOKEN=yourgeneratedtokenhere
 
 You can run Secrover easily using Docker without installing any local dependencies.
 
-### ▶️ One-Time Scan (on-demand)
+### One-Time Scan (on-demand)
 
 From the folder where your `config.yaml` (and optionally `.env`) lives, run:
 
@@ -128,7 +128,7 @@ docker run -it --rm \
 * It clones repositories, scan them, as well as your domains
 * It generates a full **HTML security report** into the `output/` folder
 
-### ⏰ Automated Scans (Cron Mode)
+### Automated Scans (Cron Mode)
 
 Secrover also supports **automatic recurring scans** using an internal cron scheduler (via [Supercronic](https://github.com/aptible/supercronic)).
 
