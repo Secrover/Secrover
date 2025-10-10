@@ -53,10 +53,7 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: |
-            # Stable release from main via tag
-            ${{ startsWith(github.ref, 'refs/tags/') && format('secrover/secrover:%s', github.ref_name) || '' }}
-            ${{ startsWith(github.ref, 'refs/tags/') && 'secrover/secrover:latest' || '' }}
-            # Development builds from develop branch
-            ${{ github.ref_name == 'develop' && 'secrover/secrover:develop' || '' }}
-            ${{ github.ref_name == 'develop' && format('secrover/secrover:develop-%s', github.sha) || '' }}
+          tags: ${{ 
+            startsWith(github.ref, 'refs/tags/') && format('secrover/secrover:%s,secrover/secrover:latest', github.ref_name) || 
+            (github.ref_name == 'develop' && format('secrover/secrover:develop,secrover/secrover:develop-%s', github.sha) || '') 
+          }}
