@@ -55,8 +55,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: |
             # Stable release from main via tag
+            ${{ startsWith(github.ref, 'refs/tags/') && format('secrover/secrover:%s', github.ref_name) || '' }}
             ${{ startsWith(github.ref, 'refs/tags/') && 'secrover/secrover:latest' || '' }}
-            ${{ startsWith(github.ref, 'refs/tags/') && 'secrover/secrover:' + github.ref_name || '' }}
             # Development builds from develop branch
             ${{ github.ref_name == 'develop' && 'secrover/secrover:develop' || '' }}
-            ${{ github.ref_name == 'develop' && 'secrover/secrover:develop-' + github.sha || '' }}
+            ${{ github.ref_name == 'develop' && format('secrover/secrover:develop-%s', github.sha) || '' }}
