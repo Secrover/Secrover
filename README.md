@@ -138,7 +138,6 @@ You can schedule scans to run periodically **inside the container** — ideal fo
 
 ```bash
 docker run -it --rm \
-  --env-file .env \
   -v "$(pwd)/config.yaml:/app/config.yaml" \
   -v "$(pwd)/output:/output" \
   -e CRON_SCHEDULE="0 0 * * *" \
