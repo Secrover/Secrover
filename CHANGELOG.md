@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1=2] - 2025-10-10
+## [0.2] - 2025-10-10
 - Switch to osv-scanner to scan dependencies
 - Only clone selected git branch
 - Dependencies Audit: show impacted versions
