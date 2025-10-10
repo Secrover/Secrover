@@ -41,6 +41,7 @@ def check_dependencies(project, repos, output_path: Path, enabled_checks):
             "description": repo_description,
             "audit": audit_results,
         }
+        print(f"  Found {audit_results["total_vulnerabilities"]} issues")
 
     summary = aggregate_global_summary(data)
     summary.update({"nbRepos": total})
