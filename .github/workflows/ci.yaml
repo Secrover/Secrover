@@ -53,7 +53,7 @@ jobs:
           if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
             echo "DOCKER_TAGS=secrover/secrover:${GITHUB_REF_NAME},secrover/secrover:latest" >> $GITHUB_ENV
           elif [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
-            echo "DOCKER_TAGS=secrover/secrover:develop,secrover/secrover:develop-${GITHUB_SHA}" >> $GITHUB_ENV
+            echo "DOCKER_TAGS=secrover/secrover:develop" >> $GITHUB_ENV
           else
             echo "DOCKER_TAGS=" >> $GITHUB_ENV
           fi
