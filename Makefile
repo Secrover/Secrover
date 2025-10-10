@@ -4,6 +4,7 @@ STAMP = .docker-built
 
 dev:
 	docker run -it --rm \
+		--env-file .env \
 		-v $(PWD)/config.yaml:/app/config.yaml \
 		-v $(PWD)/repos:/app/repos \
 		-v $(PWD)/output:/output \

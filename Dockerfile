@@ -10,15 +10,16 @@ RUN apk add --no-cache \
     ca-certificates
 
 # Install uv
-ADD https://astral.sh/uv/install.sh /uv-installer.sh
-RUN sh /uv-installer.sh && rm /uv-installer.sh
-ENV PATH="/root/.local/bin/:$PATH"
+RUN apk add uv
 
 # Install opengrep
 RUN curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.sh | bash
 
 # Install osv-scanner
 RUN apk add osv-scanner
+
+# Install Supercronic
+RUN apk add supercronic
 
 # Create working directory
 WORKDIR /app
