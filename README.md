@@ -108,40 +108,66 @@ GITHUB_TOKEN=yourgeneratedtokenhere
 
 You can run Secrover easily using Docker without installing any local dependencies.
 
-From the folder where you created your `config.yaml`, run:
+### ▶️ One-Time Scan (on-demand)
 
-### With private repositories (.env required)
-
-If you're scanning private GitHub repositories, create a `.env` file containing your GitHub token (see [Accessing Private Repositories](#-accessing-private-repositories)).
-
-Then run:
+From the folder where your `config.yaml` (and optionally `.env`) lives, run:
 
 ```bash
-docker pull secrover/secrover && docker run --rm \
+docker run -it --rm \
   --env-file .env \
   -v "$(pwd)/config.yaml:/app/config.yaml" \
   -v "$(pwd)/output:/output" \
-  -e CONFIG_FILE=config.yaml \
   secrover/secrover
 ```
 
-### Without private repositories (.env not needed)
+> 💡 If you’re only scanning public repositories or do not need to change default settings, the `--env-file .env` flag is optional.
 
-If you're only scanning public repos, you can skip the `.env` file:
+**What happens:**
+
+* Secrover read the list of repositories and domains from your `config.yaml`
+* It clones repositories, scan them, as well as your domains
+* It generates a full **HTML security report** into the `output/` folder
+
+### ⏰ Automated Scans (Cron Mode)
+
+Secrover also supports **automatic recurring scans** using an internal cron scheduler (via [Supercronic](https://github.com/aptible/supercronic)).
+
+You can schedule scans to run periodically **inside the container** — ideal for servers, NAS setups, ...
+
+### Example: Run every day at midnight
 
 ```bash
-docker pull secrover/secrover && docker run --rm \
+docker run -it --rm \
+  --env-file .env \
   -v "$(pwd)/config.yaml:/app/config.yaml" \
   -v "$(pwd)/output:/output" \
-  -e CONFIG_FILE=config.yaml \
+  -e CRON_SCHEDULE="0 0 * * *" \
   secrover/secrover
 ```
 
-This will:
+**What happens:**
 
-* Read the list of repositories and domains from your `config.yaml`
-* Clone repositories, scan them, as well as your domains
-* Generate a full **HTML security report** into the `output/` folder
+* Secrover starts Supercronic in the background
+* It executes a new scan based on the chosen schedule
+* By default, results are written to `/output` and logs to `/output/secrover.log`
+
+## Environment Variables Reference
+
+| Variable        | Required                   | Default       | Description                                                                                             |
+| --------------- | -------------------------- | ------------- | ------------------------------------------------------------------------------------------------------- |
+| `GITHUB_TOKEN`  | ❌                          | `-`           | Used to clone private GitHub repositories over HTTPS.                                                   |
+| `CONFIG_FILE`   | ✅                          | `config.yaml` | Path to your YAML configuration inside the container.                                                   |
+| `OUTPUT_DIR`    | ✅                          | `/output`     | Directory where reports and logs are saved.                                                             |
+| `CRON_SCHEDULE` | ❌                          | `-`           | Optional [cron expression](https://crontab.guru/) to schedule recurring scans                           |
+
+All variables can be defined in your `.env` file **or** passed directly using `-e` flags when running the container.
+For example:
+
+```bash
+-e CONFIG_FILE=config.yaml -e OUTPUT_DIR=/output
+```
+
+is equivalent to having them set in your `.env` file.
 
 ## Thanks and Acknowledgments
 
