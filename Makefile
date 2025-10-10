@@ -2,11 +2,29 @@ IMAGE_NAME = secrover:latest
 WORKDIR = /app
 STAMP = .docker-built
 
+dev:
+	docker run -it --rm \
+		-v $(PWD)/config.yaml:/app/config.yaml \
+		-v $(PWD)/repos:/app/repos \
+		-v $(PWD)/output:/output \
+		-v $(PWD)/secrover:/app/secrover \
+		-v $(PWD)/templates:/app/templates \
+		-e CONFIG_FILE=config.yaml \
+		$(IMAGE_NAME)
+
 $(STAMP): Dockerfile
 	docker build -t $(IMAGE_NAME) .
 	touch $(STAMP)
 
 build: $(STAMP)
+
+run: build
+	docker run -it --rm \
+		-v $(PWD)/config.yaml:/app/config.yaml \
+		-v $(PWD)/repos:/app/repos \
+		-v $(PWD)/output:/output \
+		-e CONFIG_FILE=config.yaml \
+		$(IMAGE_NAME)
 
 lint: build
 	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff check secrover/.

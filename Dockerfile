@@ -1,40 +1,13 @@
-FROM python:3.14-slim
+FROM python:3.14-alpine
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
+    bash \
     curl \
     git \
     unzip \
     zip \
-    gnupg \
-    libzip-dev \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libicu-dev \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    zlib1g-dev \
-    libpq-dev \
     ca-certificates
-
-# Ensure pip is installed/upgraded
-RUN python -m ensurepip --upgrade && \
-    pip install --upgrade pip
-
-# Install pip deps
-RUN pip install pip-audit
-
-# Install PHP and Composer
-RUN apt-get install -y php-cli
-RUN curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer
-
-# Install Node.js and npm
-RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
-    apt-get update && \
-    apt-get install -y nodejs && \
-    npm install -g npm@latest
 
 # Install uv
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
@@ -43,6 +16,9 @@ ENV PATH="/root/.local/bin/:$PATH"
 
 # Install opengrep
 RUN curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.sh | bash
+
+# Install osv-scanner
+RUN apk add osv-scanner
 
 # Create working directory
 WORKDIR /app
@@ -53,7 +29,7 @@ COPY . .
 # Install Python dependencies with uv
 RUN uv sync --locked
 
-# Default env vars
+# Default environment variables
 ENV CONFIG_FILE=config.yaml
 ENV OUTPUT_DIR=/output
 

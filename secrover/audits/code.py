@@ -5,7 +5,6 @@ from pathlib import Path
 
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
-from secrover.languages import detect_language_by_files
 from secrover.constants import REPOS_FOLDER
 
 sarif_to_severity = {
@@ -80,7 +79,6 @@ def check_code(project, repos, output_path: Path, enabled_checks):
         print(f"[{i}/{total}] Scanning repo: {repo_name} ...")
         repo_description = repo.get("description") or ""
         repo_path = REPOS_FOLDER / repo_name
-        language = detect_language_by_files(repo_path)
 
         try:
             result = subprocess.run(
@@ -112,7 +110,6 @@ def check_code(project, repos, output_path: Path, enabled_checks):
             detailed_findings = parse_sarif_findings(sarif_data)
 
             data[repo_name] = {
-                "language": language,
                 "description": repo_description,
                 "findings_count": total_findings,
                 "findings_by_severity": findings_by_severity,

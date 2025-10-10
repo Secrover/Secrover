@@ -36,7 +36,6 @@
                 <div class="card project-card">
                     <div class="project-header">
                         <h3>{{ repo_name }}</h3>
-                        <span class="badge badge-small">{{ repo_data.language }}</span>
                     </div>
                     <p class="project-description">{{ repo_data.description }}</p>
 
@@ -56,27 +55,26 @@
                     </div>
 
                     <p><strong>📦 Impacted Packages:</strong></p>
-                    <div class="packages-list">
-                        {% if audit.packages_impacted %}
-                            {% for pkg in audit.packages_impacted %}
-                            <div class="{{ pkg.severity }}">{{ pkg.name }}</div>
-                            {% endfor %}
-                        {% else %}
+                    {% if audit.packages_impacted %}
+                        {% for file, pkgs in audit.packages_by_file.items() %}
+                            <h4>{{ file }}</h4>
+                            <div class="packages-list">
+                                {% for pkg in pkgs %}
+                                    <div class="{{ pkg.severity }}">
+                                        {{ pkg.name }} <span>{{ pkg.version }}</span>
+                                        {% if pkg.cves %}
+                                            <small>
+                                                <a href="{{ pkg.url }}" target="_blank">{{ pkg.cves | join(', ') }}</a>
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="packages-list">
                             <p class="no-issues success mb-0">None - All clear!</p>
-                        {% endif %}
-                    </div>
-
-                    {% if 'abandoned_packages' in audit %}
-                    <p class="mt-20"><strong>📦 Abandoned Packages:</strong></p>
-                    <div class="packages-list">
-                        {% if audit.abandoned_packages %}
-                            {% for pkg in audit.abandoned_packages | sort %}
-                            <div>{{ pkg }}</div>
-                            {% endfor %}
-                        {% else %}
-                            <p class="no-issues success mb-0">None – All clear!</p>
-                        {% endif %}
-                    </div>
+                        </div>
                     {% endif %}
                 </div>
             {% endif %}

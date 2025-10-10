@@ -23,7 +23,7 @@ Secrover is a free and open-source tool that generates clear, professional secur
 
 | Category        | Checks                                                 | Supported languages        |
 | --------------- | ------------------------------------------------------ | -------------------------- |
-| Dependencies | Vulnerability check                                    | PHP, JavaScript and Python |
+| Dependencies | Vulnerability check                                    |  All languages supported by osv-scanner |
 | Code         | Static check                                           | All languages supported by opengrep |
 | Domains      | SSL certificate, HTTP→HTTPS Redirect, HSTS header, TLS versions, Open Ports, Security Headers | -     |
 
@@ -147,11 +147,10 @@ This will:
 
 This project benefits from the fantastic work of several open-source projects:
 
-- Python & pip-audit
-- PHP & Composer
-- Node.js & npm
-- uv
-- opengrep
+- [Python](https://github.com/python)
+- [uv](https://github.com/astral-sh/uv)
+- [opengrep](https://github.com/opengrep/opengrep)
+- [osv-scanner](https://github.com/google/osv-scanner)
 
 A big thanks to all the maintainers and contributors behind these amazing projects, without whom this project wouldn't be possible!
 

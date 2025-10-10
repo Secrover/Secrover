@@ -51,7 +51,9 @@ def clone_repos(repos, token):
 
         print(f"Cloning {original_url} into {dest_path} (branch {branch}) ...")
         try:
-            Repo.clone_from(normalized_url, dest_path, branch=branch)
+            Repo.clone_from(
+                normalized_url, dest_path, branch=branch, single_branch=True
+            )
             valid_repos.append(repo)
         except Exception as error:
             print(f"Can't clone {normalized_url}:", error)

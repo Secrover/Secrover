@@ -1,10 +1,10 @@
 import subprocess
 import json
+import re
 from pathlib import Path
 
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
-from secrover.languages import detect_language_by_files
 from secrover.constants import REPOS_FOLDER
 from collections import defaultdict
 
@@ -28,20 +28,6 @@ def merge_severity(existing, new):
     return new if severity_rank(new) < severity_rank(existing) else existing
 
 
-def build_audit_summary(severity_counts, package_map, extras=None):
-    packages_impacted = [
-        {"name": name, "severity": sev} for name, sev in sorted(package_map.items())
-    ]
-    result = {
-        "total_vulnerabilities": sum(severity_counts.values()),
-        "vulnerabilities_by_severity": severity_counts,
-        "packages_impacted": packages_impacted,
-    }
-    if extras:
-        result.update(extras)
-    return result
-
-
 def check_dependencies(project, repos, output_path: Path, enabled_checks):
     data = {}
     total = len(repos)
@@ -50,19 +36,11 @@ def check_dependencies(project, repos, output_path: Path, enabled_checks):
         print(f"[{i}/{total}] Scanning repo: {repo_name} ...")
         repo_description = repo.get("description") or ""
         repo_path = REPOS_FOLDER / repo_name
-
-        language = detect_language_by_files(repo_path)
-        if language:
-            print(f"Detected language for '{repo_name}': {language}")
-
-            audit_results = run_language_audit(language, repo_path)
-            data[repo_name] = {
-                "language": language,
-                "description": repo_description,
-                "audit": audit_results,
-            }
-        else:
-            print(f"No supported language found for {repo_name}, skipping.")
+        audit_results = run_audit(repo_path)
+        data[repo_name] = {
+            "description": repo_description,
+            "audit": audit_results,
+        }
 
     summary = aggregate_global_summary(data)
     summary.update({"nbRepos": total})
@@ -82,147 +60,105 @@ def check_dependencies(project, repos, output_path: Path, enabled_checks):
     return summary
 
 
-def run_pip_audit(repo_path: Path):
-    if not any(
-        (repo_path / fname).exists() for fname in ["requirements.txt", "pyproject.toml"]
-    ):
-        print(f"No Python dependency files found in {repo_path}, skipping pip audit.")
-        return None
-
+def run_audit(repo_path: Path):
+    """
+    Run osv-scanner in SARIF format and return a structured summary
+    suitable for templating in HTML.
+    """
     try:
         result = subprocess.run(
-            ["pip-audit", "--format", "json"],
-            cwd=repo_path,
+            ["osv-scanner", "scan", "--format", "sarif", "-r", str(repo_path)],
             capture_output=True,
             text=True,
             check=False,
         )
+
         if not result.stdout.strip():
-            print(f"pip-audit returned no output in {repo_path}")
+            print(f"osv-scanner returned no output in {repo_path}")
             return None
 
-        audit_data = json.loads(result.stdout)
-        if not isinstance(audit_data, dict) or "dependencies" not in audit_data:
-            print(f"Unexpected pip-audit JSON format in {repo_path}: {audit_data}")
+        try:
+            sarif_data = json.loads(result.stdout)
+        except json.JSONDecodeError as e:
+            print(f"Failed to parse SARIF output: {e}")
             return None
 
         severity_counts = init_severity_counts()
-        packages = {}
+        packages_by_file = defaultdict(list)
 
-        for dep in audit_data["dependencies"]:
-            name = dep.get("name")
-            for vuln in dep.get("vulns", []):
-                severity = normalize_severity(vuln.get("severity"))
+        for run in sarif_data.get("runs", []):
+            rules = run.get("tool", {}).get("driver", {}).get("rules", [])
+            for res in run.get("results", []):
+                msg = res.get("message", {}).get("text", "")
+                level = res.get("level", "note")
+                severity = normalize_severity(level)
+
+                # Extract package name and version from message
+                match = re.search(r"Package '(.+?)@(.+?)' is vulnerable", msg)
+                if not match:
+                    continue
+                name, version = match.groups()
+
+                # Extract file / artifact where the package is defined
+                filename = None
+                for loc in res.get("locations", []):
+                    uri = (
+                        loc.get("physicalLocation", {})
+                        .get("artifactLocation", {})
+                        .get("uri")
+                    )
+                    if uri:
+                        uri = uri.replace("file://", "")
+                        filename = Path(uri).name
+                        break
+
+                # Extract CVE / vulnerability IDs
+                rule_index = res.get("ruleIndex")
+                cves = []
+                url = None
+                if rule_index is not None and rule_index < len(rules):
+                    rule = rules[rule_index]
+                    # deprecatedIds usually contains CVE/GHSA/RUSTSEC IDs
+                    cves = rule.get("deprecatedIds", [])
+                    if cves:
+                        # Construct a simple advisory URL using the first CVE/OSV ID
+                        url = f"https://osv.dev/vulnerability/{cves[0]}"
+
+                pkg_entry = {
+                    "name": name,
+                    "version": version,
+                    "severity": severity,
+                    "file": filename,
+                    "cves": cves,
+                    "url": url,
+                }
+                packages_by_file[filename].append(pkg_entry)
                 severity_counts[severity] += 1
-                if name:
-                    current = packages.get(name, "info")
-                    packages[name] = merge_severity(current, severity)
 
-        return build_audit_summary(severity_counts, packages)
+        return build_audit_summary(severity_counts, packages_by_file)
 
-    except json.JSONDecodeError as e:
-        print(f"Failed to parse pip-audit output as JSON: {e}")
-        print(f"Output was:\n{result.stdout}")
     except Exception as e:
-        print(f"pip-audit failed unexpectedly: {e}")
+        print(f"osv-scanner failed unexpectedly: {e}")
+        if result.stderr:
+            print(f"stderr:\n{result.stderr}")
 
     return None
 
 
-def run_npm_audit(repo_path: Path):
-    if not (repo_path / "package.json").exists():
-        print(f"No package.json found in {repo_path}, skipping npm audit.")
-        return None
+def build_audit_summary(severity_counts, packages_by_file, extras=None):
+    all_packages = [pkg for pkgs in packages_by_file.values() for pkg in pkgs]
 
-    try:
-        result = subprocess.run(
-            ["npm", "audit", "--json"],
-            cwd=repo_path,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        audit_data = json.loads(result.stdout)
-        vulns = audit_data.get("vulnerabilities", {})
-
-        severity_counts = init_severity_counts()
-        packages = {}
-
-        for pkg, details in vulns.items():
-            count = details.get("vulnerabilities", 1)
-            severity = normalize_severity(details.get("severity"))
-            severity_counts[severity] += count
-            current = packages.get(pkg, "info")
-            packages[pkg] = merge_severity(current, severity)
-
-        return build_audit_summary(severity_counts, packages)
-
-    except json.JSONDecodeError as e:
-        print(f"Failed to parse npm audit output as JSON: {e}")
-        print(f"Output was:\n{result.stdout}")
-    except Exception as e:
-        print(f"npm audit failed unexpectedly: {e}")
-
-    return None
-
-
-def run_composer_audit(repo_path: Path):
-    if not (repo_path / "composer.lock").exists():
-        print(f"No composer.lock found in {repo_path}, skipping composer audit.")
-        return None
-
-    try:
-        result = subprocess.run(
-            ["composer", "audit", "--format=json", "--locked"],
-            cwd=repo_path,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        output = result.stdout.strip()
-        if not output:
-            print(f"composer audit returned empty output for {repo_path}")
-            return None
-
-        audit_data = json.loads(output)
-        advisories = audit_data.get("advisories", [])
-        abandoned = audit_data.get("abandoned", [])
-
-        severity_counts = init_severity_counts()
-        packages = {}
-
-        for vuln in advisories:
-            severity = normalize_severity(vuln.get("severity"))
-            severity_counts[severity] += 1
-            pkg_name = vuln.get("package", {}).get("name")
-            if pkg_name:
-                current = packages.get(pkg_name, "info")
-                packages[pkg_name] = merge_severity(current, severity)
-
-        return build_audit_summary(
-            severity_counts, packages, {"abandoned_packages": abandoned}
-        )
-
-    except subprocess.CalledProcessError as e:
-        print(f"composer audit command failed in {repo_path}: {e}")
-        if e.stderr:
-            print(f"stderr: {e.stderr}")
-    except json.JSONDecodeError as e:
-        print(f"Failed to parse composer audit output as JSON in {repo_path}: {e}")
-        print(f"Output was:\n{result.stdout}")
-
-    return None
-
-
-def run_language_audit(language_str, repo_path):
-    if "JavaScript" in language_str:
-        summary = run_npm_audit(repo_path)
-    elif "PHP" in language_str:
-        summary = run_composer_audit(repo_path)
-    elif "Python" in language_str:
-        summary = run_pip_audit(repo_path)
-
-    return summary
+    result = {
+        "total_vulnerabilities": sum(severity_counts.values()),
+        "vulnerabilities_by_severity": severity_counts,
+        "packages_by_file": dict(packages_by_file),
+        "packages_impacted": sorted(
+            all_packages, key=lambda p: (p["severity"], p["name"])
+        ),
+    }
+    if extras:
+        result.update(extras)
+    return result
 
 
 def aggregate_global_summary(data):
