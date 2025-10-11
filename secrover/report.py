@@ -15,9 +15,9 @@ def generate_html_report(report_type: str, results: dict, output_path: Path):
     env = Environment(
         loader=FileSystemLoader(str(template_dir)),
         autoescape=select_autoescape(
-            enabled_extensions=('html', 'xml'),
+            enabled_extensions=("html", "xml"),
             default_for_string=True,
-        )
+        ),
     )
 
     template = env.get_template(f"{report_type}.html")
