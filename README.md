@@ -51,13 +51,13 @@ The demo repository uses **GitHub Actions** to automatically:
 
 > This setup is ideal for **publicly sharing reports**, for example on GitHub Pages or a public website.
 
+➡️ You can copy the workflow from the [demo repository’s `.github/workflows/secrover.yml`](https://github.com/secrover/secrover-demo/blob/main/.github/workflows/secrover.yml) to get started quickly.
+
 ### Flexible Deployment Options
 
-Secrover is not limited to GitHub Actions — you can also **export reports to any remote destination** (SFTP, WebDAV, SMB, S3, Google Drive, etc.) using rclone, making them automatically available on internal servers, intranet sites, cloud storage, or backup locations.
+Secrover is not limited to GitHub Actions — you can [also export reports to any remote destination](#-exporting-reports-optional) (SFTP, WebDAV, SMB, S3, Google Drive, etc.) using rclone, making them automatically available on internal servers, intranet sites, cloud storage, or backup locations.
 
 This flexibility ensures that whether you want **public reporting** or **private/internal hosting**, Secrover can fit your workflow.
-
-➡️ You can copy the workflow from the [demo repository’s `.github/workflows/secrover.yml`](https://github.com/secrover/secrover-demo/blob/main/.github/workflows/secrover.yml) to get started quickly.
 
 ## Getting Started
 
