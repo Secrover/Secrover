@@ -39,15 +39,17 @@ def main():
 
     print(f"----- Secrover ({VERSION}) -----")
 
-    print(f"- Using config: {config_path}")
-    print(f"- Reports will be saved in: {output_path}")
+    print(f"- Using configuration file: {config_path}")
+    print(f"- Reports will be saved locally to: {output_path}")
+    print(f"- Repositories will be cloned to: {repos_path}")
+    print(f"- Remote export enabled: {'Yes' if export_enabled else 'No'}")
 
     project = config.get("project", [])
     repos = config.get("repos", [])
     domains = config.get("domains", [])
 
     # Clone repos
-    print("\n# Clone repos")
+    print("\n# Clone repos\n")
     if repos:
         repos = clone_repos(repos_path, repos, token)
     else:
@@ -100,7 +102,7 @@ def main():
 
         # Remote Export
         if export_enabled:
-            print("\n# Remote Export")
+            print("\n# Remote Export\n")
             export_reports(output_path, rclone_remotes, rclone_path)
     else:
         print("\nNo checks were enabled, skipping report generation.")
@@ -108,8 +110,7 @@ def main():
     end_time = time.perf_counter()  # End timer
     seconds = end_time - start_time
 
-    print(f"\nAll checks have finished in {seconds:.2f} seconds.")
-
+    print(f"\n⚡ Secrover scan completed in {seconds:.2f} seconds.")
 
 if __name__ == "__main__":
     main()

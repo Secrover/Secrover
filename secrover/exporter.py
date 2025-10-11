@@ -15,11 +15,11 @@ def expand_shell_date(path: str) -> str:
 
 def export_reports(output_dir: Path, remotes: list[str], remote_path: str):
     if not remotes:
-        print("[export] RCLONE_REMOTES not configured.")
+        print("RCLONE_REMOTES not configured.")
         return
 
     if not remote_path:
-        print("[export] RCLONE_PATH not configured.")
+        print("RCLONE_PATH not configured.")
         return
 
     # Expand any $(date +FORMAT) expressions
@@ -27,7 +27,7 @@ def export_reports(output_dir: Path, remotes: list[str], remote_path: str):
 
     for remote in remotes:
         target = f"{remote}:{target_path}/"
-        print(f"[export] Uploading {output_dir} → {target}")
+        print(f"Uploading {output_dir} → {target}")
 
         cmd = [
             "rclone",
@@ -40,8 +40,6 @@ def export_reports(output_dir: Path, remotes: list[str], remote_path: str):
         result = subprocess.run(cmd)
 
         if result.returncode == 0:
-            print(f"[export] ✅ Export to {remote} successful.")
+            print(f"✅ Export to {remote} successful.")
         else:
-            print(
-                f"[export] ❌ Export to {remote} failed with code {result.returncode}."
-            )
+            print(f"❌ Export to {remote} failed with code {result.returncode}.")
