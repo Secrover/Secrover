@@ -121,8 +121,8 @@ From the folder where your `config.yaml` (and optionally `.env`) lives, run:
 ```bash
 docker run -it --rm \
   --env-file .env \
-  -v "$(pwd)/config.yaml:/config.yaml" \
-  -v "$(pwd)/output:/output" \
+  -v "$(PWD)/config.yaml:/config.yaml" \
+  -v "$(PWD)/output:/output" \
   secrover/secrover
 ```
 
@@ -144,8 +144,8 @@ You can schedule scans to run periodically **inside the container** — ideal fo
 
 ```bash
 docker run -it --rm \
-  -v "$(pwd)/config.yaml:/config.yaml" \
-  -v "$(pwd)/output:/output" \
+  -v "$(PWD)/config.yaml:/config.yaml" \
+  -v "$(PWD)/output:/output" \
   -e CRON_SCHEDULE="0 0 * * *" \
   secrover/secrover
 ```
