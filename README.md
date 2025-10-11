@@ -155,8 +155,9 @@ docker run -it --rm \
 | Variable        | Required                   | Default       | Description                                                                                             |
 | --------------- | -------------------------- | ------------- | ------------------------------------------------------------------------------------------------------- |
 | `GITHUB_TOKEN`  | ❌                          | `-`           | Used to clone private GitHub repositories over HTTPS.                                                   |
-| `CONFIG_FILE`   | ✅                          | `config.yaml` | Path to your YAML configuration inside the container.                                                   |
+| `CONFIG_FILE`   | ✅                          | `/config.yaml` | Path to your YAML configuration inside the container.                                                  |
 | `OUTPUT_DIR`    | ✅                          | `/output`     | Directory where reports and logs are saved.                                                             |
+| `REPOS_DIR`     | ✅                          | `repos`       | Directory where git repos are cloned.                                                                   |
 | `CRON_SCHEDULE` | ❌                          | `-`           | Optional [cron expression](https://crontab.guru/) to schedule recurring scans                           |
 
 All variables can be defined in your `.env` file **or** passed directly using `-e` flags when running the container.

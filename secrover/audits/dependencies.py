@@ -5,7 +5,6 @@ from pathlib import Path
 
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
-from secrover.constants import REPOS_FOLDER
 from collections import defaultdict
 
 severity_order = ["critical", "high", "moderate", "low", "info"]
@@ -28,14 +27,16 @@ def merge_severity(existing, new):
     return new if severity_rank(new) < severity_rank(existing) else existing
 
 
-def check_dependencies(project, repos, output_path: Path, enabled_checks):
+def check_dependencies(
+    project, repos, repos_path: Path, output_path: Path, enabled_checks
+):
     data = {}
     total = len(repos)
     for i, repo in enumerate(repos, 1):
         repo_name = repo.get("name") or get_repo_name_from_url(repo["url"])
         print(f"[{i}/{total}] Scanning repo: {repo_name} ...")
         repo_description = repo.get("description") or ""
-        repo_path = REPOS_FOLDER / repo_name
+        repo_path = repos_path / repo_name
         audit_results = run_audit(repo_path)
         data[repo_name] = {
             "description": repo_description,

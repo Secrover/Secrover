@@ -19,6 +19,7 @@ def main():
     load_dotenv()
     config_path = Path(getenv("CONFIG_FILE")).resolve()
     output_path = Path(getenv("OUTPUT_DIR")).resolve()
+    repos_path = Path(getenv("REPOS_DIR")).resolve()
     token = getenv("GITHUB_TOKEN")
 
     # Load config
@@ -42,7 +43,7 @@ def main():
     # Clone repos
     print("\n# Clone repos")
     if repos:
-        repos = clone_repos(repos, token)
+        repos = clone_repos(repos_path, repos, token)
     else:
         print("No repositories to clone.")
 
@@ -59,7 +60,7 @@ def main():
     if repos:
         print("\n1 / Dependencies check")
         dependencies_summary = check_dependencies(
-            project, repos, output_path, enabled_checks)
+            project, repos, repos_path, output_path, enabled_checks)
     else:
         print("\n1 / Dependencies check skipped (no repositories).")
         dependencies_summary = None
@@ -67,7 +68,7 @@ def main():
     # 2 - Code
     if repos:
         print("\n2 / Code check")
-        code_summary = check_code(project, repos, output_path, enabled_checks)
+        code_summary = check_code(project, repos, repos_path, output_path, enabled_checks)
     else:
         print("\n2 / Code check skipped (no repositories).")
         code_summary = None
