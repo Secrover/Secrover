@@ -10,6 +10,7 @@ from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
 from secrover.report import generate_html_report
 from secrover.constants import VERSION
+from secrover.exporter import export_reports
 
 
 def main():
@@ -20,7 +21,12 @@ def main():
     config_path = Path(getenv("CONFIG_FILE")).resolve()
     output_path = Path(getenv("OUTPUT_DIR")).resolve()
     repos_path = Path(getenv("REPOS_DIR")).resolve()
+
     token = getenv("GITHUB_TOKEN")
+
+    export_enabled = getenv("EXPORT_ENABLED").lower() in ("true", "1", "yes")
+    rclone_remotes = [r.strip() for r in getenv("RCLONE_REMOTES").split(",") if r.strip()]
+    rclone_path = getenv("RCLONE_PATH")
 
     # Load config
     try:
@@ -91,6 +97,11 @@ def main():
             "domains_summary": domains_summary,
             "enabled_checks": enabled_checks,
         }, output_path)
+
+        # Remote Export
+        if export_enabled:
+            print("\n# Remote Export")
+            export_reports(output_path, rclone_remotes, rclone_path)
     else:
         print("\nNo checks were enabled, skipping report generation.")
 

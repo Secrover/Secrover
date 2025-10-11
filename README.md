@@ -150,15 +150,24 @@ docker run -it --rm \
 * It executes a new scan based on the chosen schedule
 * By default, results are written to `/output` and logs to `/output/secrover.log`
 
+### 📤 Exporting Reports (Optional)
+
+Secrover can upload generated reports to remote destinations (SFTP, WebDAV, SMB, S3, etc.) via [rclone](https://rclone.org/).
+
+For setup instructions and advanced options, see [EXPORT.md](docs/export.md).
+
 ## Environment Variables Reference
 
-| Variable        | Required                   | Default       | Description                                                                                             |
-| --------------- | -------------------------- | ------------- | ------------------------------------------------------------------------------------------------------- |
-| `GITHUB_TOKEN`  | ❌                          | `-`           | Used to clone private GitHub repositories over HTTPS.                                                   |
-| `CONFIG_FILE`   | ✅                          | `/config.yaml` | Path to your YAML configuration inside the container.                                                  |
-| `OUTPUT_DIR`    | ✅                          | `/output`     | Directory where reports and logs are saved.                                                             |
-| `REPOS_DIR`     | ✅                          | `repos`       | Directory where git repos are cloned.                                                                   |
-| `CRON_SCHEDULE` | ❌                          | `-`           | Optional [cron expression](https://crontab.guru/) to schedule recurring scans                           |
+| Variable         | Required | Default              | Description                                                                                                  |
+| ---------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `GITHUB_TOKEN`   | ❌        | `-`                  | Used to clone private GitHub repositories over HTTPS.                                                        |
+| `CONFIG_FILE`    | ✅        | `/config.yaml`       | Path to your YAML configuration inside the container.                                                        |
+| `OUTPUT_DIR`     | ✅        | `/output`            | Directory where reports and logs are saved.                                                                  |
+| `REPOS_DIR`      | ✅        | `repos`              | Directory where git repos are cloned.                                                                        |
+| `CRON_SCHEDULE`  | ❌        | `-`                  | Optional [cron expression](https://crontab.guru/) to schedule recurring scans                                |
+| `EXPORT_ENABLED` | ❌        | `false`              | Enable exporting reports to remote destinations using rclone.                                                |
+| `RCLONE_REMOTES` | ❌        | `-`                  | Comma-separated list of rclone remote names (from `rclone.conf`) to upload reports to.                       |
+| `RCLONE_PATH`    | ❌        | `/secrover-reports/` | Path on the remote(s) where reports should be uploaded. Supports timestamp expansion using `$(date +FORMAT)` |
 
 All variables can be defined in your `.env` file **or** passed directly using `-e` flags when running the container.
 For example:
@@ -177,6 +186,7 @@ This project benefits from the fantastic work of several open-source projects:
 - [uv](https://github.com/astral-sh/uv)
 - [opengrep](https://github.com/opengrep/opengrep)
 - [osv-scanner](https://github.com/google/osv-scanner)
+- [rclone](https://github.com/rclone/rclone)
 
 A big thanks to all the maintainers and contributors behind these amazing projects, without whom this project wouldn't be possible!
 
