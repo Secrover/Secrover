@@ -1,4 +1,4 @@
-from git import Repo
+from git import Repo, GitCommandError
 from secrover.constants import REPOS_FOLDER
 from urllib.parse import urlparse, urlunparse
 
@@ -39,14 +39,18 @@ def clone_repos(repos, token):
         if token:
             normalized_url = inject_token_into_url(normalized_url, token)
         branch = repo.get("branch", "main")
-        repo_name = repo.get("name") or get_repo_name_from_url(
-            repo["url"]
-        )  # use original URL to name folder
+        repo_name = repo.get("name") or get_repo_name_from_url(original_url)
         dest_path = REPOS_FOLDER / repo_name
 
         if dest_path.exists():
-            valid_repos.append(repo)
-            print(f"Repo '{repo_name}' already exists at {dest_path}, skipping clone.")
+            try:
+                print(f"Repo '{repo_name}' exists, pulling latest changes...")
+                local_repo = Repo(dest_path)
+                origin = local_repo.remotes.origin
+                origin.pull(branch)
+                valid_repos.append(repo)
+            except GitCommandError as error:
+                print(f"Failed to pull {repo_name}: {error}")
             continue
 
         print(f"Cloning {original_url} into {dest_path} (branch {branch}) ...")
@@ -55,6 +59,7 @@ def clone_repos(repos, token):
                 normalized_url, dest_path, branch=branch, single_branch=True
             )
             valid_repos.append(repo)
-        except Exception as error:
+        except GitCommandError as error:
             print(f"Can't clone {normalized_url}:", error)
+
     return valid_repos
