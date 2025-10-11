@@ -12,12 +12,12 @@ Secrover is a free and open-source tool that generates clear, professional secur
 
 ## 🔍 Features
 
-- 🔒 **Security Audits**: Scans your project dependencies and your domains to identify possible vulnerabilities.
-- 📊 **Sharable Dashboards**: Generate dashboards you can easily share with clients, teams, or stakeholders — ideal for reporting and collaboration.
-- 🧠 **Human-readable Reports**:  Clean, actionable, and easy-to-understand reports — even for non-technical audiences.
-- ⚡ **Easy to Use**: Just a simple config file where you list your repositories and your domains to get started quickly.
-- 💻 **Cross-platform**: Works seamlessly on Linux, macOS, and Windows.
-- 🌟 **Actively Maintained**:  We’re constantly adding new features and improvements to help you stay ahead of threats.
+* 🔒 **Security Audits**: Scans your dependencies, code, and domains to find vulnerabilities.
+* 🧠 **Human-readable Reports**: Clear, actionable reports — even for non-technical audiences.
+* ⚡ **Easy Setup & Automation**: Configure with a simple YAML file, schedule recurring scans via built-in cron, or run automatically using GitHub Actions.
+* 📤 **Remote Export**: Upload reports to SFTP, WebDAV, SMB, S3, or Google Drive.
+* 💻 **Cross-platform**: Works on Linux, macOS, and Windows.
+* 🌟 **Actively Maintained**: Continuously improved with new features and workflow enhancements.
 
 ### Audits
 
@@ -37,7 +37,7 @@ Secrover is a free and open-source tool that generates clear, professional secur
 
 You can see Secrover in action right now:
 
-- 📂 Example GitHub repository: [secrover-demo](https://github.com/secrover/secrover-demo)  
+- 📂 Example GitHub repository: [secrover-demo](https://github.com/secrover/secrover-demo)
 - 📊 Live generated report: [demo.secrover.org](https://demo.secrover.org)
 
 ### How the demo works
@@ -49,7 +49,13 @@ The demo repository uses **GitHub Actions** to automatically:
 3. Generate an **HTML security report**.
 4. Deploy the report to **GitHub Pages**, making it publicly accessible.
 
-This setup makes it easy to run Secrover on a schedule (e.g. daily or weekly), so your reports are always up-to-date and shareable with your team or community.
+> This setup is ideal for **publicly sharing reports**, for example on GitHub Pages or a public website.
+
+### Flexible Deployment Options
+
+Secrover is not limited to GitHub Actions — you can also **export reports to any remote destination** (SFTP, WebDAV, SMB, S3, Google Drive, etc.) using rclone, making them automatically available on internal servers, intranet sites, cloud storage, or backup locations.
+
+This flexibility ensures that whether you want **public reporting** or **private/internal hosting**, Secrover can fit your workflow.
 
 ➡️ You can copy the workflow from the [demo repository’s `.github/workflows/secrover.yml`](https://github.com/secrover/secrover-demo/blob/main/.github/workflows/secrover.yml) to get started quickly.
 
