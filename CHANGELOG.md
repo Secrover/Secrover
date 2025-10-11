@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - core: permit to change repos folder path
 - export: add suport for remote export of reports with rclone
 - docker: add cron support with supercronic
+- docker: fix opengrep not found by Python subprocess
 
 ## [0.2] - 2025-10-10
 - core: only clone selected git branch
