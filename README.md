@@ -179,7 +179,7 @@ All variables can be defined in your `.env` file **or** passed directly using `-
 For example:
 
 ```bash
--e CONFIG_FILE=config.yaml -e OUTPUT_DIR=/output
+-e CONFIG_FILE=/config.yaml -e OUTPUT_DIR=/output
 ```
 
 is equivalent to having them set in your `.env` file.
