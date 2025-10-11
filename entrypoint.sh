@@ -3,7 +3,7 @@ set -e
 
 run_scan() {
     echo "Running Secrover scan at $(date)"
-    uv run main.py -c "$CONFIG_FILE" -o "$OUTPUT_DIR"
+    uv run main.py
 }
 
 if [ "$1" = "run_once" ]; then

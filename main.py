@@ -1,4 +1,3 @@
-import argparse
 import time
 from pathlib import Path
 from dotenv import load_dotenv
@@ -18,25 +17,9 @@ def main():
 
     # Env vars
     load_dotenv()
+    config_path = getenv("CONFIG_FILE")
+    output_path = getenv("OUTPUT_DIR")
     token = getenv("GITHUB_TOKEN")
-
-    # Program options
-    parser = argparse.ArgumentParser(description="Secrover Security Scanner")
-    parser.add_argument(
-        "-c", "--config",
-        default="config.yaml",
-        help="Path to config YAML file"
-    )
-    parser.add_argument(
-        "-o", "--output",
-        default="output/",
-        help="Path to output folder"
-    )
-
-    args = parser.parse_args()
-
-    config_path = Path(args.config).resolve()
-    output_path = Path(args.output).resolve()
 
     # Load config
     try:

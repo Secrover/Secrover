@@ -31,8 +31,8 @@ COPY . .
 RUN uv sync --locked
 
 # Default environment variables
-ENV CONFIG_FILE=config.yaml
-ENV OUTPUT_DIR=/output
+ENV CONFIG_FILE="config.yaml"
+ENV OUTPUT_DIR="/output"
 
 # Copy and make entrypoint executable
 COPY entrypoint.sh /entrypoint.sh
