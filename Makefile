@@ -5,12 +5,11 @@ STAMP = .docker-built
 dev:
 	docker run -it --rm \
 		--env-file .env \
-		-v $(PWD)/config.yaml:/app/config.yaml \
+		-v $(PWD)/config.yaml:/config.yaml \
 		-v $(PWD)/repos:/app/repos \
 		-v $(PWD)/output:/output \
 		-v $(PWD)/secrover:/app/secrover \
 		-v $(PWD)/templates:/app/templates \
-		-e CONFIG_FILE=config.yaml \
 		$(IMAGE_NAME)
 
 $(STAMP): Dockerfile
@@ -21,10 +20,9 @@ build: $(STAMP)
 
 run: build
 	docker run -it --rm \
-		-v $(PWD)/config.yaml:/app/config.yaml \
+		-v $(PWD)/config.yaml:/config.yaml \
 		-v $(PWD)/repos:/app/repos \
 		-v $(PWD)/output:/output \
-		-e CONFIG_FILE=config.yaml \
 		$(IMAGE_NAME)
 
 lint: build
