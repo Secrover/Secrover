@@ -36,5 +36,5 @@ format-check: build
 format: build
 	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff format secrover/.
 
-update_deps: build
+update_deps:
 	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv sync --upgrade
