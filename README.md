@@ -166,10 +166,10 @@ For setup instructions and advanced options, see [EXPORT.md](docs/export.md).
 
 | Variable         | Required | Default              | Description                                                                                                  |
 | ---------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `GITHUB_TOKEN`   | ❌        | `-`                  | Used to clone private GitHub repositories over HTTPS.                                                        |
 | `CONFIG_FILE`    | ✅        | `/config.yaml`       | Path to your YAML configuration inside the container.                                                        |
 | `OUTPUT_DIR`     | ✅        | `/output`            | Directory where reports and logs are saved.                                                                  |
 | `REPOS_DIR`      | ✅        | `repos`              | Directory where git repos are cloned.                                                                        |
+| `GITHUB_TOKEN`   | ❌        | `-`                  | Used to clone private GitHub repositories over HTTPS.                                                        |
 | `CRON_SCHEDULE`  | ❌        | `-`                  | Optional [cron expression](https://crontab.guru/) to schedule recurring scans                                |
 | `EXPORT_ENABLED` | ❌        | `false`              | Enable exporting reports to remote destinations using rclone.                                                |
 | `RCLONE_REMOTES` | ❌        | `-`                  | Comma-separated list of rclone remote names (from `rclone.conf`) to upload reports to.                       |
