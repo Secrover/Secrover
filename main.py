@@ -10,6 +10,7 @@ from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
 from secrover.report import generate_html_report
 from secrover.constants import VERSION
+from secrover.exporter import export_reports
 
 
 def main():
@@ -20,7 +21,12 @@ def main():
     config_path = Path(getenv("CONFIG_FILE")).resolve()
     output_path = Path(getenv("OUTPUT_DIR")).resolve()
     repos_path = Path(getenv("REPOS_DIR")).resolve()
+
     token = getenv("GITHUB_TOKEN")
+
+    export_enabled = getenv("EXPORT_ENABLED").lower() in ("true", "1", "yes")
+    rclone_remotes = [r.strip() for r in getenv("RCLONE_REMOTES").split(",") if r.strip()]
+    rclone_path = getenv("RCLONE_PATH")
 
     # Load config
     try:
@@ -33,15 +39,17 @@ def main():
 
     print(f"----- Secrover ({VERSION}) -----")
 
-    print(f"- Using config: {config_path}")
-    print(f"- Reports will be saved in: {output_path}")
+    print(f"- Using configuration file: {config_path}")
+    print(f"- Reports will be saved locally to: {output_path}")
+    print(f"- Repositories will be cloned to: {repos_path}")
+    print(f"- Remote export enabled: {'Yes' if export_enabled else 'No'}")
 
     project = config.get("project", [])
     repos = config.get("repos", [])
     domains = config.get("domains", [])
 
     # Clone repos
-    print("\n# Clone repos")
+    print("\n# Clone repos\n")
     if repos:
         repos = clone_repos(repos_path, repos, token)
     else:
@@ -91,14 +99,18 @@ def main():
             "domains_summary": domains_summary,
             "enabled_checks": enabled_checks,
         }, output_path)
+
+        # Remote Export
+        if export_enabled:
+            print("\n# Remote Export\n")
+            export_reports(output_path, rclone_remotes, rclone_path)
     else:
         print("\nNo checks were enabled, skipping report generation.")
 
     end_time = time.perf_counter()  # End timer
     seconds = end_time - start_time
 
-    print(f"\nAll checks have finished in {seconds:.2f} seconds.")
-
+    print(f"\n⚡ Secrover scan completed in {seconds:.2f} seconds.")
 
 if __name__ == "__main__":
     main()

@@ -12,12 +12,12 @@ Secrover is a free and open-source tool that generates clear, professional secur
 
 ## 🔍 Features
 
-- 🔒 **Security Audits**: Scans your project dependencies and your domains to identify possible vulnerabilities.
-- 📊 **Sharable Dashboards**: Generate dashboards you can easily share with clients, teams, or stakeholders — ideal for reporting and collaboration.
-- 🧠 **Human-readable Reports**:  Clean, actionable, and easy-to-understand reports — even for non-technical audiences.
-- ⚡ **Easy to Use**: Just a simple config file where you list your repositories and your domains to get started quickly.
-- 💻 **Cross-platform**: Works seamlessly on Linux, macOS, and Windows.
-- 🌟 **Actively Maintained**:  We’re constantly adding new features and improvements to help you stay ahead of threats.
+* 🔒 **Security Audits**: Scans your dependencies, code, and domains to find vulnerabilities.
+* 🧠 **Human-readable Reports**: Clear, actionable reports — even for non-technical audiences.
+* ⚡ **Easy Setup & Automation**: Configure with a simple YAML file, schedule recurring scans via built-in cron, or run automatically using GitHub Actions.
+* 📤 **Remote Export**: Upload reports to SFTP, WebDAV, SMB, S3, or Google Drive.
+* 💻 **Cross-platform**: Works on Linux, macOS, and Windows.
+* 🌟 **Actively Maintained**: Continuously improved with new features and workflow enhancements.
 
 ### Audits
 
@@ -37,7 +37,7 @@ Secrover is a free and open-source tool that generates clear, professional secur
 
 You can see Secrover in action right now:
 
-- 📂 Example GitHub repository: [secrover-demo](https://github.com/secrover/secrover-demo)  
+- 📂 Example GitHub repository: [secrover-demo](https://github.com/secrover/secrover-demo)
 - 📊 Live generated report: [demo.secrover.org](https://demo.secrover.org)
 
 ### How the demo works
@@ -49,9 +49,15 @@ The demo repository uses **GitHub Actions** to automatically:
 3. Generate an **HTML security report**.
 4. Deploy the report to **GitHub Pages**, making it publicly accessible.
 
-This setup makes it easy to run Secrover on a schedule (e.g. daily or weekly), so your reports are always up-to-date and shareable with your team or community.
+> This setup is ideal for **publicly sharing reports**, for example on GitHub Pages or a public website.
 
 ➡️ You can copy the workflow from the [demo repository’s `.github/workflows/secrover.yml`](https://github.com/secrover/secrover-demo/blob/main/.github/workflows/secrover.yml) to get started quickly.
+
+### Flexible Deployment Options
+
+Secrover is not limited to GitHub Actions — you can [also export reports to any remote destination](#-exporting-reports-optional) (SFTP, WebDAV, SMB, S3, Google Drive, etc.) using rclone, making them automatically available on internal servers, intranet sites, cloud storage, or backup locations.
+
+This flexibility ensures that whether you want **public reporting** or **private/internal hosting**, Secrover can fit your workflow.
 
 ## Getting Started
 
@@ -150,15 +156,24 @@ docker run -it --rm \
 * It executes a new scan based on the chosen schedule
 * By default, results are written to `/output` and logs to `/output/secrover.log`
 
+### 📤 Exporting Reports (Optional)
+
+Secrover can upload generated reports to remote destinations (SFTP, WebDAV, SMB, S3, etc.) via [rclone](https://rclone.org/).
+
+For setup instructions and advanced options, see [EXPORT.md](docs/export.md).
+
 ## Environment Variables Reference
 
-| Variable        | Required                   | Default       | Description                                                                                             |
-| --------------- | -------------------------- | ------------- | ------------------------------------------------------------------------------------------------------- |
-| `GITHUB_TOKEN`  | ❌                          | `-`           | Used to clone private GitHub repositories over HTTPS.                                                   |
-| `CONFIG_FILE`   | ✅                          | `/config.yaml` | Path to your YAML configuration inside the container.                                                  |
-| `OUTPUT_DIR`    | ✅                          | `/output`     | Directory where reports and logs are saved.                                                             |
-| `REPOS_DIR`     | ✅                          | `repos`       | Directory where git repos are cloned.                                                                   |
-| `CRON_SCHEDULE` | ❌                          | `-`           | Optional [cron expression](https://crontab.guru/) to schedule recurring scans                           |
+| Variable         | Required | Default              | Description                                                                                                  |
+| ---------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `GITHUB_TOKEN`   | ❌        | `-`                  | Used to clone private GitHub repositories over HTTPS.                                                        |
+| `CONFIG_FILE`    | ✅        | `/config.yaml`       | Path to your YAML configuration inside the container.                                                        |
+| `OUTPUT_DIR`     | ✅        | `/output`            | Directory where reports and logs are saved.                                                                  |
+| `REPOS_DIR`      | ✅        | `repos`              | Directory where git repos are cloned.                                                                        |
+| `CRON_SCHEDULE`  | ❌        | `-`                  | Optional [cron expression](https://crontab.guru/) to schedule recurring scans                                |
+| `EXPORT_ENABLED` | ❌        | `false`              | Enable exporting reports to remote destinations using rclone.                                                |
+| `RCLONE_REMOTES` | ❌        | `-`                  | Comma-separated list of rclone remote names (from `rclone.conf`) to upload reports to.                       |
+| `RCLONE_PATH`    | ❌        | `/secrover-reports/` | Path on the remote(s) where reports should be uploaded. Supports timestamp expansion using `$(date +FORMAT)` |
 
 All variables can be defined in your `.env` file **or** passed directly using `-e` flags when running the container.
 For example:
@@ -177,6 +192,7 @@ This project benefits from the fantastic work of several open-source projects:
 - [uv](https://github.com/astral-sh/uv)
 - [opengrep](https://github.com/opengrep/opengrep)
 - [osv-scanner](https://github.com/google/osv-scanner)
+- [rclone](https://github.com/rclone/rclone)
 
 A big thanks to all the maintainers and contributors behind these amazing projects, without whom this project wouldn't be possible!
 

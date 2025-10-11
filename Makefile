@@ -5,6 +5,7 @@ STAMP = .docker-built
 dev:
 	docker run -it --rm \
 		--env-file .env \
+		-v $(PWD)/rclone.conf:/root/.config/rclone/rclone.conf:ro \
 		-v $(PWD)/config.yaml:/config.yaml \
 		-v $(PWD)/repos:/app/repos \
 		-v $(PWD)/output:/output \
