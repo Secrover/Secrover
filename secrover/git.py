@@ -46,8 +46,15 @@ def clone_repos(repos, token):
             try:
                 print(f"Repo '{repo_name}' exists, pulling latest changes...")
                 local_repo = Repo(dest_path)
-                origin = local_repo.remotes.origin
-                origin.pull(branch)
+                pull_info = local_repo.remotes.origin.pull(branch)
+                
+                # Count updates
+                changes_count = sum(1 for info in pull_info if info.flags & info.FAST_FORWARD)
+                if changes_count:
+                    print(f"Pulled {changes_count} updates for {repo_name}")
+                else:
+                    print(f"No updates for {repo_name}")
+                
                 valid_repos.append(repo)
             except GitCommandError as error:
                 print(f"Failed to pull {repo_name}: {error}")

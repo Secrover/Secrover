@@ -17,8 +17,8 @@ def main():
 
     # Env vars
     load_dotenv()
-    config_path = getenv("CONFIG_FILE")
-    output_path = getenv("OUTPUT_DIR")
+    config_path = Path(getenv("CONFIG_FILE")).resolve()
+    output_path = Path(getenv("OUTPUT_DIR")).resolve()
     token = getenv("GITHUB_TOKEN")
 
     # Load config

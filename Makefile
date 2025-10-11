@@ -10,6 +10,7 @@ dev:
 		-v $(PWD)/output:/output \
 		-v $(PWD)/secrover:/app/secrover \
 		-v $(PWD)/templates:/app/templates \
+		-v $(PWD)/main.py:/app/main.py \
 		$(IMAGE_NAME)
 
 $(STAMP): Dockerfile
