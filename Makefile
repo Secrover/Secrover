@@ -4,12 +4,14 @@ STAMP = .docker-built
 
 dev:
 	docker run -it --rm \
-		-v $(PWD)/config.yaml:/app/config.yaml \
+		--env-file .env \
+		-v $(PWD)/rclone.conf:/root/.config/rclone/rclone.conf:ro \
+		-v $(PWD)/config.yaml:/config.yaml \
 		-v $(PWD)/repos:/app/repos \
 		-v $(PWD)/output:/output \
 		-v $(PWD)/secrover:/app/secrover \
 		-v $(PWD)/templates:/app/templates \
-		-e CONFIG_FILE=config.yaml \
+		-v $(PWD)/main.py:/app/main.py \
 		$(IMAGE_NAME)
 
 $(STAMP): Dockerfile
@@ -20,10 +22,9 @@ build: $(STAMP)
 
 run: build
 	docker run -it --rm \
-		-v $(PWD)/config.yaml:/app/config.yaml \
+		-v $(PWD)/config.yaml:/config.yaml \
 		-v $(PWD)/repos:/app/repos \
 		-v $(PWD)/output:/output \
-		-e CONFIG_FILE=config.yaml \
 		$(IMAGE_NAME)
 
 lint: build
@@ -35,5 +36,5 @@ format-check: build
 format: build
 	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff format secrover/.
 
-update_deps: build
+update_deps:
 	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv sync --upgrade

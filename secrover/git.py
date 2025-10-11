@@ -1,6 +1,6 @@
-from git import Repo
-from secrover.constants import REPOS_FOLDER
+from git import Repo, GitCommandError
 from urllib.parse import urlparse, urlunparse
+from pathlib import Path
 
 
 def get_repo_name_from_url(url):
@@ -30,23 +30,36 @@ def inject_token_into_url(url, token):
     return new_url
 
 
-def clone_repos(repos, token):
+def clone_repos(repos_path: Path, repos, token):
     valid_repos = []
-    REPOS_FOLDER.mkdir(parents=True, exist_ok=True)
+    repos_path.mkdir(parents=True, exist_ok=True)
     for repo in repos:
         original_url = repo["url"]
         normalized_url = normalize_repo_url(original_url)
         if token:
             normalized_url = inject_token_into_url(normalized_url, token)
         branch = repo.get("branch", "main")
-        repo_name = repo.get("name") or get_repo_name_from_url(
-            repo["url"]
-        )  # use original URL to name folder
-        dest_path = REPOS_FOLDER / repo_name
+        repo_name = repo.get("name") or get_repo_name_from_url(original_url)
+        dest_path = repos_path / repo_name
 
         if dest_path.exists():
-            valid_repos.append(repo)
-            print(f"Repo '{repo_name}' already exists at {dest_path}, skipping clone.")
+            try:
+                print(f"Repo '{repo_name}' exists, pulling latest changes...")
+                local_repo = Repo(dest_path)
+                pull_info = local_repo.remotes.origin.pull(branch)
+
+                # Count updates
+                changes_count = sum(
+                    1 for info in pull_info if info.flags & info.FAST_FORWARD
+                )
+                if changes_count:
+                    print(f"Pulled {changes_count} updates for {repo_name}")
+                else:
+                    print(f"No updates for {repo_name}")
+
+                valid_repos.append(repo)
+            except GitCommandError as error:
+                print(f"Failed to pull {repo_name}: {error}")
             continue
 
         print(f"Cloning {original_url} into {dest_path} (branch {branch}) ...")
@@ -55,6 +68,7 @@ def clone_repos(repos, token):
                 normalized_url, dest_path, branch=branch, single_branch=True
             )
             valid_repos.append(repo)
-        except Exception as error:
+        except GitCommandError as error:
             print(f"Can't clone {normalized_url}:", error)
+
     return valid_repos

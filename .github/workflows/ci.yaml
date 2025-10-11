@@ -5,10 +5,10 @@ permissions:
 
 on:
   push:
-    branches: [ main ]
+    branches: [main, develop]
     tags: ["*"]
   pull_request:
-    branches: [ main ]
+    branches: [main, develop]
 
 jobs:
   checks:
@@ -29,6 +29,7 @@ jobs:
     name: Build & Publish Docker Image
     runs-on: ubuntu-latest
     needs: checks
+    if: github.event_name == 'push' # Skip on PRs
 
     steps:
       - name: Checkout repository
@@ -41,19 +42,26 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to Docker Hub
-        if: github.event_name == 'push'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Set Docker tags
+        id: docker-tags
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "DOCKER_TAGS=secrover/secrover:${GITHUB_REF_NAME},secrover/secrover:latest" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
+            echo "DOCKER_TAGS=secrover/secrover:develop" >> $GITHUB_ENV
+          else
+            echo "DOCKER_TAGS=" >> $GITHUB_ENV
+          fi
+
       - name: Build and push Docker image
-        if: github.event_name == 'push'
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: |
-            secrover/secrover:latest
-            secrover/secrover:${{ github.ref_name }}
+          tags: ${{ env.DOCKER_TAGS }}

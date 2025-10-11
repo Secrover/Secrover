@@ -18,3 +18,4 @@ config.yaml
 repos/
 output/
 .env
+rclone.conf

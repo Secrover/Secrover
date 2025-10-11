@@ -31,6 +31,4 @@ def generate_html_report(report_type: str, results, output_path: Path):
         report_file = output_path / f"{report_type}_report.html"
     report_file.write_text(output_html, encoding="utf-8")
 
-    print(
-        f'\n{report_type.capitalize()} HTML report generated in "{output_path}" folder.'
-    )
+    print(f"\n✅ {report_type.capitalize()} HTML report generated.")

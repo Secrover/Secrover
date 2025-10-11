@@ -5,7 +5,6 @@ from pathlib import Path
 
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
-from secrover.constants import REPOS_FOLDER
 
 sarif_to_severity = {
     "error": "high",
@@ -71,14 +70,14 @@ def aggregate_global_summary(data):
     return summary
 
 
-def check_code(project, repos, output_path: Path, enabled_checks):
+def check_code(project, repos, repos_path: Path, output_path: Path, enabled_checks):
     data = {}
     total = len(repos)
     for i, repo in enumerate(repos, 1):
         repo_name = repo.get("name") or get_repo_name_from_url(repo["url"])
         print(f"[{i}/{total}] Scanning repo: {repo_name} ...")
         repo_description = repo.get("description") or ""
-        repo_path = REPOS_FOLDER / repo_name
+        repo_path = repos_path / repo_name
 
         try:
             result = subprocess.run(
