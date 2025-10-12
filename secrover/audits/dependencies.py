@@ -100,6 +100,7 @@ def run_audit(repo_path: Path):
                 if not match:
                     continue
                 name, version = match.groups()
+                version = version.rstrip(",")  # known quirk
 
                 # Extract file / artifact where the package is defined
                 filename = None

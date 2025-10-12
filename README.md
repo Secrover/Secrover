@@ -37,8 +37,8 @@ Secrover is a free and open-source tool that generates clear, professional secur
 
 You can see Secrover in action right now:
 
-- 📂 Example GitHub repository: [secrover-demo](https://github.com/secrover/secrover-demo)
 - 📊 Live generated report: [demo.secrover.org](https://demo.secrover.org)
+- 📂 Example GitHub repository: [secrover-demo](https://github.com/secrover/secrover-demo)
 
 ### How the demo works
 
