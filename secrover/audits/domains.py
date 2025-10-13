@@ -2,10 +2,27 @@ import ssl
 import socket
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlparse
 import requests
-
+import IP2Location
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
 from secrover.report import generate_html_report
+from secrover.helpers import country_code_to_emoji
+
+
+def get_country_from_url(ip_db_path: Path, url: str) -> str:
+    if not ip_db_path.exists():
+        return "❓"
+
+    try:
+        database = IP2Location.IP2Location(str(ip_db_path))
+        domain = urlparse(url).netloc or url
+        ip = socket.gethostbyname(domain)
+        rec = database.get_all(ip)
+        return country_code_to_emoji(rec.country_short)
+    except Exception:
+        return "❓"
 
 
 def check_http_to_https_redirect(domain):
@@ -81,10 +98,6 @@ def check_open_ports(domain):
 
 
 def check_security_headers(url):
-    """
-    Fetch response headers from the given full URL (including scheme),
-    and extract key security headers.
-    """
     try:
         response = requests.get(url, timeout=5)
         headers = response.headers
@@ -170,7 +183,9 @@ def get_ssl_info(domain, port=443, timeout=5):
         return {"valid": False, "error": str(e)}
 
 
-def check_domains(project, domains, output_path: Path, enabled_checks):
+def check_domains(
+    project, domains, ip_db_path: Path, output_path: Path, enabled_checks
+):
     output_path.mkdir(parents=True, exist_ok=True)
     data = []
 
@@ -179,6 +194,7 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
         print(f"[{i}/{total}] Scanning domain: {domain} ...")
         info = {
             "domain": domain,
+            "country": None,
             "active": False,
             "https_available": False,
             "http_to_https_redirect": False,
@@ -227,6 +243,9 @@ def check_domains(project, domains, output_path: Path, enabled_checks):
             else:
                 # HTTPS not available, fallback to HTTP
                 url = f"http://{domain}"
+
+            # Check country of url (with ip)
+            info["country"] = get_country_from_url(ip_db_path, url)
 
             # Check security headers for the chosen URL (https if SSL valid, else http)
             sec_headers = check_security_headers(url)

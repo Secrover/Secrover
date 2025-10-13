@@ -76,6 +76,15 @@ wheels = [
 ]
 
 [[package]]
+name = "ip2location"
+version = "8.11.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/f8/b44e07221217f2ef3e1e141fd13fefb439e077696b6a33f3921b323807bc/ip2location-8.11.0.tar.gz", hash = "sha256:444149a741f6575d7711cf5414cfb81f0c44f830e2e94ab968d74665f8baaa31", size = 14084, upload-time = "2025-09-04T06:09:56.269Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/3a/60a919dc2b3a475472b57994234c26ca6a42bded7140de31e6cd695237cc/ip2location-8.11.0-py3-none-any.whl", hash = "sha256:cee21e91ccffbbc5486c588fac5ea5d210feb7e1754d17090e7c6ab358bab16a", size = 14482, upload-time = "2025-09-04T06:09:54.921Z" },
+]
+
+[[package]]
 name = "jinja2"
 version = "3.1.6"
 source = { registry = "https://pypi.org/simple" }
@@ -231,6 +240,7 @@ version = "0.3.0"
 source = { virtual = "." }
 dependencies = [
     { name = "gitpython" },
+    { name = "ip2location" },
     { name = "jinja2" },
     { name = "python-dotenv" },
     { name = "pyyaml" },
@@ -245,6 +255,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "gitpython", specifier = ">=3.1.45" },
+    { name = "ip2location", specifier = ">=8.11.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "pyyaml", specifier = ">=6.0.2" },

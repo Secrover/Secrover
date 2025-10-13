@@ -34,6 +34,14 @@ COPY . .
 # Install Python dependencies with uv
 RUN uv sync --locked
 
+# Download ip2location db
+RUN mkdir -p data/IP2Location && \
+    curl -L -o /tmp/ip2loc.zip "https://download.ip2location.com/lite/IP2LOCATION-LITE-DB1.BIN.ZIP" && \
+    unzip /tmp/ip2loc.zip -d data/IP2Location && \
+    rm -f /tmp/ip2loc.zip
+
+ENV IP2LOCATION_DB_PATH="data/IP2Location/IP2LOCATION-LITE-DB1.BIN"
+
 # Default environment variables
 ENV CONFIG_FILE="/config.yaml"
 ENV OUTPUT_DIR="/output/"

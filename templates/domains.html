@@ -12,6 +12,7 @@
             <thead>
                 <tr>
                     <th>Domain</th>
+                    <th>Country</th>
                     <th>Status</th>
                     <th>HTTPS</th>
                     <th>Certificate</th>
@@ -28,6 +29,9 @@
                 {% for row in data %}
                     <tr>
                         <td><strong>{{ row.domain }}</strong></td>
+                        <td>
+                            {{ row.country }}
+                        </td>
                         <td>
                             {% if row.active %}
                                 <div class="d-flex success">

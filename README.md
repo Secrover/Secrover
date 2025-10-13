@@ -168,12 +168,13 @@ For setup instructions and advanced options, see [EXPORT.md](docs/export.md).
 | ---------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `CONFIG_FILE`    | ✅        | `/config.yaml`       | Path to your YAML configuration inside the container.                                                        |
 | `OUTPUT_DIR`     | ✅        | `/output`            | Directory where reports and logs are saved.                                                                  |
-| `REPOS_DIR`      | ✅        | `repos`              | Directory where git repos are cloned.                                                                        |
+| `REPOS_DIR`      | ✅        | `repos/`             | Directory where git repos are cloned.                                                                        |
 | `GITHUB_TOKEN`   | ❌        | `-`                  | Used to clone private GitHub repositories over HTTPS.                                                        |
 | `CRON_SCHEDULE`  | ❌        | `-`                  | Optional [cron expression](https://crontab.guru/) to schedule recurring scans                                |
 | `EXPORT_ENABLED` | ❌        | `false`              | Enable exporting reports to remote destinations using rclone.                                                |
 | `RCLONE_REMOTES` | ❌        | `-`                  | Comma-separated list of rclone remote names (from `rclone.conf`) to upload reports to.                       |
 | `RCLONE_PATH`    | ❌        | `/secrover-reports/` | Path on the remote(s) where reports should be uploaded. Supports timestamp expansion using `$(date +FORMAT)` |
+| `IP2LOCATION_DB_PATH` | ❌   | `data/IP2Location/`  | Path to the IP2Location database file used for resolving country information from IP addresses.              |
 
 All variables can be defined in your `.env` file **or** passed directly using `-e` flags when running the container.
 For example:
