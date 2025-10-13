@@ -156,7 +156,7 @@ docker run -it --rm \
 * It executes a new scan based on the chosen schedule
 * By default, results are written to `/output` and logs to `/output/secrover.log`
 
-### 📤 Exporting Reports (Optional)
+### Exporting Reports (Optional)
 
 Secrover can upload generated reports to remote destinations (SFTP, WebDAV, SMB, S3, etc.) via [rclone](https://rclone.org/).
 
