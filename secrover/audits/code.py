@@ -12,6 +12,7 @@ sarif_to_severity = {
     "note": "low",
 }
 
+
 def parse_sarif_findings(sarif_data):
     findings = []
     for run in sarif_data.get("runs", []):

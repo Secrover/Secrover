@@ -173,5 +173,7 @@ def aggregate_global_summary(data):
             sev = audit.get("vulnerabilities_by_severity", {})
             for level in DEPENDENCIES_SEVERITY_ORDER:
                 global_counts[level] += sev.get(level, 0)
-    global_counts["total"] = sum(global_counts[level] for level in DEPENDENCIES_SEVERITY_ORDER)
+    global_counts["total"] = sum(
+        global_counts[level] for level in DEPENDENCIES_SEVERITY_ORDER
+    )
     return global_counts
