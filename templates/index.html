@@ -3,31 +3,44 @@
 {% block title %}Report Overview{% endblock %}
 
 {% block content %}
-<section id="global-recap" class="mb-0">
+<section>
     <h1>📊 Report Overview</h1>
 
     <div class="overview-container">
         {% if enabled_checks.dependencies and dependencies_summary %}
             <div class="card">
                 <h2>📦 Dependencies</h2>
-                <div class="count">{{ dependencies_summary.nbRepos }}</div>
-                <div class="label">Repositories scanned</div>
+                <div class="mb-20">
+                    <div class="count">{{ dependencies_summary.nbRepos }}</div>
+                    <div class="label">Repositories scanned</div>
+                </div>
+                <span class="badge {{ 'badge-error' if dependencies_summary.total > 0 else 'badge-success' }}">
+                    <strong>{{ dependencies_summary.total }}</strong> vulnerabilities
+                </span>
             </div>
         {% endif %}
 
         {% if enabled_checks.code and code_summary %}
             <div class="card">
                 <h2>📝 Code</h2>
-                <div class="count">{{ code_summary.nbRepos }}</div>
-                <div class="label">Repositories scanned</div>
+                <div class="mb-20">
+                    <div class="count">{{ code_summary.nbRepos }}</div>
+                    <div class="label">Repositories scanned</div>
+                </div>
+
+                <span class="badge {{ 'badge-error' if code_summary.total > 0 else 'badge-success' }}">
+                    <strong>{{ code_summary.total }}</strong> vulnerabilities
+                </span>
             </div>
         {% endif %}
 
         {% if enabled_checks.domains and domains_summary %}
             <div class="card">
                 <h2>🌐 Domains</h2>
-                <div class="count">{{ domains_summary.nbDomains }}</div>
-                <div class="label">Domains scanned</div>
+                <div class="mb-20">
+                    <div class="count">{{ domains_summary.nbDomains }}</div>
+                    <div class="label">Domains scanned</div>
+                </div>
             </div>
         {% endif %}
     </div>

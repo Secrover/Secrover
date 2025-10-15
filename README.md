@@ -37,8 +37,8 @@ Secrover is a free and open-source tool that generates clear, professional secur
 
 You can see Secrover in action right now:
 
-- 📂 Example GitHub repository: [secrover-demo](https://github.com/secrover/secrover-demo)
 - 📊 Live generated report: [demo.secrover.org](https://demo.secrover.org)
+- 📂 Example GitHub repository: [secrover-demo](https://github.com/secrover/secrover-demo)
 
 ### How the demo works
 
@@ -121,8 +121,8 @@ From the folder where your `config.yaml` (and optionally `.env`) lives, run:
 ```bash
 docker run -it --rm \
   --env-file .env \
-  -v "$(pwd)/config.yaml:/config.yaml" \
-  -v "$(pwd)/output:/output" \
+  -v "$(PWD)/config.yaml:/config.yaml" \
+  -v "$(PWD)/output:/output" \
   secrover/secrover
 ```
 
@@ -144,8 +144,8 @@ You can schedule scans to run periodically **inside the container** — ideal fo
 
 ```bash
 docker run -it --rm \
-  -v "$(pwd)/config.yaml:/config.yaml" \
-  -v "$(pwd)/output:/output" \
+  -v "$(PWD)/config.yaml:/config.yaml" \
+  -v "$(PWD)/output:/output" \
   -e CRON_SCHEDULE="0 0 * * *" \
   secrover/secrover
 ```
@@ -156,7 +156,7 @@ docker run -it --rm \
 * It executes a new scan based on the chosen schedule
 * By default, results are written to `/output` and logs to `/output/secrover.log`
 
-### 📤 Exporting Reports (Optional)
+### Exporting Reports (Optional)
 
 Secrover can upload generated reports to remote destinations (SFTP, WebDAV, SMB, S3, etc.) via [rclone](https://rclone.org/).
 
@@ -166,20 +166,21 @@ For setup instructions and advanced options, see [EXPORT.md](docs/export.md).
 
 | Variable         | Required | Default              | Description                                                                                                  |
 | ---------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `GITHUB_TOKEN`   | ❌        | `-`                  | Used to clone private GitHub repositories over HTTPS.                                                        |
 | `CONFIG_FILE`    | ✅        | `/config.yaml`       | Path to your YAML configuration inside the container.                                                        |
 | `OUTPUT_DIR`     | ✅        | `/output`            | Directory where reports and logs are saved.                                                                  |
-| `REPOS_DIR`      | ✅        | `repos`              | Directory where git repos are cloned.                                                                        |
+| `REPOS_DIR`      | ✅        | `repos/`             | Directory where git repos are cloned.                                                                        |
+| `GITHUB_TOKEN`   | ❌        | `-`                  | Used to clone private GitHub repositories over HTTPS.                                                        |
 | `CRON_SCHEDULE`  | ❌        | `-`                  | Optional [cron expression](https://crontab.guru/) to schedule recurring scans                                |
 | `EXPORT_ENABLED` | ❌        | `false`              | Enable exporting reports to remote destinations using rclone.                                                |
 | `RCLONE_REMOTES` | ❌        | `-`                  | Comma-separated list of rclone remote names (from `rclone.conf`) to upload reports to.                       |
 | `RCLONE_PATH`    | ❌        | `/secrover-reports/` | Path on the remote(s) where reports should be uploaded. Supports timestamp expansion using `$(date +FORMAT)` |
+| `IP2LOCATION_DB_PATH` | ❌   | `data/IP2Location/`  | Path to the IP2Location database file used for resolving country information from IP addresses.              |
 
 All variables can be defined in your `.env` file **or** passed directly using `-e` flags when running the container.
 For example:
 
 ```bash
--e CONFIG_FILE=config.yaml -e OUTPUT_DIR=/output
+-e CONFIG_FILE=/config.yaml -e OUTPUT_DIR=/output
 ```
 
 is equivalent to having them set in your `.env` file.

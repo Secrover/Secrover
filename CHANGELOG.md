@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4] - 2025-10-15
+- templates: improve main report
+- domains: add country of domain (based on IP)
+- security: escape html templates
+
 ## [0.3] - 2025-10-11
 - core: pull git repos if already cloned
 - core: permit to change repos folder path
@@ -25,4 +30,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1] - 2025-08-28
 
-- Initial version
+- initial version

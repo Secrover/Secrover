@@ -9,7 +9,7 @@ from secrover.audits.code import check_code
 from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
 from secrover.report import generate_html_report
-from secrover.constants import VERSION
+from secrover.constants import VERSION, CODE_SEVERITY_ORDER, DEPENDENCIES_SEVERITY_ORDER
 from secrover.exporter import export_reports
 
 
@@ -21,6 +21,7 @@ def main():
     config_path = Path(getenv("CONFIG_FILE")).resolve()
     output_path = Path(getenv("OUTPUT_DIR")).resolve()
     repos_path = Path(getenv("REPOS_DIR")).resolve()
+    ip_db_path = Path(getenv("IP2LOCATION_DB_PATH")).resolve()
 
     token = getenv("GITHUB_TOKEN")
 
@@ -85,7 +86,7 @@ def main():
     if domains:
         print("\n3 / Domains check")
         domains_summary = check_domains(
-            project, domains, output_path, enabled_checks)
+            project, domains, ip_db_path, output_path, enabled_checks)
     else:
         print("\n3 / Domains check skipped (no domains).")
         domains_summary = None
@@ -94,6 +95,8 @@ def main():
     if any(enabled_checks.values()):
         generate_html_report("index", {
             "project": project,
+            "dependencies_severity_order": DEPENDENCIES_SEVERITY_ORDER,
+            "code_severity_order": CODE_SEVERITY_ORDER,
             "dependencies_summary": dependencies_summary,
             "code_summary": code_summary,
             "domains_summary": domains_summary,

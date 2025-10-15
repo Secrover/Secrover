@@ -5,19 +5,23 @@
 {% block content %}
     <section id="global-recap">
         <h1>📝 Code Report</h1>
-         <div class="card severity-dots">
-            <div>
-                {% for level in severity_order %}
-                <span class="severity-dot">
-                    <span class="dot dot-{{ level }}"></span>
-                    <span>
-                        <strong>{{ global_summary[level] }}</strong>
-                        {{ level.capitalize() }}
-                    </span>
+        <div class="card">
+            <div class="d-flex d-justify-between">
+                <span class="badge {{ 'badge-error' if global_summary.total > 0 else 'badge-success' }}">
+                    <strong>{{ global_summary.total }}</strong> vulnerabilities
                 </span>
-                {% endfor %}
+                <div class="severity-dots">
+                    {% for level in severity_order %}
+                    <span class="severity-dot">
+                        <span class="dot dot-{{ level }}"></span>
+                        <span>
+                            <strong>{{ global_summary[level] }}</strong>
+                            {{ level.capitalize() }}
+                        </span>
+                    </span>
+                    {% endfor %}
+                </div>
             </div>
-            <span><strong>{{ global_summary.total }}</strong> vulnerabilities</span>
         </div>
     </section>
 
@@ -32,8 +36,11 @@
                 {% if repo_data.error %}
                     <p class="error">❌ Scan failed: {{ repo_data.error }}</p>
                 {% else %}
-                    <div class="severity-dots mb-20">
-                        <div>
+                    <div class="d-flex d-justify-between mb-20">
+                        <span class="badge {{ 'badge-error' if repo_data.findings_count > 0 else 'badge-success' }}">
+                            <strong>{{ repo_data.findings_count }}</strong> vulnerabilities</span> 
+                        </span>
+                        <div class="severity-dots">
                             {% for level in severity_order %}
                             <span class="severity-dot">
                                 <span class="dot dot-{{ level }}"></span>
@@ -44,7 +51,6 @@
                             </span>
                             {% endfor %}
                         </div>
-                        <span><strong>{{ repo_data.findings_count }}</strong> vulnerabilities</span>
                     </div>
 
                     <p><strong>🕵️ Findings Details:</strong></p>

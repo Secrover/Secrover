@@ -1,11 +1,12 @@
 [project]
 name = "secrover"
-version = "0.3.0"
+version = "0.4.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "gitpython>=3.1.45",
+    "ip2location>=8.11.0",
     "jinja2>=3.1.6",
     "python-dotenv>=1.1.1",
     "pyyaml>=6.0.2",

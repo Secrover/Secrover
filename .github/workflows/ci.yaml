@@ -54,11 +54,14 @@ jobs:
             echo "DOCKER_TAGS=secrover/secrover:${GITHUB_REF_NAME},secrover/secrover:latest" >> $GITHUB_ENV
           elif [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
             echo "DOCKER_TAGS=secrover/secrover:develop" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            echo "DOCKER_TAGS=secrover/secrover:latest" >> $GITHUB_ENV
           else
             echo "DOCKER_TAGS=" >> $GITHUB_ENV
           fi
 
       - name: Build and push Docker image
+        if: env.DOCKER_TAGS != ''
         uses: docker/build-push-action@v6
         with:
           context: .

@@ -2,25 +2,24 @@ import subprocess
 import json
 import re
 from pathlib import Path
-
-from secrover.git import get_repo_name_from_url
-from secrover.report import generate_html_report
 from collections import defaultdict
 
-severity_order = ["critical", "high", "moderate", "low", "info"]
+from secrover.constants import DEPENDENCIES_SEVERITY_ORDER
+from secrover.git import get_repo_name_from_url
+from secrover.report import generate_html_report
 
 
 def init_severity_counts():
-    return {sev: 0 for sev in severity_order}
+    return {sev: 0 for sev in DEPENDENCIES_SEVERITY_ORDER}
 
 
 def normalize_severity(severity: str):
     sev = (severity or "info").lower()
-    return sev if sev in severity_order else "info"
+    return sev if sev in DEPENDENCIES_SEVERITY_ORDER else "info"
 
 
 def severity_rank(sev):
-    return severity_order.index(normalize_severity(sev))
+    return DEPENDENCIES_SEVERITY_ORDER.index(normalize_severity(sev))
 
 
 def merge_severity(existing, new):
@@ -52,7 +51,7 @@ def check_dependencies(
         {
             "project": project,
             "data": data,
-            "severity_order": severity_order,
+            "severity_order": DEPENDENCIES_SEVERITY_ORDER,
             "global_summary": summary,
             "enabled_checks": enabled_checks,
         },
@@ -100,6 +99,7 @@ def run_audit(repo_path: Path):
                 if not match:
                     continue
                 name, version = match.groups()
+                version = version.rstrip(",")  # known quirk
 
                 # Extract file / artifact where the package is defined
                 filename = None
@@ -169,7 +169,9 @@ def aggregate_global_summary(data):
         audit = repo_data.get("audit", {})
         if audit:
             sev = audit.get("vulnerabilities_by_severity", {})
-            for level in severity_order:
+            for level in DEPENDENCIES_SEVERITY_ORDER:
                 global_counts[level] += sev.get(level, 0)
-    global_counts["total"] = sum(global_counts[level] for level in severity_order)
+    global_counts["total"] = sum(
+        global_counts[level] for level in DEPENDENCIES_SEVERITY_ORDER
+    )
     return global_counts

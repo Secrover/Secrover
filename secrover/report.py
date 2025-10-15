@@ -1,5 +1,5 @@
 import base64
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
 from datetime import datetime
 from secrover.constants import VERSION
@@ -10,9 +10,16 @@ def get_base64_image(path: Path) -> str:
         return base64.b64encode(img_file.read()).decode("utf-8")
 
 
-def generate_html_report(report_type: str, results, output_path: Path):
+def generate_html_report(report_type: str, results: dict, output_path: Path):
     template_dir = Path("templates")
-    env = Environment(loader=FileSystemLoader(str(template_dir)))
+    env = Environment(
+        loader=FileSystemLoader(str(template_dir)),
+        autoescape=select_autoescape(
+            enabled_extensions=("html", "xml"),
+            default_for_string=True,
+        ),
+    )
+
     template = env.get_template(f"{report_type}.html")
 
     context = {
@@ -25,10 +32,12 @@ def generate_html_report(report_type: str, results, output_path: Path):
 
     output_html = template.render(context)
     output_path.mkdir(parents=True, exist_ok=True)
-    if report_type == "index":
-        report_file = output_path / f"{report_type}.html"
-    else:
-        report_file = output_path / f"{report_type}_report.html"
+    report_file = output_path / (
+        f"{report_type}.html"
+        if report_type == "index"
+        else f"{report_type}_report.html"
+    )
+
     report_file.write_text(output_html, encoding="utf-8")
 
     print(f"\n✅ {report_type.capitalize()} HTML report generated.")
