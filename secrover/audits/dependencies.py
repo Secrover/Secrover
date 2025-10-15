@@ -8,8 +8,6 @@ from secrover.constants import DEPENDENCIES_SEVERITY_ORDER
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
 
-DEPENDENCIES_SEVERITY_ORDER = ["critical", "high", "moderate", "low", "info"]
-
 
 def init_severity_counts():
     return {sev: 0 for sev in DEPENDENCIES_SEVERITY_ORDER}
