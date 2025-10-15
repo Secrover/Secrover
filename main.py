@@ -9,7 +9,7 @@ from secrover.audits.code import check_code
 from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
 from secrover.report import generate_html_report
-from secrover.constants import VERSION
+from secrover.constants import VERSION, CODE_SEVERITY_ORDER, DEPENDENCIES_SEVERITY_ORDER
 from secrover.exporter import export_reports
 
 
@@ -95,6 +95,8 @@ def main():
     if any(enabled_checks.values()):
         generate_html_report("index", {
             "project": project,
+            "dependencies_severity_order": DEPENDENCIES_SEVERITY_ORDER,
+            "code_severity_order": CODE_SEVERITY_ORDER,
             "dependencies_summary": dependencies_summary,
             "code_summary": code_summary,
             "domains_summary": domains_summary,

@@ -2,7 +2,7 @@ import subprocess
 import json
 from pathlib import Path
 
-
+from secrover.constants import CODE_SEVERITY_ORDER
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
 
@@ -11,8 +11,6 @@ sarif_to_severity = {
     "warning": "moderate",
     "note": "low",
 }
-severity_order = ["high", "moderate", "low"]
-
 
 def parse_sarif_findings(sarif_data):
     findings = []
@@ -55,14 +53,14 @@ def parse_sarif_findings(sarif_data):
 
 
 def aggregate_global_summary(data):
-    summary = {level: 0 for level in severity_order}
+    summary = {level: 0 for level in CODE_SEVERITY_ORDER}
     summary["total"] = 0
 
     for repo_data in data.values():
         findings_by_severity = repo_data.get("findings_by_severity", {})
         total_findings = repo_data.get("findings_count", 0)
 
-        for level in severity_order:
+        for level in CODE_SEVERITY_ORDER:
             summary[level] += findings_by_severity.get(level, 0)
 
         summary["total"] += total_findings
@@ -96,7 +94,7 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
                 all_results.extend(run.get("results", []))
 
             # Count findings per severity
-            findings_by_severity = {sev: 0 for sev in severity_order}
+            findings_by_severity = {sev: 0 for sev in CODE_SEVERITY_ORDER}
             for res in all_results:
                 # default 'warning'
                 level = res.get("level", "warning").lower()
@@ -121,7 +119,7 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
             data[repo_name] = {
                 "error": str(e),
                 "findings_count": 0,
-                "findings_by_severity": {sev: 0 for sev in severity_order},
+                "findings_by_severity": {sev: 0 for sev in CODE_SEVERITY_ORDER},
                 "findings": [],
             }
 
@@ -130,7 +128,7 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
             data[repo_name] = {
                 "error": str(e),
                 "findings_count": 0,
-                "findings_by_severity": {sev: 0 for sev in severity_order},
+                "findings_by_severity": {sev: 0 for sev in CODE_SEVERITY_ORDER},
                 "findings": [],
             }
 
@@ -142,7 +140,7 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
         {
             "project": project,
             "data": data,
-            "severity_order": severity_order,
+            "severity_order": CODE_SEVERITY_ORDER,
             "global_summary": summary,
             "enabled_checks": enabled_checks,
         },

@@ -170,26 +170,18 @@
             font-size: 14px;
         }
         .badge {
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
             background-color: #f8f9fa;
             color: #6c757d;
 
             &.badge-small {
-                padding: 4px 12px;
+                padding: 2px 6px;
                 font-size: 12px;
-                font-weight: 500;
-            }
-
-            &.badge-small {
-                padding: 2px 4px;
-                font-size: 12px;
-                font-weight: 500;
             }
 
             &.badge-success {
@@ -204,17 +196,9 @@
         }
         .severity-dots {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 12px;
             flex-wrap: wrap;
-
-            & > div {
-                display: flex;
-                gap: 12px;
-                flex-wrap: wrap;
-                align-items: center;
-                padding: 15px 0;
-            }
+            align-items: center;
         }
         .severity-dot {
             display: flex;
@@ -265,10 +249,6 @@
         }
         #global-recap {
             margin-bottom: 40px;
-
-            .severity-dots {
-                padding: 15px 20px;
-            }
         }
         .overview-container {
             display: flex;
@@ -351,6 +331,9 @@
             display: flex;
             align-items: center;
             gap: 5px;
+        }
+        .d-justify-between {
+            justify-content: space-between;
         }
         .d-wrap {
             flex-wrap: wrap;
