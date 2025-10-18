@@ -55,7 +55,7 @@ The demo repository uses **GitHub Actions** to automatically:
 
 ### Flexible Deployment Options
 
-Secrover is not limited to GitHub Actions — you can [also export reports to any remote destination](#-exporting-reports-optional) (SFTP, WebDAV, SMB, S3, Google Drive, etc.) using rclone, making them automatically available on internal servers, intranet sites, cloud storage, or backup locations.
+Secrover is not limited to GitHub Actions — you can [also export reports to any remote destination](#exporting-reports-optional) (SFTP, WebDAV, SMB, S3, Google Drive, etc.) using rclone, making them automatically available on internal servers, intranet sites, cloud storage, or backup locations.
 
 This flexibility ensures that whether you want **public reporting** or **private/internal hosting**, Secrover can fit your workflow.
 

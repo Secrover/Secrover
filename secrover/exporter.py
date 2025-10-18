@@ -4,26 +4,23 @@ from datetime import datetime, timezone
 import re
 
 
-def expand_shell_date(path: str) -> str:
+def expand_shell_date(path: Path) -> Path:
     def replacer(match):
         fmt = match.group(1)
         return datetime.now(timezone.utc).strftime(fmt)
 
     pattern = re.compile(r"\$\(\s*date\s+\+([^)]+)\s*\)")
-    return pattern.sub(replacer, path)
+    expanded_str = pattern.sub(replacer, str(path))
+    return Path(expanded_str).resolve()
 
 
-def export_reports(output_dir: Path, remotes: list[str], remote_path: str):
+def export_reports(output_dir: Path, remotes: list[str], remote_path: Path):
     if not remotes:
         print("RCLONE_REMOTES not configured.")
         return
 
-    if not remote_path:
-        print("RCLONE_PATH not configured.")
-        return
-
     # Expand any $(date +FORMAT) expressions
-    target_path = expand_shell_date(remote_path.rstrip("/"))
+    target_path = expand_shell_date(remote_path)
 
     for remote in remotes:
         target = f"{remote}:{target_path}/"

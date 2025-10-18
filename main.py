@@ -18,16 +18,19 @@ def main():
 
     # Env vars
     load_dotenv()
+
     config_path = Path(getenv("CONFIG_FILE")).resolve()
     output_path = Path(getenv("OUTPUT_DIR")).resolve()
     repos_path = Path(getenv("REPOS_DIR")).resolve()
     ip_db_path = Path(getenv("IP2LOCATION_DB_PATH")).resolve()
+    rclone_path = Path(getenv("RCLONE_PATH")).resolve()
 
     token = getenv("GITHUB_TOKEN")
 
     export_enabled = getenv("EXPORT_ENABLED").lower() in ("true", "1", "yes")
-    rclone_remotes = [r.strip() for r in getenv("RCLONE_REMOTES").split(",") if r.strip()]
-    rclone_path = getenv("RCLONE_PATH")
+    rclone_remotes = [
+        r.strip() for r in getenv("RCLONE_REMOTES").split(",") if r.strip()
+    ]
 
     # Load config
     try:
@@ -69,7 +72,8 @@ def main():
     if repos:
         print("\n1 / Dependencies check")
         dependencies_summary = check_dependencies(
-            project, repos, repos_path, output_path, enabled_checks)
+            project, repos, repos_path, output_path, enabled_checks
+        )
     else:
         print("\n1 / Dependencies check skipped (no repositories).")
         dependencies_summary = None
@@ -77,7 +81,9 @@ def main():
     # 2 - Code
     if repos:
         print("\n2 / Code check")
-        code_summary = check_code(project, repos, repos_path, output_path, enabled_checks)
+        code_summary = check_code(
+            project, repos, repos_path, output_path, enabled_checks
+        )
     else:
         print("\n2 / Code check skipped (no repositories).")
         code_summary = None
@@ -86,22 +92,27 @@ def main():
     if domains:
         print("\n3 / Domains check")
         domains_summary = check_domains(
-            project, domains, ip_db_path, output_path, enabled_checks)
+            project, domains, ip_db_path, output_path, enabled_checks
+        )
     else:
         print("\n3 / Domains check skipped (no domains).")
         domains_summary = None
 
     # Only generate the main report if any check was run
     if any(enabled_checks.values()):
-        generate_html_report("index", {
-            "project": project,
-            "dependencies_severity_order": DEPENDENCIES_SEVERITY_ORDER,
-            "code_severity_order": CODE_SEVERITY_ORDER,
-            "dependencies_summary": dependencies_summary,
-            "code_summary": code_summary,
-            "domains_summary": domains_summary,
-            "enabled_checks": enabled_checks,
-        }, output_path)
+        generate_html_report(
+            "index",
+            {
+                "project": project,
+                "dependencies_severity_order": DEPENDENCIES_SEVERITY_ORDER,
+                "code_severity_order": CODE_SEVERITY_ORDER,
+                "dependencies_summary": dependencies_summary,
+                "code_summary": code_summary,
+                "domains_summary": domains_summary,
+                "enabled_checks": enabled_checks,
+            },
+            output_path,
+        )
 
         # Remote Export
         if export_enabled:
@@ -114,6 +125,7 @@ def main():
     seconds = end_time - start_time
 
     print(f"\n⚡ Secrover scan completed in {seconds:.2f} seconds.")
+
 
 if __name__ == "__main__":
     main()
