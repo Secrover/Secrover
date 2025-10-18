@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5] - 2025-10-18
+- core: update deps
+- templates: show technologies used in the report
+- templates: handle pluralization of 'vulnerabilities' word
+- domains: add global summary
+
 ## [0.4] - 2025-10-15
 - templates: improve main report
 - domains: add country of domain (based on IP)

@@ -15,7 +15,7 @@
                     <div class="label">Repositories scanned</div>
                 </div>
                 <span class="badge {{ 'badge-error' if dependencies_summary.total > 0 else 'badge-success' }}">
-                    <strong>{{ dependencies_summary.total }}</strong> vulnerabilities
+                    <strong>{{ dependencies_summary.total }}</strong> {{ dependencies_summary.total | pluralize('vulnerability') }}
                 </span>
             </div>
         {% endif %}
@@ -29,7 +29,7 @@
                 </div>
 
                 <span class="badge {{ 'badge-error' if code_summary.total > 0 else 'badge-success' }}">
-                    <strong>{{ code_summary.total }}</strong> vulnerabilities
+                    <strong>{{ code_summary.total }}</strong> {{ code_summary.total | pluralize('vulnerability') }}
                 </span>
             </div>
         {% endif %}
@@ -41,6 +41,10 @@
                     <div class="count">{{ domains_summary.nbDomains }}</div>
                     <div class="label">Domains scanned</div>
                 </div>
+
+                <span class="badge {{ 'badge-error' if domains_summary.total > 0 else 'badge-success' }}">
+                    <strong>{{ domains_summary.total }}</strong> {{ domains_summary.total | pluralize('vulnerability') }}
+                </span>
             </div>
         {% endif %}
     </div>

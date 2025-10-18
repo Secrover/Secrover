@@ -38,7 +38,7 @@
                 {% else %}
                     <div class="d-flex d-justify-between mb-20">
                         <span class="badge {{ 'badge-error' if repo_data.findings_count > 0 else 'badge-success' }}">
-                            <strong>{{ repo_data.findings_count }}</strong> vulnerabilities</span> 
+                            <strong>{{ repo_data.findings_count }}</strong> {{ repo_data.findings_count | pluralize('vulnerability') }}</span>
                         </span>
                         <div class="severity-dots">
                             {% for level in severity_order %}
@@ -75,5 +75,5 @@
             </div>
         {% endfor %}
     </div>
-   
+
 {% endblock %}

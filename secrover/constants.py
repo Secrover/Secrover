@@ -1,4 +1,5 @@
-VERSION = "0.4"
+VERSION = "0.5"
 
 DEPENDENCIES_SEVERITY_ORDER = ["critical", "high", "moderate", "low", "info"]
 CODE_SEVERITY_ORDER = ["high", "moderate", "low"]
+DOMAINS_SEVERITY_ORDER = ["high", "moderate", "low"]

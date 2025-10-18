@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from secrover.report import generate_html_report
 from secrover.helpers import country_code_to_emoji
+from secrover.constants import DOMAINS_SEVERITY_ORDER
 
 
 def get_country_from_url(ip_db_path: Path, url: str) -> str:
@@ -183,6 +184,30 @@ def get_ssl_info(domain, port=443, timeout=5):
         return {"valid": False, "error": str(e)}
 
 
+def aggregate_global_summary(data):
+    summary = {level: 0 for level in DOMAINS_SEVERITY_ORDER}
+    summary["total"] = 0
+
+    for domain_info in data:
+        # Skip inactive domains
+        if not domain_info.get("active", False):
+            continue
+
+        # HIGH: No HTTPS available
+        if not domain_info.get("https_available", False):
+            summary["high"] += 1
+            summary["total"] += 1
+            continue  # Count only once per domain
+
+        # HIGH: TLSv1 or TLSv1.1 used
+        tls_versions = domain_info.get("tls_versions", {})
+        if "TLSv1" in tls_versions or "TLSv1.1" in tls_versions:
+            summary["high"] += 1
+            summary["total"] += 1
+
+    return summary
+
+
 def check_domains(
     project, domains, ip_db_path: Path, output_path: Path, enabled_checks
 ):
@@ -266,13 +291,18 @@ def check_domains(
 
         data.append(info)
 
-    summary = {
-        "nbDomains": total,
-    }
+    summary = aggregate_global_summary(data)
+    summary.update({"nbDomains": total})
 
     generate_html_report(
         "domains",
-        {"project": project, "data": data, "enabled_checks": enabled_checks},
+        {
+            "project": project,
+            "data": data,
+            "severity_order": DOMAINS_SEVERITY_ORDER,
+            "global_summary": summary,
+            "enabled_checks": enabled_checks,
+        },
         output_path,
     )
 

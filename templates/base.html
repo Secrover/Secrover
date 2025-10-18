@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="data:image/svg+xml;base64,{{ favicon_b64 }}" type="image/svg+xml">
     <style>
-        /* http://meyerweb.com/eric/tools/css/reset/ 
+        /* http://meyerweb.com/eric/tools/css/reset/
         v2.0 | 20110126
         License: none (public domain)
         */
@@ -19,8 +19,8 @@
         dl, dt, dd, ol, ul, li,
         fieldset, form, label, legend,
         table, caption, tbody, tfoot, thead, tr, th, td,
-        article, aside, canvas, details, embed, 
-        figure, figcaption, footer, header, hgroup, 
+        article, aside, canvas, details, embed,
+        figure, figcaption, footer, header, hgroup,
         menu, nav, output, ruby, section, summary,
         time, mark, audio, video {
             margin: 0;
@@ -31,7 +31,7 @@
             vertical-align: baseline;
         }
         /* HTML5 display-role reset for older browsers */
-        article, aside, details, figcaption, figure, 
+        article, aside, details, figcaption, figure,
         footer, header, hgroup, menu, nav, section {
             display: block;
         }
@@ -65,9 +65,9 @@
             --success-color: #059669;
             --error-color: #ef4444;
         }
-        body { 
-            font-family: 'Noto Sans', Arial, sans-serif; 
-            margin-bottom: 20px; 
+        body {
+            font-family: 'Noto Sans', Arial, sans-serif;
+            margin-bottom: 20px;
             background: #fff;
             color: #222;
         }
@@ -89,8 +89,12 @@
             margin-bottom: 30px;
             padding: 0 0 40px 0;
 
-
             #logo { height: 40px; }
+            #audit-info {
+                text-align: right;
+                color: #666;
+                font-size: 14px;
+            }
         }
         #footer {
             display: flex;
@@ -110,10 +114,10 @@
         h1 { font-size: 1.8em; }
         h3 { font-size: 1.4em; }
         h4 { margin-bottom: 10px; }
-        a { 
-            font-weight: bold; 
-            color: var(--main-color); 
-            text-decoration: none; 
+        a {
+            font-weight: bold;
+            color: var(--main-color);
+            text-decoration: none;
 
             &.disabled {
                 pointer-events: none;
@@ -163,11 +167,6 @@
             &.limit-size {
                 max-width: 400px;
             }
-        }
-        #audit-info { 
-            text-align: right;
-            color: #666;
-            font-size: 14px;
         }
         .badge {
             display: inline-flex;
@@ -222,7 +221,7 @@
             &.dot-success { background: var(--success-color); }
             &.dot-error { background: var(--error-color); }
         }
-        
+
         #menu {
             display: flex;
             flex-wrap: wrap;
@@ -326,6 +325,47 @@
             font-style: italic;
         }
 
+        .tooltip-link {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            border-bottom: 1px dotted #666;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            font-size: 13px;
+            font-style: normal;
+            z-index: 1000;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #333;
+        }
+
+        .tooltip-link:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
         /* Helpers */
         .d-flex {
             display: flex;
@@ -369,6 +409,13 @@
             #main {
                 margin: 20px;
             }
+            #header {
+                justify-content: center;
+
+                #audit-info {
+                    text-align: center;
+                }
+            }
         }
     </style>
 </head>
@@ -385,7 +432,18 @@
                         for <strong>{{ project.name }}</strong>
                     {% endif %}
                 </p>
-                <p><em>Audit run on {{ audit_datetime }} with <a href="https://secrover.org" target="_blank">Secrover</a> {{ version }}</em></p>
+                <p class="audit-info">
+                    <em>
+                        Audit run on {{ audit_datetime }} with
+                        <span class="tooltip-link">
+                            Secrover {{ version }}
+                            <span class="tooltip">
+                                osv-scanner: {{ osv_version }}<br>
+                                opengrep: {{ opengrep_version }}
+                            </span>
+                        </span>
+                    </em>
+                </p>
             </div>
         </div>
 
@@ -395,7 +453,7 @@
             <a href="code_report.html" {% if not enabled_checks.code %}class="disabled" aria-disabled="true"{% endif %}>📝 Code</a>
             <a href="domains_report.html" {% if not enabled_checks.domains %}class="disabled" aria-disabled="true"{% endif %}>🌐 Domains</a>
         </nav>
-        
+
         {% block content %}{% endblock %}
     </div>
     <footer id="footer">

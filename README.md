@@ -25,7 +25,7 @@ Secrover is a free and open-source tool that generates clear, professional secur
 | --------------- | ------------------------------------------------------ | -------------------------- |
 | Dependencies | Vulnerability check                                    |  All languages supported by osv-scanner |
 | Code         | Static check                                           | All languages supported by opengrep |
-| Domains      | SSL certificate, HTTP→HTTPS Redirect, HSTS header, TLS versions, Open Ports, Security Headers | -     |
+| Domains      | SSL certificate, HTTP→HTTPS Redirect, HSTS header, TLS versions, Open Ports, Security Headers, Hosting Location | -     |
 
 ## Screenshots
 
@@ -55,13 +55,13 @@ The demo repository uses **GitHub Actions** to automatically:
 
 ### Flexible Deployment Options
 
-Secrover is not limited to GitHub Actions — you can [also export reports to any remote destination](#-exporting-reports-optional) (SFTP, WebDAV, SMB, S3, Google Drive, etc.) using rclone, making them automatically available on internal servers, intranet sites, cloud storage, or backup locations.
+Secrover is not limited to GitHub Actions — you can [also export reports to any remote destination](#exporting-reports-optional) (SFTP, WebDAV, SMB, S3, Google Drive, etc.) using rclone, making them automatically available on internal servers, intranet sites, cloud storage, or backup locations.
 
 This flexibility ensures that whether you want **public reporting** or **private/internal hosting**, Secrover can fit your workflow.
 
 ## Getting Started
 
-Secrover is designed to be simple: configure what you want to scan, then run it with Docker.  
+Secrover is designed to be simple: configure what you want to scan, then run it with Docker.
 Within minutes, you’ll have a professional **HTML security report** you can share.
 
 Create a new folder/repo with a `config.yaml` file inside where you will list your repositories and domains to scan.

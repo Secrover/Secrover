@@ -13,7 +13,9 @@ RUN apk add --no-cache \
 RUN apk add uv
 
 # Install opengrep
-RUN curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.sh | bash
+RUN curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.sh -o /tmp/install.sh && \
+    chmod +x /tmp/install.sh && \
+    bash /tmp/install.sh
 ENV PATH="/root/.opengrep/cli/latest:$PATH"
 
 # Install osv-scanner
