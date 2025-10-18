@@ -41,6 +41,10 @@
                     <div class="count">{{ domains_summary.nbDomains }}</div>
                     <div class="label">Domains scanned</div>
                 </div>
+
+                <span class="badge {{ 'badge-error' if domains_summary.total > 0 else 'badge-success' }}">
+                    <strong>{{ domains_summary.total }}</strong> vulnerabilities
+                </span>
             </div>
         {% endif %}
     </div>
