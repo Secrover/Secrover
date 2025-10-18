@@ -3,6 +3,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
 from datetime import datetime
 from secrover.constants import VERSION
+from secrover.tools import get_tool_version
 
 
 def get_base64_image(path: Path) -> str:
@@ -24,7 +25,9 @@ def generate_html_report(report_type: str, results: dict, output_path: Path):
 
     context = {
         "version": VERSION,
-        "audit_datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "osv_version": get_tool_version("osv-scanner"),
+        "opengrep_version": get_tool_version("opengrep"),
+        "audit_datetime": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "logo_b64": get_base64_image(Path("assets/secrover.svg")),
         "favicon_b64": get_base64_image(Path("assets/favicon.svg")),
     }

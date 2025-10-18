@@ -12,7 +12,6 @@ from secrover.report import generate_html_report
 from secrover.constants import VERSION, CODE_SEVERITY_ORDER, DEPENDENCIES_SEVERITY_ORDER
 from secrover.exporter import export_reports
 
-
 def main():
     start_time = time.perf_counter()  # Start timer
 

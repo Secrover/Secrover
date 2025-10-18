@@ -325,6 +325,47 @@
             font-style: italic;
         }
 
+        .tooltip-link {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            border-bottom: 1px dotted #666;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            font-size: 13px;
+            font-style: normal;
+            z-index: 1000;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #333;
+        }
+
+        .tooltip-link:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
         /* Helpers */
         .d-flex {
             display: flex;
@@ -391,7 +432,18 @@
                         for <strong>{{ project.name }}</strong>
                     {% endif %}
                 </p>
-                <p><em>Audit run on {{ audit_datetime }} with <a href="https://secrover.org" target="_blank">Secrover</a> {{ version }}</em></p>
+                <p class="audit-info">
+                    <em>
+                        Audit run on {{ audit_datetime }} with
+                        <span class="tooltip-link">
+                            Secrover {{ version }}
+                            <span class="tooltip">
+                                osv-scanner: {{ osv_version }}<br>
+                                opengrep: {{ opengrep_version }}
+                            </span>
+                        </span>
+                    </em>
+                </p>
             </div>
         </div>
 
