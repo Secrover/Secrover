@@ -6,6 +6,25 @@ from secrover.constants import VERSION
 from secrover.tools import get_tool_version
 
 
+def pluralize(count, singular, plural=None):
+    if count == 1:
+        return singular
+
+    if plural is None:
+        # Handle words ending in consonant + y (e.g., "baby" -> "babies")
+        if singular.endswith("y") and len(singular) > 1:
+            # Check if the letter before 'y' is a consonant
+            if singular[-2] not in "aeiou":
+                plural = singular[:-1] + "ies"
+            else:
+                # Vowel + y just adds 's' (e.g., "day" -> "days")
+                plural = singular + "s"
+        else:
+            plural = singular + "s"
+
+    return plural
+
+
 def get_base64_image(path: Path) -> str:
     with path.open("rb") as img_file:
         return base64.b64encode(img_file.read()).decode("utf-8")
@@ -20,6 +39,7 @@ def generate_html_report(report_type: str, results: dict, output_path: Path):
             default_for_string=True,
         ),
     )
+    env.filters["pluralize"] = pluralize
 
     template = env.get_template(f"{report_type}.html")
 

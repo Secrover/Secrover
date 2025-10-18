@@ -8,14 +8,14 @@
         <div class="card">
             <div class="d-flex d-justify-between">
                 <span class="badge {{ 'badge-error' if global_summary.total > 0 else 'badge-success' }}">
-                    <strong>{{ global_summary.total }}</strong> vulnerabilities
+                    <strong>{{ global_summary.total }}</strong> {{ global_summary.total | pluralize('vulnerability') }}
                 </span>
                 <div class="severity-dots">
                     {% for level in severity_order %}
                     <span class="severity-dot">
                         <span class="dot dot-{{ level }}"></span>
                         <span>
-                            <strong>{{ global_summary[level] }}</strong> 
+                            <strong>{{ global_summary[level] }}</strong>
                             {{ level.capitalize() }}
                         </span>
                     </span>
@@ -42,17 +42,17 @@
                         <h3>{{ repo_name }}</h3>
                     </div>
                     <p class="project-description">{{ repo_data.description }}</p>
-                    
+
                     <div class="d-flex d-justify-between mb-20">
                         <span class="badge {{ 'badge-error' if audit.total_vulnerabilities > 0 else 'badge-success' }}">
-                            <strong>{{ audit.total_vulnerabilities }}</strong> vulnerabilities</span> 
+                            <strong>{{ audit.total_vulnerabilities }}</strong> {{ audit.total_vulnerabilities | pluralize('vulnerability') }}</span>
                         </span>
                         <div class="severity-dots">
                             {% for level in severity_order %}
                             <span class="severity-dot">
                                 <span class="dot dot-{{ level }}"></span>
                                 <span>
-                                    <strong>{{ audit.vulnerabilities_by_severity.get(level, 0) }}</strong> 
+                                    <strong>{{ audit.vulnerabilities_by_severity.get(level, 0) }}</strong>
                                     {{ level.capitalize() }}
                                 </span>
                             </span>
