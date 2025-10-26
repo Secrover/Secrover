@@ -5,13 +5,13 @@ STAMP = .docker-built
 dev:
 	docker run -it --rm \
 		--env-file .env \
-		-v $(pwd)/rclone.conf:/root/.config/rclone/rclone.conf:ro \
-		-v $(pwd)/config.yaml:/config.yaml \
-		-v $(pwd)/repos:/app/repos \
-		-v $(pwd)/output:/output \
-		-v $(pwd)/secrover:/app/secrover \
-		-v $(pwd)/templates:/app/templates \
-		-v $(pwd)/main.py:/app/main.py \
+		-v $(PWD)/rclone.conf:/root/.config/rclone/rclone.conf:ro \
+		-v $(PWD)/config.yaml:/config.yaml \
+		-v $(PWD)/repos:/app/repos \
+		-v $(PWD)/output:/output \
+		-v $(PWD)/secrover:/app/secrover \
+		-v $(PWD)/templates:/app/templates \
+		-v $(PWD)/main.py:/app/main.py \
 		$(IMAGE_NAME)
 
 $(STAMP): Dockerfile
@@ -23,20 +23,20 @@ build: $(STAMP)
 run: build
 	docker run -it --rm \
 		--env-file .env \
-		-v $(pwd)/rclone.conf:/root/.config/rclone/rclone.conf:ro \
-		-v $(pwd)/config.yaml:/config.yaml \
-		-v $(pwd)/repos:/app/repos \
-		-v $(pwd)/output:/output \
+		-v $(PWD)/rclone.conf:/root/.config/rclone/rclone.conf:ro \
+		-v $(PWD)/config.yaml:/config.yaml \
+		-v $(PWD)/repos:/app/repos \
+		-v $(PWD)/output:/output \
 		$(IMAGE_NAME)
 
 lint: build
-	docker run --rm --entrypoint "" -v $(pwd):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff check secrover/.
+	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff check secrover/.
 
 format-check: build
-	docker run --rm --entrypoint "" -v $(pwd):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff format --check secrover/.
+	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff format --check secrover/.
 
 format: build
-	docker run --rm --entrypoint "" -v $(pwd):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff format secrover/.
+	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff format secrover/.
 
 update_deps:
-	docker run --rm --entrypoint "" -v $(pwd):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv sync --upgrade
+	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv sync --upgrade
