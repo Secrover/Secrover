@@ -2,7 +2,13 @@ IMAGE_NAME = secrover:latest
 WORKDIR = /app
 STAMP = .docker-built
 
-dev:
+$(STAMP): Dockerfile
+	docker build -t $(IMAGE_NAME) .
+	touch $(STAMP)
+
+build: $(STAMP)
+
+dev: build
 	docker run -it --rm \
 		--env-file .env \
 		-v $(PWD)/rclone.conf:/root/.config/rclone/rclone.conf:ro \
@@ -13,12 +19,6 @@ dev:
 		-v $(PWD)/templates:/app/templates \
 		-v $(PWD)/main.py:/app/main.py \
 		$(IMAGE_NAME)
-
-$(STAMP): Dockerfile
-	docker build -t $(IMAGE_NAME) .
-	touch $(STAMP)
-
-build: $(STAMP)
 
 run: build
 	docker run -it --rm \
