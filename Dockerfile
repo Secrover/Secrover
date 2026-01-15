@@ -10,7 +10,7 @@ RUN apk add --no-cache \
     ca-certificates
 
 # Install uv
-RUN apk add uv
+RUN apk add --no-cache uv
 
 # Install opengrep
 RUN curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.sh -o /tmp/install.sh && \
@@ -19,13 +19,13 @@ RUN curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.
 ENV PATH="/root/.opengrep/cli/latest:$PATH"
 
 # Install osv-scanner
-RUN apk add osv-scanner
+RUN apk add --no-cache osv-scanner
 
 # Install Supercronic
-RUN apk add supercronic
+RUN apk add --no-cache supercronic
 
 # Install rclone
-RUN apk add rclone
+RUN apk add --no-cache rclone
 
 # Create working directory
 WORKDIR /app
