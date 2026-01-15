@@ -41,7 +41,10 @@ def check_dependencies(
             "description": repo_description,
             "audit": audit_results,
         }
-        print(f"  Found {audit_results['total_vulnerabilities']} issues")
+        if audit_results:
+            print(f"  Found {audit_results['total_vulnerabilities']} issues")
+        else:
+            print("  No issues found")
 
     summary = aggregate_global_summary(data)
     summary.update({"nbRepos": total})

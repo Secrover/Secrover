@@ -41,8 +41,8 @@ Mount your `rclone.conf` in addition to the usual volumes:
 ```bash
 docker run -it --rm \
   --env-file .env \
-  -v "$(PWD)/config.yaml:/config.yaml" \
-  -v "$(PWD)/rclone.conf:/root/.config/rclone/rclone.conf:ro" \
+  -v "$(pwd)/config.yaml:/config.yaml" \
+  -v "$(pwd)/rclone.conf:/root/.config/rclone/rclone.conf:ro" \
   secrover/secrover
 ```
 

@@ -1,0 +1,12 @@
+project:
+  name: My project
+domains:
+  - my-domain.com
+  - subdomain.my-domain.com
+repos:
+  - url: https://github.com/your-org/your-repo
+    description: "Short description of the project"
+    branch: "main"
+
+  - url: https://github.com/your-org/another-repo
+    description: "Another awesome project"
