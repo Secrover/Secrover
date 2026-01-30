@@ -71,7 +71,16 @@ def run_audit(repo_path: Path):
     """
     try:
         result = subprocess.run(
-            ["osv-scanner", "scan", "--format", "sarif", "-r", str(repo_path)],
+            [
+                "osv-scanner",
+                "scan",
+                "source",
+                "--format",
+                "sarif",
+                "-r",
+                str(repo_path),
+                "--no-ignore",
+            ],
             capture_output=True,
             text=True,
             check=False,
