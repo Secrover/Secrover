@@ -28,21 +28,17 @@
     <div id="repos">
         {% for repo_name, repo_data in data.items() %}
             {% set audit = repo_data.audit %}
-            {% if not audit %}
-                <div class="card project-card">
-                    <div class="project-header">
-                        <h3>{{ repo_name }}</h3>
-                    </div>
-                    <p class="project-description">{{ repo_data.description }}</p>
-                    <p class="mb-0">No audit data available.</p>
+            <div class="card project-card">
+                <div class="project-header">
+                    <h3>{{ repo_name }}</h3>
+                    <a href="{{ repo_data.url }}" target="_blank">
+                        <img id="logo" src="data:image/svg+xml;base64,{{ git_icon_b64 }}" alt="Git Repository">
+                    </a>
                 </div>
-            {% else %}
-                <div class="card project-card">
-                    <div class="project-header">
-                        <h3>{{ repo_name }}</h3>
-                    </div>
-                    <p class="project-description">{{ repo_data.description }}</p>
-
+                <p class="project-description">{{ repo_data.description }}</p>
+                {% if not audit %}
+                    <p class="mb-0">No audit data available.</p>
+                {% else %}
                     <div class="d-flex d-justify-between mb-20">
                         <span class="badge {{ 'badge-error' if audit.total_vulnerabilities > 0 else 'badge-success' }}">
                             <strong>{{ audit.total_vulnerabilities }}</strong> {{ audit.total_vulnerabilities | pluralize('vulnerability') }}</span>
@@ -82,8 +78,8 @@
                             <p class="no-issues success mb-0">None - All clear!</p>
                         </div>
                     {% endif %}
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         {% endfor %}
     </div>
 
