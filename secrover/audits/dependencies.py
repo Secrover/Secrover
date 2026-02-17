@@ -32,12 +32,14 @@ def check_dependencies(
     data = {}
     total = len(repos)
     for i, repo in enumerate(repos, 1):
-        repo_name = repo.get("name") or get_repo_name_from_url(repo["url"])
+        repo_url = repo.get("url")
+        repo_name = repo.get("name") or get_repo_name_from_url(repo_url)
         print(f"[{i}/{total}] Scanning repo: {repo_name} ...")
         repo_description = repo.get("description") or ""
         repo_path = repos_path / repo_name
         audit_results = run_audit(repo_path)
         data[repo_name] = {
+            "url": repo_url,
             "description": repo_description,
             "audit": audit_results,
         }

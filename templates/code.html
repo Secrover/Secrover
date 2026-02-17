@@ -30,6 +30,9 @@
             <div class="card project-card">
                <div class="project-header">
                     <h3>{{ repo_name }}</h3>
+                    <a href="{{ repo_data.url }}" target="_blank">
+                        <img id="logo" src="data:image/svg+xml;base64,{{ git_icon_b64 }}" alt="Git Repository">
+                    </a>
                 </div>
                 <p class="project-description">{{ repo_data.description }}</p>
 

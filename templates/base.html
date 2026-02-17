@@ -291,12 +291,20 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+
+            img {
+                width: 20px;
+                height: 20px;
+            }
         }
         .project-card .project-description {
             color: #666;
             font-style: italic;
         }
         .packages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
             background: #f8f9fa;
             border-radius: 12px;
             padding: 15px;
@@ -307,7 +315,6 @@
             color: #666;
             font-size: 14px;
             font-family: monospace;
-            margin-bottom: 4px;
             padding: 4px 8px;
             background: white;
             border-radius: 6px;

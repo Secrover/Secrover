@@ -50,6 +50,7 @@ def generate_html_report(report_type: str, results: dict, output_path: Path):
         "audit_datetime": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "logo_b64": get_base64_image(Path("assets/secrover.svg")),
         "favicon_b64": get_base64_image(Path("assets/favicon.svg")),
+        "git_icon_b64": get_base64_image(Path("assets/git-repo.svg")),
     }
     context.update(results)
 

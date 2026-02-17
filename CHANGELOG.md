@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8] - 2026-02-17
+- chore: update deps
+- core: force git pull by resetting changes before
+- templates: add links on vulnerabilities badges
+- templates: better margin for packages list
+- templates: add links to repos with a git icon
+
 ## [0.7] - 2026-01-30
 - core: update deps
 - dependencies: fix scanning by not ignore ignored files

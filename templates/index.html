@@ -14,9 +14,9 @@
                     <div class="count">{{ dependencies_summary.nbRepos }}</div>
                     <div class="label">Repositories scanned</div>
                 </div>
-                <span class="badge {{ 'badge-error' if dependencies_summary.total > 0 else 'badge-success' }}">
+                <a href="dependencies_report.html" class="badge {{ 'badge-error' if dependencies_summary.total > 0 else 'badge-success' }}">
                     <strong>{{ dependencies_summary.total }}</strong> {{ dependencies_summary.total | pluralize('vulnerability') }}
-                </span>
+                </a>
             </div>
         {% endif %}
 
@@ -28,9 +28,9 @@
                     <div class="label">Repositories scanned</div>
                 </div>
 
-                <span class="badge {{ 'badge-error' if code_summary.total > 0 else 'badge-success' }}">
+                <a href="code_report.html" class="badge {{ 'badge-error' if code_summary.total > 0 else 'badge-success' }}">
                     <strong>{{ code_summary.total }}</strong> {{ code_summary.total | pluralize('vulnerability') }}
-                </span>
+                </a>
             </div>
         {% endif %}
 
@@ -42,9 +42,9 @@
                     <div class="label">Domains scanned</div>
                 </div>
 
-                <span class="badge {{ 'badge-error' if domains_summary.total > 0 else 'badge-success' }}">
+                <a href="domains_report.html" class="badge {{ 'badge-error' if domains_summary.total > 0 else 'badge-success' }}">
                     <strong>{{ domains_summary.total }}</strong> {{ domains_summary.total | pluralize('vulnerability') }}
-                </span>
+                </a>
             </div>
         {% endif %}
     </div>
