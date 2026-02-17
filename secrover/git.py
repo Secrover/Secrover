@@ -46,7 +46,7 @@ def clone_repos(repos_path: Path, repos, token):
             try:
                 print(f"Repo '{repo_name}' exists, pulling latest changes...")
                 local_repo = Repo(dest_path)
-                local_repo.git.reset('--hard')
+                local_repo.git.reset("--hard")
                 pull_info = local_repo.remotes.origin.pull(branch)
 
                 # Count updates
