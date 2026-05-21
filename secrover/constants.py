@@ -1,4 +1,4 @@
-VERSION = "0.9"
+VERSION = "0.10"
 
 DEPENDENCIES_SEVERITY_ORDER = ["critical", "high", "moderate", "low", "info"]
 CODE_SEVERITY_ORDER = ["high", "moderate", "low"]
