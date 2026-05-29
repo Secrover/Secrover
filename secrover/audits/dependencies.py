@@ -86,6 +86,7 @@ def run_audit(repo_path: Path):
             capture_output=True,
             text=True,
             check=False,
+            timeout=60,
         )
 
         if not result.stdout.strip():
@@ -152,7 +153,8 @@ def run_audit(repo_path: Path):
                 severity_counts[severity] += 1
 
         return build_audit_summary(severity_counts, packages_by_file)
-
+    except subprocess.TimeoutExpired:
+        print("The operation was aborted because it exceeded the allowed time limit.")
     except Exception as e:
         print(f"osv-scanner failed unexpectedly: {e}")
         if result.stderr:

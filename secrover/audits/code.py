@@ -86,6 +86,7 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
                 capture_output=True,
                 text=True,
                 check=True,
+                timeout=60,
             )
             sarif_data = json.loads(result.stdout)
             runs = sarif_data.get("runs", [])
@@ -117,6 +118,16 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
             }
             print(f"  Found {total_findings} issues")
 
+        except subprocess.TimeoutExpired as e:
+            print(
+                "The operation was aborted because it exceeded the allowed time limit."
+            )
+            data[repo_name] = {
+                "error": str(e),
+                "findings_count": 0,
+                "findings_by_severity": {sev: 0 for sev in CODE_SEVERITY_ORDER},
+                "findings": [],
+            }
         except subprocess.CalledProcessError as e:
             print(f"Code scan failed for {repo_name}: {e.stderr}")
             data[repo_name] = {
@@ -125,7 +136,6 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
                 "findings_by_severity": {sev: 0 for sev in CODE_SEVERITY_ORDER},
                 "findings": [],
             }
-
         except Exception as e:
             print(f"Unexpected error scanning {repo_name}: {e}")
             data[repo_name] = {

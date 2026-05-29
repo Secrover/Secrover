@@ -2,7 +2,7 @@
 set -e
 
 run_scan() {
-    echo "Running Secrover scan at $(date)"
+    echo -e "Running Secrover scan at $(date)\n"
     uv run main.py
 }
 

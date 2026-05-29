@@ -69,7 +69,7 @@ def main():
 
     # 1 - Dependencies
     if repos:
-        print("\n1 / Dependencies check")
+        print("\n1 / Dependencies check\n")
         dependencies_summary = check_dependencies(
             project, repos, repos_path, output_path, enabled_checks
         )
@@ -79,7 +79,7 @@ def main():
 
     # 2 - Code
     if repos:
-        print("\n2 / Code check")
+        print("\n2 / Code check\n")
         code_summary = check_code(
             project, repos, repos_path, output_path, enabled_checks
         )
@@ -89,7 +89,7 @@ def main():
 
     # 3 - Domains
     if domains:
-        print("\n3 / Domains check")
+        print("\n3 / Domains check\n")
         domains_summary = check_domains(
             project, domains, ip_db_path, output_path, enabled_checks
         )
