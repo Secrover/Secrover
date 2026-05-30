@@ -29,6 +29,9 @@ run: build
 		-v $(PWD)/output:/output \
 		$(IMAGE_NAME)
 
+console: build
+	docker run -it --rm -v $(PWD):$(WORKDIR) -w $(WORKDIR) --entrypoint /bin/sh $(IMAGE_NAME)
+
 lint: build
 	docker run --rm --entrypoint "" -v $(PWD):$(WORKDIR) -w $(WORKDIR) $(IMAGE_NAME) uv run ruff check secrover/.
 

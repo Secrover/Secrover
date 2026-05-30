@@ -3,6 +3,8 @@ from pathlib import Path
 from datetime import datetime, timezone
 import re
 
+from secrover.style import style
+
 
 def expand_shell_date(path: Path) -> Path:
     def replacer(match):
@@ -16,7 +18,7 @@ def expand_shell_date(path: Path) -> Path:
 
 def export_reports(output_dir: Path, remotes: list[str], remote_path: Path):
     if not remotes:
-        print("RCLONE_REMOTES not configured.")
+        style.error("RCLONE_REMOTES not configured.")
         return
 
     # Expand any $(date +FORMAT) expressions
@@ -24,7 +26,7 @@ def export_reports(output_dir: Path, remotes: list[str], remote_path: Path):
 
     for remote in remotes:
         target = f"{remote}:{target_path}/"
-        print(f"Uploading {output_dir} → {target}")
+        style.normal(f"Uploading {output_dir} → {target}")
 
         cmd = [
             "rclone",
@@ -37,6 +39,6 @@ def export_reports(output_dir: Path, remotes: list[str], remote_path: Path):
         result = subprocess.run(cmd)
 
         if result.returncode == 0:
-            print(f"✅ Export to {remote} successful.")
+            style.success(f"Export to {remote} successful.")
         else:
-            print(f"❌ Export to {remote} failed with code {result.returncode}.")
+            style.error(f"Export to {remote} failed with code {result.returncode}.")

@@ -3,6 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from os import getenv
 
+from secrover.style import style
 from secrover.config import load_config
 from secrover.audits.dependencies import check_dependencies
 from secrover.audits.code import check_code
@@ -37,26 +38,27 @@ def main():
         if config is None:
             raise ValueError("No config found")
     except Exception as e:
-        print(f"Error loading config: {e}")
+        style.error(f"Error loading config: {e}")
         exit(1)
 
-    print(f"----- Secrover ({VERSION}) -----")
+    style.h1(f"Secrover ({VERSION})")
 
-    print(f"- Using configuration file: {config_path}")
-    print(f"- Reports will be saved locally to: {output_path}")
-    print(f"- Repositories will be cloned to: {repos_path}")
-    print(f"- Remote export enabled: {'Yes' if export_enabled else 'No'}")
+    style.normal(f"- Using configuration file: {config_path}", indent=1)
+    style.normal(f"- Reports will be saved locally to: {output_path}", indent=1)
+    style.normal(f"- Repositories will be cloned to: {repos_path}", indent=1)
+    style.normal(f"- Remote export enabled: {'Yes' if export_enabled else 'No'}", indent=1)
 
     project = config.get("project", [])
     repos = config.get("repos", [])
     domains = config.get("domains", [])
 
     # Clone repos
-    print("\n# Clone repos\n")
+    style.separator()
+    style.h1("Clone repos")
     if repos:
         repos = clone_repos(repos_path, repos, token)
     else:
-        print("No repositories to clone.")
+        style.info("No repositories to clone.", indent=4)
 
     enabled_checks = {
         "dependencies": bool(repos),
@@ -65,40 +67,42 @@ def main():
     }
 
     # Audits
-    print("\n# Launching checks")
+    style.separator()
+    style.h1("Launching checks")
 
     # 1 - Dependencies
     if repos:
-        print("\n1 / Dependencies check\n")
+        style.h2("1 / Dependencies check")
         dependencies_summary = check_dependencies(
             project, repos, repos_path, output_path, enabled_checks
         )
     else:
-        print("\n1 / Dependencies check skipped (no repositories).")
+        style.info("1 / Dependencies check skipped (no repositories).")
         dependencies_summary = None
 
     # 2 - Code
     if repos:
-        print("\n2 / Code check\n")
+        style.h2("2 / Code check")
         code_summary = check_code(
             project, repos, repos_path, output_path, enabled_checks
         )
     else:
-        print("\n2 / Code check skipped (no repositories).")
+        style.info("2 / Code check skipped (no repositories).")
         code_summary = None
 
     # 3 - Domains
     if domains:
-        print("\n3 / Domains check\n")
+        style.h2("3 / Domains check")
         domains_summary = check_domains(
             project, domains, ip_db_path, output_path, enabled_checks
         )
     else:
-        print("\n3 / Domains check skipped (no domains).")
+        style.info("3 / Domains check skipped (no domains).")
         domains_summary = None
 
     # Only generate the main report if any check was run
     if any(enabled_checks.values()):
+        style.info("Checks have been completed.")
         generate_html_report(
             "index",
             {
@@ -115,15 +119,17 @@ def main():
 
         # Remote Export
         if export_enabled:
-            print("\n# Remote Export\n")
+            style.separator()
+            style.h1("Remote Export")
             export_reports(output_path, rclone_remotes, rclone_path)
     else:
-        print("\nNo checks were enabled, skipping report generation.")
+        style.info("No checks were enabled, skipping report generation.")
+        style.line_return()
 
     end_time = time.perf_counter()  # End timer
     seconds = end_time - start_time
 
-    print(f"\n⚡ Secrover scan completed in {seconds:.2f} seconds.")
+    style.info(f"⚡ Secrover scan completed in {seconds:.2f} seconds.")
 
 
 if __name__ == "__main__":

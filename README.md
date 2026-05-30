@@ -138,7 +138,7 @@ docker run -it --rm \
 
 Secrover also supports **automatic recurring scans** using an internal cron scheduler (via [Supercronic](https://github.com/aptible/supercronic)).
 
-You can schedule scans to run periodically **inside the container** — ideal for servers, NAS setups, ...
+You can schedule scans to run periodically **inside the container** — ideal for servers, NAS setups,...
 
 ### Example: Run every day at midnight
 

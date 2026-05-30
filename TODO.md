@@ -1,0 +1,2 @@
+- create an HTTP wrapper and send user-agent "Secrover" in requests
+- support PDF reports in addition to HTML reports
