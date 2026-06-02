@@ -79,6 +79,6 @@ def clone_repos(repos_path: Path, repos, token):
             )
             valid_repos.append(repo)
         except GitCommandError as error:
-            style.error(f"Can't clone {normalized_url}:", error)
+            style.error(f"Can't clone {normalized_url}: {error}")
 
     return valid_repos
