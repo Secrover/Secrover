@@ -85,21 +85,22 @@ repos:
 
 #### Accessing Private Repositories
 
-Secrover supports cloning **private repositories via HTTPS** using a **GitHub Personal Access Token (PAT)**.
+Secrover supports cloning private repositories in two ways:
+- **HTTPS**: Using a GitHub Personal Access Token (PAT).
+- **SSH**: By forwarding your SSH keys to the Docker container.
 
-> We currently support **HTTPS only** (SSH is not yet supported).
+##### HTTPS
 
-##### 1. Create a GitHub Personal Access Token
+1. Create a GitHub Personal Access Token
+  * Go to [your GitHub account](https://github.com/settings/tokens)
+  * Click **"Generate new token"** (fine-grained)
+  * Give it a name like `Secrover`
+  * Choose "Only select repositories" and select the private repos Secrover needs to clone
+    * Under **Repository permissions**, grant:
+      * **Contents: Read-only**
+  * Generate and **copy** the token
 
-* Go to [your GitHub account](https://github.com/settings/tokens)
-* Click **"Generate new token"** (fine-grained)
-* Give it a name like `Secrover`
-* Choose "Only select repositories" and select the private repos Secrover needs to clone
-  * Under **Repository permissions**, grant:
-    * **Contents: Read-only**
-* Generate and **copy** the token
-
-##### 2. Create a `.env` file
+2. Create a `.env` file
 
 In the same directory as your `config.yaml`, create a `.env` file:
 
@@ -109,6 +110,30 @@ GITHUB_TOKEN=yourgeneratedtokenhere
 
 > **⚠️ Do not share this file or commit it to version control.**
 > Add `.env` to your `.gitignore` file to prevent accidental leaks.
+
+##### SSH
+
+To allow Secrover to access private repositories via SSH, forward your local SSH agent to the container. This avoids permission issues and keeps your private keys off the container filesystem entirely.
+First, make sure your SSH agent is running and your key is added:
+
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+ssh-add ~/.ssh/id_ed25519  # add any other keys as needed
+```
+
+Then run Secrover with the agent socket forwarded:
+
+```bash
+docker run -it --rm \
+  --env-file .env \
+  -v "$(pwd)/config.yaml:/config.yaml" \
+  -v "$(pwd)/output:/output" \
+  -v "$(SSH_AUTH_SOCK):/ssh-agent" \
+	-e SSH_AUTH_SOCK=/ssh-agent \
+		secrover:latest
+  secrover/secrover
+```
 
 ## Install & run with Docker
 

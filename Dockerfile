@@ -7,7 +7,8 @@ RUN apk add --no-cache \
     git \
     unzip \
     zip \
-    ca-certificates
+    ca-certificates \
+    openssh
 
 # Install uv
 RUN apk add --no-cache uv
@@ -26,6 +27,10 @@ RUN apk add --no-cache supercronic
 
 # Install rclone
 RUN apk add --no-cache rclone
+
+RUN mkdir -p /root/.ssh && \
+    ssh-keyscan github.com >> /root/.ssh/known_hosts && \
+    ssh-keyscan gitlab.com >> /root/.ssh/known_hosts
 
 # Create working directory
 WORKDIR /app
