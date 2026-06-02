@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - git: support cloning repos via SSH
 - tui: improve formatting of output by using click library
 - chore: update deps
-- core: add a timeout to code and dependecies checks
+- core: add a timeout to code and dependencies checks
 
 ## [0.10.0] - 2026-05-20
 - chore: update deps
