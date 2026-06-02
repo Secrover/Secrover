@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime
 from secrover.constants import VERSION
 from secrover.tools import get_tool_version
+from secrover.style import style
 
 
 def pluralize(count, singular, plural=None):
@@ -64,4 +65,6 @@ def generate_html_report(report_type: str, results: dict, output_path: Path):
 
     report_file.write_text(output_html, encoding="utf-8")
 
-    print(f"\n✅ {report_type.capitalize()} HTML report generated.")
+    style.line_return()
+    style.success(f"{report_type.capitalize()} HTML report generated.")
+    style.line_return()

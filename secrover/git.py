@@ -2,6 +2,8 @@ from git import Repo, GitCommandError
 from urllib.parse import urlparse, urlunparse
 from pathlib import Path
 
+from secrover.style import style
+
 
 def get_repo_name_from_url(url):
     url = url.rstrip("/")
@@ -33,7 +35,8 @@ def inject_token_into_url(url, token):
 def clone_repos(repos_path: Path, repos, token):
     valid_repos = []
     repos_path.mkdir(parents=True, exist_ok=True)
-    for repo in repos:
+    total = len(repos)
+    for i, repo in enumerate(repos, 1):
         original_url = repo["url"]
         normalized_url = normalize_repo_url(original_url)
         if token:
@@ -44,7 +47,9 @@ def clone_repos(repos_path: Path, repos, token):
 
         if dest_path.exists():
             try:
-                print(f"Repo '{repo_name}' exists, pulling latest changes...")
+                style.normal(
+                    f"[{i}/{total}] Repo '{repo_name}' exists, pulling latest changes..."
+                )
                 local_repo = Repo(dest_path)
                 local_repo.git.reset("--hard")
                 pull_info = local_repo.remotes.origin.pull(branch)
@@ -54,22 +59,26 @@ def clone_repos(repos_path: Path, repos, token):
                     1 for info in pull_info if info.flags & info.FAST_FORWARD
                 )
                 if changes_count:
-                    print(f"Pulled {changes_count} updates for {repo_name}")
+                    style.info(
+                        f"Pulled {changes_count} updates for {repo_name}", indent=1
+                    )
                 else:
-                    print(f"No updates for {repo_name}")
+                    style.info(f"No updates for {repo_name}", indent=1)
 
                 valid_repos.append(repo)
             except GitCommandError as error:
-                print(f"Failed to pull {repo_name}: {error}")
+                style.error(f"Failed to pull {repo_name}: {error}", indent=1)
             continue
 
-        print(f"Cloning {original_url} into {dest_path} (branch {branch}) ...")
+        style.normal(
+            f"[{i}/{total}] Cloning {original_url} into {dest_path} (branch {branch})..."
+        )
         try:
             Repo.clone_from(
                 normalized_url, dest_path, branch=branch, single_branch=True
             )
             valid_repos.append(repo)
         except GitCommandError as error:
-            print(f"Can't clone {normalized_url}:", error)
+            style.error(f"Can't clone {normalized_url}: {error}", indent=1)
 
     return valid_repos

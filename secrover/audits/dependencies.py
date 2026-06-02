@@ -7,6 +7,7 @@ from collections import defaultdict
 from secrover.constants import DEPENDENCIES_SEVERITY_ORDER
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
+from secrover.style import style
 
 
 def init_severity_counts():
@@ -34,7 +35,7 @@ def check_dependencies(
     for i, repo in enumerate(repos, 1):
         repo_url = repo.get("url")
         repo_name = repo.get("name") or get_repo_name_from_url(repo_url)
-        print(f"[{i}/{total}] Scanning repo: {repo_name} ...")
+        style.normal(f"[{i}/{total}] Scanning repo: {repo_name}...")
         repo_description = repo.get("description") or ""
         repo_path = repos_path / repo_name
         audit_results = run_audit(repo_path)
@@ -43,10 +44,12 @@ def check_dependencies(
             "description": repo_description,
             "audit": audit_results,
         }
-        if audit_results:
-            print(f"  Found {audit_results['total_vulnerabilities']} issues")
+        if audit_results and audit_results["total_vulnerabilities"] > 0:
+            style.info(
+                f"Found {audit_results['total_vulnerabilities']} issues", indent=1
+            )
         else:
-            print("  No issues found")
+            style.info("No issues found", indent=1)
 
     summary = aggregate_global_summary(data)
     summary.update({"nbRepos": total})
@@ -86,16 +89,17 @@ def run_audit(repo_path: Path):
             capture_output=True,
             text=True,
             check=False,
+            timeout=60,
         )
 
         if not result.stdout.strip():
-            print(f"osv-scanner returned no output in {repo_path}")
+            style.debug(f"osv-scanner returned no output in {repo_path}", indent=1)
             return None
 
         try:
             sarif_data = json.loads(result.stdout)
         except json.JSONDecodeError as e:
-            print(f"Failed to parse SARIF output: {e}")
+            style.error(f"Failed to parse SARIF output: {e}", indent=1)
             return None
 
         severity_counts = init_severity_counts()
@@ -152,11 +156,13 @@ def run_audit(repo_path: Path):
                 severity_counts[severity] += 1
 
         return build_audit_summary(severity_counts, packages_by_file)
-
+    except subprocess.TimeoutExpired:
+        style.error(
+            "The operation was aborted because it exceeded the allowed time limit.",
+            indent=1,
+        )
     except Exception as e:
-        print(f"osv-scanner failed unexpectedly: {e}")
-        if result.stderr:
-            print(f"stderr:\n{result.stderr}")
+        style.error(f"osv-scanner failed unexpectedly: {e}", indent=1)
 
     return None
 

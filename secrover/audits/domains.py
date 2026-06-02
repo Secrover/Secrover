@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from secrover.report import generate_html_report
 from secrover.helpers import country_code_to_emoji
 from secrover.constants import DOMAINS_SEVERITY_ORDER
+from secrover.style import style
 
 
 def get_country_from_url(ip_db_path: Path, url: str) -> str:
@@ -216,7 +217,7 @@ def check_domains(
 
     total = len(domains)
     for i, domain in enumerate(domains, 1):
-        print(f"[{i}/{total}] Scanning domain: {domain} ...")
+        style.normal(f"[{i}/{total}] Scanning domain: {domain}...")
         info = {
             "domain": domain,
             "country": None,

@@ -5,6 +5,7 @@ from pathlib import Path
 from secrover.constants import CODE_SEVERITY_ORDER
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
+from secrover.style import style
 
 sarif_to_severity = {
     "error": "high",
@@ -75,7 +76,7 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
     for i, repo in enumerate(repos, 1):
         repo_url = repo.get("url")
         repo_name = repo.get("name") or get_repo_name_from_url(repo_url)
-        print(f"[{i}/{total}] Scanning repo: {repo_name} ...")
+        style.normal(f"[{i}/{total}] Scanning repo: {repo_name}...")
         repo_description = repo.get("description") or ""
         repo_path = repos_path / repo_name
 
@@ -86,6 +87,7 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
                 capture_output=True,
                 text=True,
                 check=True,
+                timeout=60,
             )
             sarif_data = json.loads(result.stdout)
             runs = sarif_data.get("runs", [])
@@ -115,19 +117,29 @@ def check_code(project, repos, repos_path: Path, output_path: Path, enabled_chec
                 "findings_by_severity": findings_by_severity,
                 "findings": detailed_findings,
             }
-            print(f"  Found {total_findings} issues")
+            style.info(f"Found {total_findings} issues", indent=1)
 
-        except subprocess.CalledProcessError as e:
-            print(f"Code scan failed for {repo_name}: {e.stderr}")
+        except subprocess.TimeoutExpired as e:
+            style.error(
+                "The operation was aborted because it exceeded the allowed time limit.",
+                indent=1,
+            )
             data[repo_name] = {
                 "error": str(e),
                 "findings_count": 0,
                 "findings_by_severity": {sev: 0 for sev in CODE_SEVERITY_ORDER},
                 "findings": [],
             }
-
+        except subprocess.CalledProcessError as e:
+            style.error(f"Code scan failed for {repo_name}: {e.stderr}", indent=1)
+            data[repo_name] = {
+                "error": str(e),
+                "findings_count": 0,
+                "findings_by_severity": {sev: 0 for sev in CODE_SEVERITY_ORDER},
+                "findings": [],
+            }
         except Exception as e:
-            print(f"Unexpected error scanning {repo_name}: {e}")
+            style.error(f"Unexpected error scanning {repo_name}: {e}", indent=1)
             data[repo_name] = {
                 "error": str(e),
                 "findings_count": 0,
