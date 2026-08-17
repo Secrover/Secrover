@@ -1,8 +1,8 @@
-import subprocess
 import json
 import re
-from pathlib import Path
+import subprocess
 from collections import defaultdict
+from pathlib import Path
 
 from secrover.constants import DEPENDENCIES_SEVERITY_ORDER
 from secrover.git import get_repo_name_from_url

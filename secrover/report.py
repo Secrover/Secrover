@@ -1,10 +1,12 @@
 import base64
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+
 from secrover.constants import VERSION
-from secrover.tools import get_tool_version
 from secrover.style import style
+from secrover.tools import get_tool_version
 
 
 def pluralize(count, singular, plural=None):

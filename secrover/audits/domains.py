@@ -1,15 +1,16 @@
-import ssl
 import socket
-from datetime import datetime, timezone
+import ssl
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlparse
-import requests
-import IP2Location
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from secrover.report import generate_html_report
-from secrover.helpers import country_code_to_emoji
+import IP2Location
+import requests
+
 from secrover.constants import DOMAINS_SEVERITY_ORDER
+from secrover.helpers import country_code_to_emoji
+from secrover.report import generate_html_report
 from secrover.style import style
 
 
@@ -168,8 +169,8 @@ def get_ssl_info(domain, port=443, timeout=5):
             with context.wrap_socket(sock, server_hostname=domain) as ssock:
                 cert = ssock.getpeercert()
                 not_after = datetime.strptime(cert["notAfter"], "%b %d %H:%M:%S %Y %Z")
-                not_after = not_after.replace(tzinfo=timezone.utc)
-                now = datetime.now(timezone.utc)
+                not_after = not_after.replace(tzinfo=UTC)
+                now = datetime.now(UTC)
                 days_remaining = (not_after - now).days
 
                 issuer_raw = cert.get("issuer", [])

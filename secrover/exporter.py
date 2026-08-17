@@ -1,7 +1,7 @@
-import subprocess
-from pathlib import Path
-from datetime import datetime, timezone
 import re
+import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
 
 from secrover.style import style
 
@@ -9,7 +9,7 @@ from secrover.style import style
 def expand_shell_date(path: Path) -> Path:
     def replacer(match):
         fmt = match.group(1)
-        return datetime.now(timezone.utc).strftime(fmt)
+        return datetime.now(UTC).strftime(fmt)
 
     pattern = re.compile(r"\$\(\s*date\s+\+([^)]+)\s*\)")
     expanded_str = pattern.sub(replacer, str(path))
