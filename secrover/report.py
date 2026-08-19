@@ -1,5 +1,5 @@
 import base64
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -50,7 +50,7 @@ def generate_html_report(report_type: str, results: dict, output_path: Path):
         "version": VERSION,
         "osv_version": get_tool_version("osv-scanner"),
         "opengrep_version": get_tool_version("opengrep"),
-        "audit_datetime": datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M"),
+        "audit_datetime": datetime.now(tz=UTC).strftime("%Y-%m-%d %H:%M"),
         "logo_b64": get_base64_image(Path("assets/secrover.svg")),
         "favicon_b64": get_base64_image(Path("assets/favicon.svg")),
         "git_icon_b64": get_base64_image(Path("assets/git-repo.svg")),
