@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.2] - 2026-08-19
+- fix: fix usage of timezone in a datetime.now call
+
 ## [0.12.1] - 2026-08-19
 - fix: fix usage of timezone in a datetime.now call
 
