@@ -36,7 +36,7 @@ def export_reports(output_dir: Path, remotes: list[str], remote_path: Path):
             "-v",
             "--create-empty-src-dirs",
         ]
-        result = subprocess.run(cmd)
+        result = subprocess.run(cmd, check=False)
 
         if result.returncode == 0:
             style.success(f"Export to {remote} successful.")

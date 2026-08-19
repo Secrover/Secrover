@@ -152,10 +152,12 @@ def check_tls_versions(domain, port=443):
             ctx.check_hostname = False
             ctx.verify_mode = ssl.CERT_NONE
 
-            with socket.create_connection((domain, port), timeout=5) as sock:
-                with ctx.wrap_socket(sock, server_hostname=domain):
-                    # Include only supported versions
-                    result[label] = {"secure": label not in insecure_versions}
+            with (
+                socket.create_connection((domain, port), timeout=5) as sock,
+                ctx.wrap_socket(sock, server_hostname=domain),
+            ):
+                # Include only supported versions
+                result[label] = {"secure": label not in insecure_versions}
         except Exception:
             pass  # Skip unsupported versions
 
@@ -165,23 +167,26 @@ def check_tls_versions(domain, port=443):
 def get_ssl_info(domain, port=443, timeout=5):
     try:
         context = ssl.create_default_context()
-        with socket.create_connection((domain, port), timeout=timeout) as sock:
-            with context.wrap_socket(sock, server_hostname=domain) as ssock:
-                cert = ssock.getpeercert()
-                not_after = datetime.strptime(cert["notAfter"], "%b %d %H:%M:%S %Y %Z")
-                not_after = not_after.replace(tzinfo=UTC)
-                now = datetime.now(UTC)
-                days_remaining = (not_after - now).days
+        with (
+            socket.create_connection((domain, port), timeout=timeout) as sock,
+            context.wrap_socket(sock, server_hostname=domain) as ssock,
+        ):
+            cert = ssock.getpeercert()
+            not_after = datetime.strptime(
+                cert["notAfter"], "%b %d %H:%M:%S %Y %Z"
+            ).replace(tzinfo=UTC)
+            now = datetime.now(UTC)
+            days_remaining = (not_after - now).days
 
-                issuer_raw = cert.get("issuer", [])
-                issuer = {key: value for pair in issuer_raw for key, value in pair}
+            issuer_raw = cert.get("issuer", [])
+            issuer = {key: value for pair in issuer_raw for key, value in pair}
 
-                return {
-                    "valid": True,
-                    "issuer": issuer,
-                    "not_after": not_after.date().isoformat(),
-                    "days_remaining": days_remaining,
-                }
+            return {
+                "valid": True,
+                "issuer": issuer,
+                "not_after": not_after.date().isoformat(),
+                "days_remaining": days_remaining,
+            }
     except Exception as e:
         return {"valid": False, "error": str(e)}
 
