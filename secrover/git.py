@@ -1,6 +1,7 @@
-from git import Repo, GitCommandError
-from urllib.parse import urlparse, urlunparse
 from pathlib import Path
+from urllib.parse import urlparse, urlunparse
+
+from git import GitCommandError, Repo
 
 from secrover.style import style
 
@@ -8,8 +9,7 @@ from secrover.style import style
 def get_repo_name_from_url(url):
     url = url.rstrip("/")
     repo_name = url.split("/")[-1]
-    if repo_name.endswith(".git"):
-        repo_name = repo_name[:-4]
+    repo_name = repo_name.removesuffix(".git")
     return repo_name
 
 
