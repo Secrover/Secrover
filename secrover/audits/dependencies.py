@@ -184,7 +184,8 @@ def build_audit_summary(severity_counts, packages_by_file, extras=None):
         "vulnerabilities_by_severity": severity_counts,
         "packages_by_file": dict(packages_by_file),
         "packages_impacted": sorted(
-            all_packages, key=lambda p: (p["severity"], p["name"])
+            all_packages,
+            key=lambda p: (severity_rank(p["severity"]), p["name"]),
         ),
     }
     if extras:
