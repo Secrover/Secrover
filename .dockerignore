@@ -1,0 +1,28 @@
+# VCS / CI
+.git
+.github
+
+# Docs
+docs/
+CHANGELOG.md
+
+# Secrets and local configuration
+.env
+config.yaml
+rclone.conf
+
+# Local state (volumes or generated at runtime)
+repos/
+output/
+data/
+secrover.log
+
+# Python
+.venv
+__pycache__/
+*.py[oc]
+
+# Tooling caches
+.ruff_cache
+.docker-built
+uv.lock.tmp
