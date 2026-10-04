@@ -9,6 +9,13 @@ from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
 from secrover.style import style
 
+sarif_to_severity = {
+    "error": "high",
+    "warning": "moderate",
+    "note": "low",
+    "none": "info",
+}
+
 
 def init_severity_counts():
     return {sev: 0 for sev in DEPENDENCIES_SEVERITY_ORDER}
@@ -16,7 +23,9 @@ def init_severity_counts():
 
 def normalize_severity(severity: str):
     sev = (severity or "info").lower()
-    return sev if sev in DEPENDENCIES_SEVERITY_ORDER else "info"
+    if sev in DEPENDENCIES_SEVERITY_ORDER:
+        return sev
+    return sarif_to_severity.get(sev, "info")
 
 
 def severity_rank(sev):
