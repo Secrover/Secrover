@@ -374,7 +374,7 @@ wheels = [
 
 [[package]]
 name = "secrover"
-version = "0.12.2"
+version = "0.12.3"
 source = { virtual = "." }
 dependencies = [
     { name = "click" },
