@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - dependencies: handle osv-scanner exit code 128 (no package sources) as an empty result
 - core: use a single audit datetime for all generated report pages
 - core: scan repos and domains in parallel (up to 8 at a time) to speed up audits
+- domains: count invalid certs, missing redirect/HSTS and missing security headers in the summary
 - chore: update deps
 
 ## [0.12.3] - 2026-10-04

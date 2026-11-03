@@ -212,6 +212,38 @@ def aggregate_global_summary(data):
             summary["high"] += 1
             summary["total"] += 1
 
+        # HIGH: invalid or expired SSL certificate
+        if not domain_info.get("valid", False):
+            summary["high"] += 1
+            summary["total"] += 1
+
+        # MODERATE: port 80 open without redirecting to HTTPS
+        if 80 in domain_info.get("open_ports", []) and not domain_info.get(
+            "http_to_https_redirect", False
+        ):
+            summary["moderate"] += 1
+            summary["total"] += 1
+
+        # MODERATE: HTTPS available but no HSTS header
+        if not domain_info.get("hsts_present", False):
+            summary["moderate"] += 1
+            summary["total"] += 1
+
+        # LOW: missing security headers / policies
+        for header in (
+            "csp",
+            "x_content_type_options",
+            "x_frame_options",
+            "referrer_policy",
+            "permissions_policy",
+            "coep",
+            "coop",
+            "corp",
+        ):
+            if not domain_info.get(header):
+                summary["low"] += 1
+                summary["total"] += 1
+
     return summary
 
 
