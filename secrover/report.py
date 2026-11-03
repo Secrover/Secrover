@@ -6,7 +6,10 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from secrover.constants import VERSION
 from secrover.style import style
-from secrover.tools import get_tool_version
+from secrover.tools import get_python_package_version, get_tool_version
+
+# Computed once per run so every generated page shows the same audit datetime
+AUDIT_DATETIME = datetime.now(tz=UTC).strftime("%Y-%m-%d %H:%M")
 
 
 def pluralize(count, singular, plural=None):
@@ -50,7 +53,8 @@ def generate_html_report(report_type: str, results: dict, output_path: Path):
         "version": VERSION,
         "osv_version": get_tool_version("osv-scanner"),
         "opengrep_version": get_tool_version("opengrep"),
-        "audit_datetime": datetime.now(tz=UTC).strftime("%Y-%m-%d %H:%M"),
+        "ossatrisk_version": get_python_package_version("ossatrisk"),
+        "audit_datetime": AUDIT_DATETIME,
         "logo_b64": get_base64_image(Path("assets/secrover.svg")),
         "favicon_b64": get_base64_image(Path("assets/favicon.svg")),
         "git_icon_b64": get_base64_image(Path("assets/git-repo.svg")),

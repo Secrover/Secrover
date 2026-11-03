@@ -10,7 +10,7 @@ from secrover.audits.code import check_code
 from secrover.audits.domains import check_domains
 from secrover.git import clone_repos
 from secrover.report import generate_html_report
-from secrover.constants import VERSION, CODE_SEVERITY_ORDER, DEPENDENCIES_SEVERITY_ORDER
+from secrover.constants import VERSION, CODE_SEVERITY_ORDER, DEPENDENCIES_SEVERITY_ORDER, DOMAINS_SEVERITY_ORDER
 from secrover.exporter import export_reports
 
 def main():
@@ -103,12 +103,23 @@ def main():
     # Only generate the main report if any check was run
     if any(enabled_checks.values()):
         style.info("Checks have been completed.")
+        global_severity_summary = {level: 0 for level in DEPENDENCIES_SEVERITY_ORDER}
+        for summary in (dependencies_summary, code_summary, domains_summary):
+            if summary:
+                for level in global_severity_summary:
+                    global_severity_summary[level] += summary.get(level, 0)
+        global_severity_summary["total"] = sum(
+            global_severity_summary[level] for level in DEPENDENCIES_SEVERITY_ORDER
+        )
         generate_html_report(
             "index",
             {
                 "project": project,
                 "dependencies_severity_order": DEPENDENCIES_SEVERITY_ORDER,
                 "code_severity_order": CODE_SEVERITY_ORDER,
+                "domains_severity_order": DOMAINS_SEVERITY_ORDER,
+                "global_severity_order": DEPENDENCIES_SEVERITY_ORDER,
+                "global_severity_summary": global_severity_summary,
                 "dependencies_summary": dependencies_summary,
                 "code_summary": code_summary,
                 "domains_summary": domains_summary,

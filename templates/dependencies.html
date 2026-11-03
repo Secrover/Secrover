@@ -1,25 +1,36 @@
 {% extends "base.html" %}
+{% import "_macros.html" as ui %}
 
 {% block title %}Dependencies Report{% endblock %}
 
 {% block content %}
     <section id="global-recap">
-        <h1>📦 Dependencies Report</h1>
+        <h1>Dependencies Report</h1>
         <div class="card">
-            <div class="d-flex d-justify-between">
-                <span class="badge {{ 'badge-error' if global_summary.total > 0 else 'badge-success' }}">
-                    <strong>{{ global_summary.total }}</strong> {{ global_summary.total | pluralize('vulnerability') }}
-                </span>
-                <div class="severity-dots">
-                    {% for level in severity_order %}
-                    <span class="severity-dot">
-                        <span class="dot dot-{{ level }}"></span>
-                        <span>
-                            <strong>{{ global_summary[level] }}</strong>
-                            {{ level.capitalize() }}
+            <div class="d-flex recap-row">
+                {{ ui.donut(global_summary, severity_order) }}
+                <div>
+                    <div class="d-flex">
+                        <span class="badge {{ 'badge-error' if global_summary.total > 0 else 'badge-success' }}">
+                            <strong>{{ global_summary.total }}</strong>
+                            <span class="tooltip-link">{{ global_summary.total | pluralize('vulnerability') }}<span class="tooltip">Known CVEs/advisories found in lockfiles (osv-scanner)</span></span>
                         </span>
-                    </span>
-                    {% endfor %}
+                        <span class="badge {{ 'badge-error' if global_summary.risky_total > 0 else 'badge-success' }}">
+                            <strong>{{ global_summary.risky_total }}</strong>
+                            <span class="tooltip-link">{{ global_summary.risky_total | pluralize('risky package') }}<span class="tooltip">Risk score from package manifests (ossatrisk): release recency, CVEs, maintainers, popularity, open issues. Complements the CVE list.</span></span>
+                        </span>
+                    </div>
+                    <div class="severity-dots mt-20">
+                        {% for level in severity_order %}
+                        <span class="severity-dot">
+                            <span class="dot dot-{{ level }}"></span>
+                            <span>
+                                <strong>{{ global_summary[level] }}</strong>
+                                {{ level.capitalize() }}
+                            </span>
+                        </span>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,11 +48,12 @@
                 </div>
                 <p class="project-description">{{ repo_data.description }}</p>
                 {% if not audit %}
-                    <p class="mb-0">No audit data available.</p>
+                    <p class="mb-0">Audit failed - no data available.</p>
                 {% else %}
-                    <div class="d-flex d-justify-between mb-20">
+                    <div class="d-flex d-justify-between summary-row mb-20">
                         <span class="badge {{ 'badge-error' if audit.total_vulnerabilities > 0 else 'badge-success' }}">
-                            <strong>{{ audit.total_vulnerabilities }}</strong> {{ audit.total_vulnerabilities | pluralize('vulnerability') }}</span>
+                            <strong>{{ audit.total_vulnerabilities }}</strong>
+                            <span class="tooltip-link">{{ audit.total_vulnerabilities | pluralize('vulnerability') }}<span class="tooltip">Known CVEs/advisories found in lockfiles (osv-scanner)</span></span>
                         </span>
                         <div class="severity-dots">
                             {% for level in severity_order %}
@@ -56,27 +68,71 @@
                         </div>
                     </div>
 
-                    <p><strong>📦 Impacted Packages:</strong></p>
-                    {% if audit.packages_impacted %}
-                        {% for file, pkgs in audit.packages_by_file.items() %}
-                            <h4>{{ file }}</h4>
+                    <div class="subsection">
+                        <p class="subsection-title"><strong>Vulnerable Packages (CVEs):</strong></p>
+                        {% if audit.packages_impacted %}
+                            {% for file, pkgs in audit.packages_by_file.items() %}
+                                <h4>{{ file }}</h4>
+                                <div class="packages-list">
+                                    {% for pkg in pkgs %}
+                                        <div class="{{ pkg.severity }}">
+                                            {{ pkg.name }} <span>{{ pkg.version }}</span>
+                                            {% if pkg.cves %}
+                                                <small>
+                                                    <a href="{{ pkg.url }}" target="_blank">{{ pkg.cves | join(', ') }}</a>
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        {% elif audit.note %}
+                            <p class="no-issues">{{ audit.note }}</p>
+                        {% else %}
+                            <p class="no-issues success">None - All clear!</p>
+                        {% endif %}
+                    </div>
+
+                    {% if audit.risky_packages is defined %}
+                    <div class="subsection">
+                        <p class="subsection-title">
+                            <strong class="tooltip-link">Risky Packages:<span class="tooltip">Risk score from package manifests (ossatrisk): release recency, CVEs, maintainers, popularity, open issues. Complements the CVE list above.</span></strong>
+                        </p>
+                        <div class="d-flex d-justify-between summary-row mb-10">
+                            <span class="badge {{ 'badge-error' if audit.total_risky_packages > 0 else 'badge-success' }}">
+                                <strong>{{ audit.total_risky_packages }}</strong>
+                                <span class="tooltip-link">{{ audit.total_risky_packages | pluralize('risky package') }}<span class="tooltip">Risk score from package manifests (ossatrisk). Complements the CVE list.</span></span>
+                            </span>
+                            <div class="severity-dots">
+                                {% for level in severity_order %}
+                                <span class="severity-dot">
+                                    <span class="dot dot-{{ level }}"></span>
+                                    <span>
+                                        <strong>{{ audit.risky_by_severity.get(level, 0) }}</strong>
+                                        {{ level.capitalize() }}
+                                    </span>
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if audit.risky_packages %}
                             <div class="packages-list">
-                                {% for pkg in pkgs %}
+                                {% for pkg in audit.risky_packages %}
                                     <div class="{{ pkg.severity }}">
-                                        {{ pkg.name }} <span>{{ pkg.version }}</span>
-                                        {% if pkg.cves %}
-                                            <small>
-                                                <a href="{{ pkg.url }}" target="_blank">{{ pkg.cves | join(', ') }}</a>
-                                            </small>
-                                        {% endif %}
+                                        {{ pkg.name }} <span>score {{ pkg.score }}/100</span>
+                                        <small>
+                                            {{ pkg.ecosystem }} &middot; {{ pkg.file }}
+                                            {% if pkg.abandoned %} &middot; <strong>abandoned</strong>{% endif %}
+                                            {% if pkg.cves_count %} &middot; {{ pkg.cves_count }} CVEs{% endif %}
+                                            {% if pkg.suggested %} &middot; suggested: {{ pkg.suggested }}{% endif %}
+                                        </small>
                                     </div>
                                 {% endfor %}
                             </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="packages-list">
-                            <p class="no-issues success mb-0">None - All clear!</p>
-                        </div>
+                        {% else %}
+                            <p class="no-issues success">None - All clear!</p>
+                        {% endif %}
+                    </div>
                     {% endif %}
                 {% endif %}
             </div>

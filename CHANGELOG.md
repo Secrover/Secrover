@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-11-03
+- dependencies: add ossatrisk package risk assessment (js/php) alongside osv-scanner
+- templates: improve report UI
+- templates: add severity donut charts and a global stacked bar to the report overview
+- templates: add a severity donut to the global recap card of each report page
+- docker: update base image to Python 3.15
+- dependencies: handle osv-scanner exit code 128 (no package sources) as an empty result
+- core: use a single audit datetime for all generated report pages
+- core: scan repos and domains in parallel (up to 8 at a time) to speed up audits
+- domains: count invalid certs, missing redirect/HSTS and missing security headers in the summary
+- chore: update deps
+
 ## [0.12.3] - 2026-10-04
 - fix: fix mapping of dependencies findings
 - chore: update deps

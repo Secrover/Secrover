@@ -23,7 +23,7 @@ Secrover is a free and open-source tool that generates clear, professional secur
 
 | Category        | Checks                                                 | Supported languages        |
 | --------------- | ------------------------------------------------------ | -------------------------- |
-| Dependencies | Vulnerability check                                    |  All languages supported by osv-scanner |
+| Dependencies | Vulnerability check (osv-scanner) + package risk assessment (ossatrisk) | All languages supported by osv-scanner; PHP & JS for ossatrisk |
 | Code         | Static check                                           | All languages supported by opengrep |
 | Domains      | SSL certificate, HTTP→HTTPS Redirect, HSTS header, TLS versions, Open Ports, Security Headers, Hosting Location | -     |
 
@@ -218,6 +218,7 @@ This project benefits from the fantastic work of several open-source projects:
 - [uv](https://github.com/astral-sh/uv)
 - [opengrep](https://github.com/opengrep/opengrep)
 - [osv-scanner](https://github.com/google/osv-scanner)
+- [ossatrisk](https://github.com/Huluti/ossatrisk)
 - [rclone](https://github.com/rclone/rclone)
 
 A big thanks to all the maintainers and contributors behind these amazing projects, without whom this project wouldn't be possible!

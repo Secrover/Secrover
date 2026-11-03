@@ -6,9 +6,9 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import IP2Location
-import requests
 
-from secrover.constants import DOMAINS_SEVERITY_ORDER
+from secrover import http
+from secrover.constants import DOMAINS_SEVERITY_ORDER, MAX_PARALLEL_CHECKS
 from secrover.helpers import country_code_to_emoji
 from secrover.report import generate_html_report
 from secrover.style import style
@@ -32,13 +32,13 @@ def check_http_to_https_redirect(domain):
     url = f"http://{domain}"
     try:
         # We use 'allow_redirects=False' to catch the first response redirect header
-        response = requests.get(url, allow_redirects=False, timeout=5)
+        response = http.get(url, allow_redirects=False, timeout=5)
         if response.status_code in range(300, 400):
             location = response.headers.get("Location", "")
             if location.startswith("https://"):
                 return True
         return False
-    except requests.RequestException:
+    except http.RequestException:
         return False
 
 
@@ -49,7 +49,7 @@ def is_domain_active(domain, timeout=3):
     """
     for scheme in ["https", "http"]:
         try:
-            resp = requests.get(f"{scheme}://{domain}", timeout=timeout)
+            resp = http.get(f"{scheme}://{domain}", timeout=timeout)
             if resp.status_code < 404:
                 return True
         except Exception:
@@ -102,7 +102,7 @@ def check_open_ports(domain):
 
 def check_security_headers(url):
     try:
-        response = requests.get(url, timeout=5)
+        response = http.get(url, timeout=5)
         headers = response.headers
 
         return {
@@ -212,91 +212,130 @@ def aggregate_global_summary(data):
             summary["high"] += 1
             summary["total"] += 1
 
+        # HIGH: invalid or expired SSL certificate
+        if not domain_info.get("valid", False):
+            summary["high"] += 1
+            summary["total"] += 1
+
+        # MODERATE: port 80 open without redirecting to HTTPS
+        if 80 in domain_info.get("open_ports", []) and not domain_info.get(
+            "http_to_https_redirect", False
+        ):
+            summary["moderate"] += 1
+            summary["total"] += 1
+
+        # MODERATE: HTTPS available but no HSTS header
+        if not domain_info.get("hsts_present", False):
+            summary["moderate"] += 1
+            summary["total"] += 1
+
+        # LOW: missing security headers / policies
+        for header in (
+            "csp",
+            "x_content_type_options",
+            "x_frame_options",
+            "referrer_policy",
+            "permissions_policy",
+            "coep",
+            "coop",
+            "corp",
+        ):
+            if not domain_info.get(header):
+                summary["low"] += 1
+                summary["total"] += 1
+
     return summary
+
+
+def _check_domain(domain, ip_db_path: Path):
+    info = {
+        "domain": domain,
+        "country": None,
+        "active": False,
+        "https_available": False,
+        "http_to_https_redirect": False,
+        "tls_versions": [],
+        "hsts_present": False,
+        "hsts_value": "",
+        "csp": None,
+        "x_content_type_options": None,
+        "x_frame_options": None,
+        "referrer_policy": None,
+        "permissions_policy": None,
+        "coep": None,
+        "coop": None,
+        "corp": None,
+        "open_ports": [],
+        "valid": False,
+        "issuer": {},
+        "not_after": None,
+        "days_remaining": None,
+        "error": None,
+    }
+
+    info["active"] = is_domain_active(domain)
+    if info["active"]:
+        info["open_ports"] = check_open_ports(domain)
+        info["https_available"] = 443 in info["open_ports"]
+
+        # Check HTTP to HTTPS redirect only if port 80 is open
+        if 80 in info["open_ports"]:
+            info["http_to_https_redirect"] = check_http_to_https_redirect(domain)
+
+        if info["https_available"]:
+            ssl_info = get_ssl_info(domain)
+            info["valid"] = ssl_info.get("valid", False)
+            info["error"] = ssl_info.get("error")
+
+            if info["valid"]:
+                url = f"https://{domain}"
+                info["issuer"] = ssl_info.get("issuer", {})
+                info["not_after"] = ssl_info.get("not_after")
+                info["days_remaining"] = ssl_info.get("days_remaining")
+                info["tls_versions"] = check_tls_versions(domain)
+            else:
+                # SSL invalid but HTTPS port is open, fallback to HTTP
+                url = f"http://{domain}"
+        else:
+            # HTTPS not available, fallback to HTTP
+            url = f"http://{domain}"
+
+        # Check country of url (with ip)
+        info["country"] = get_country_from_url(ip_db_path, url)
+
+        # Check security headers for the chosen URL (https if SSL valid, else http)
+        sec_headers = check_security_headers(url)
+        info["hsts_present"] = sec_headers.get("hsts_present", False)
+        info["hsts_value"] = sec_headers.get("hsts_value", "")
+        info["csp"] = sec_headers.get("csp")
+        info["x_content_type_options"] = sec_headers.get("x_content_type_options")
+        info["x_frame_options"] = sec_headers.get("x_frame_options")
+        info["referrer_policy"] = sec_headers.get("referrer_policy")
+        info["permissions_policy"] = sec_headers.get("permissions_policy")
+        info["coep"] = sec_headers.get("coep")
+        info["coop"] = sec_headers.get("coop")
+        info["corp"] = sec_headers.get("corp")
+
+    return info
 
 
 def check_domains(
     project, domains, ip_db_path: Path, output_path: Path, enabled_checks
 ):
     output_path.mkdir(parents=True, exist_ok=True)
-    data = []
 
     total = len(domains)
-    for i, domain in enumerate(domains, 1):
-        style.normal(f"[{i}/{total}] Scanning domain: {domain}...")
-        info = {
-            "domain": domain,
-            "country": None,
-            "active": False,
-            "https_available": False,
-            "http_to_https_redirect": False,
-            "tls_versions": [],
-            "hsts_present": False,
-            "hsts_value": "",
-            "csp": None,
-            "x_content_type_options": None,
-            "x_frame_options": None,
-            "referrer_policy": None,
-            "permissions_policy": None,
-            "coep": None,
-            "coop": None,
-            "corp": None,
-            "open_ports": [],
-            "valid": False,
-            "issuer": {},
-            "not_after": None,
-            "days_remaining": None,
-            "error": None,
-        }
-
-        info["active"] = is_domain_active(domain)
-        if info["active"]:
-            info["open_ports"] = check_open_ports(domain)
-            info["https_available"] = 443 in info["open_ports"]
-
-            # Check HTTP to HTTPS redirect only if port 80 is open
-            if 80 in info["open_ports"]:
-                info["http_to_https_redirect"] = check_http_to_https_redirect(domain)
-
-            if info["https_available"]:
-                ssl_info = get_ssl_info(domain)
-                info["valid"] = ssl_info.get("valid", False)
-                info["error"] = ssl_info.get("error")
-
-                if info["valid"]:
-                    url = f"https://{domain}"
-                    info["issuer"] = ssl_info.get("issuer", {})
-                    info["not_after"] = ssl_info.get("not_after")
-                    info["days_remaining"] = ssl_info.get("days_remaining")
-                    info["tls_versions"] = check_tls_versions(domain)
-                else:
-                    # SSL invalid but HTTPS port is open, fallback to HTTP
-                    url = f"http://{domain}"
-            else:
-                # HTTPS not available, fallback to HTTP
-                url = f"http://{domain}"
-
-            # Check country of url (with ip)
-            info["country"] = get_country_from_url(ip_db_path, url)
-
-            # Check security headers for the chosen URL (https if SSL valid, else http)
-            sec_headers = check_security_headers(url)
-            info["hsts_present"] = sec_headers.get("hsts_present", False)
-            info["hsts_value"] = sec_headers.get("hsts_value", "")
-            info["csp"] = sec_headers.get("csp")
-            info["x_content_type_options"] = sec_headers.get("x_content_type_options")
-            info["x_frame_options"] = sec_headers.get("x_frame_options")
-            info["referrer_policy"] = sec_headers.get("referrer_policy")
-            info["permissions_policy"] = sec_headers.get("permissions_policy")
-            info["coep"] = sec_headers.get("coep")
-            info["coop"] = sec_headers.get("coop")
-            info["corp"] = sec_headers.get("corp")
-
-        else:
-            # Domain inactive: keep all defaults
-            pass
-
-        data.append(info)
+    results = {}
+    with ThreadPoolExecutor(max_workers=MAX_PARALLEL_CHECKS) as executor:
+        futures = {}
+        for i, domain in enumerate(domains, 1):
+            style.normal(f"[{i}/{total}] Scanning domain: {domain}...")
+            futures[executor.submit(_check_domain, domain, ip_db_path)] = domain
+        for future in as_completed(futures):
+            info = future.result()
+            results[info["domain"]] = info
+    # keep the original config order in the report
+    data = [results[domain] for domain in domains if domain in results]
 
     summary = aggregate_global_summary(data)
     summary.update({"nbDomains": total})

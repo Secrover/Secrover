@@ -1,25 +1,29 @@
 {% extends "base.html" %}
+{% import "_macros.html" as ui %}
 
 {% block title %}Code Report{% endblock %}
 
 {% block content %}
     <section id="global-recap">
-        <h1>📝 Code Report</h1>
+        <h1>Code Report</h1>
         <div class="card">
-            <div class="d-flex d-justify-between">
-                <span class="badge {{ 'badge-error' if global_summary.total > 0 else 'badge-success' }}">
-                    <strong>{{ global_summary.total }}</strong> vulnerabilities
-                </span>
-                <div class="severity-dots">
-                    {% for level in severity_order %}
-                    <span class="severity-dot">
-                        <span class="dot dot-{{ level }}"></span>
-                        <span>
-                            <strong>{{ global_summary[level] }}</strong>
-                            {{ level.capitalize() }}
-                        </span>
+            <div class="d-flex recap-row">
+                {{ ui.donut(global_summary, severity_order) }}
+                <div>
+                    <span class="badge {{ 'badge-error' if global_summary.total > 0 else 'badge-success' }}">
+                        <strong>{{ global_summary.total }}</strong> {{ global_summary.total | pluralize('vulnerability') }}
                     </span>
-                    {% endfor %}
+                    <div class="severity-dots mt-20">
+                        {% for level in severity_order %}
+                        <span class="severity-dot">
+                            <span class="dot dot-{{ level }}"></span>
+                            <span>
+                                <strong>{{ global_summary[level] }}</strong>
+                                {{ level.capitalize() }}
+                            </span>
+                        </span>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,9 +41,9 @@
                 <p class="project-description">{{ repo_data.description }}</p>
 
                 {% if repo_data.error %}
-                    <p class="error">❌ Scan failed: {{ repo_data.error }}</p>
+                    <p class="error">Scan failed: {{ repo_data.error }}</p>
                 {% else %}
-                    <div class="d-flex d-justify-between mb-20">
+                    <div class="d-flex d-justify-between summary-row mb-20">
                         <span class="badge {{ 'badge-error' if repo_data.findings_count > 0 else 'badge-success' }}">
                             <strong>{{ repo_data.findings_count }}</strong> {{ repo_data.findings_count | pluralize('vulnerability') }}</span>
                         </span>
@@ -56,9 +60,9 @@
                         </div>
                     </div>
 
-                    <p><strong>🕵️ Findings Details:</strong></p>
-                    <div class="packages-list">
-                        {% if repo_data.findings %}
+                    <p><strong>Findings Details:</strong></p>
+                    {% if repo_data.findings %}
+                        <div class="packages-list">
                             {% for finding in repo_data.findings %}
                             <div class="{{ finding.severity }}">
                                 <strong>{{ finding.rule_id or "Unknown Rule" }}</strong> —
@@ -70,10 +74,10 @@
                                 </small>
                             </div>
                             {% endfor %}
-                        {% else %}
-                            <p class="no-issues success mb-0">None - All clear!</p>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% else %}
+                        <p class="no-issues success">None - All clear!</p>
+                    {% endif %}
                 {% endif %}
             </div>
         {% endfor %}
