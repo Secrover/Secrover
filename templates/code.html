@@ -4,7 +4,7 @@
 
 {% block content %}
     <section id="global-recap">
-        <h1>📝 Code Report</h1>
+        <h1>Code Report</h1>
         <div class="card">
             <div class="d-flex d-justify-between">
                 <span class="badge {{ 'badge-error' if global_summary.total > 0 else 'badge-success' }}">
@@ -37,7 +37,7 @@
                 <p class="project-description">{{ repo_data.description }}</p>
 
                 {% if repo_data.error %}
-                    <p class="error">❌ Scan failed: {{ repo_data.error }}</p>
+                    <p class="error">Scan failed: {{ repo_data.error }}</p>
                 {% else %}
                     <div class="d-flex d-justify-between mb-20">
                         <span class="badge {{ 'badge-error' if repo_data.findings_count > 0 else 'badge-success' }}">
@@ -56,7 +56,7 @@
                         </div>
                     </div>
 
-                    <p><strong>🕵️ Findings Details:</strong></p>
+                    <p><strong>Findings Details:</strong></p>
                     <div class="packages-list">
                         {% if repo_data.findings %}
                             {% for finding in repo_data.findings %}

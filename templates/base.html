@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Secrover - {% block title %}{% endblock %}</title>
+    <title>{% if project and 'name' in project %}{{ project.name }} - {% endif %}Secrover - {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="data:image/svg+xml;base64,{{ favicon_b64 }}" type="image/svg+xml">
     <style>
@@ -64,39 +64,58 @@
             --main-color: #638eed;
             --success-color: #059669;
             --error-color: #ef4444;
+            --text-color: #212529;
+            --muted-color: #6c757d;
+            --border-color: #e9ecef;
+        }
+        ::selection {
+            background: var(--main-color);
+            color: #fff;
         }
         body {
             font-family: 'Noto Sans', Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
             margin-bottom: 20px;
             background: #fff;
-            color: #222;
+            color: var(--text-color);
         }
         #main {
             margin: 40px;
             background: #f8f9fa;
             backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
         }
         #header {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 16px;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #e9ecef;
-            margin-bottom: 30px;
-            padding: 0 0 40px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            padding: 0 0 20px 0;
 
             #project-info {
                 .report-label {
-                    color: #666;
-                    font-size: 14px;
-                    margin-bottom: 6px;
+                    color: var(--main-color);
+                    font-size: 13px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 1.5px;
+                    margin-bottom: 8px;
                 }
                 .project-name {
                     margin-bottom: 0;
+                    font-size: 2em;
+                    font-weight: 800;
+                    line-height: 1.2;
+                    color: #1a1a1a;
+                    overflow-wrap: anywhere;
                 }
             }
             #header-right {
@@ -118,23 +137,35 @@
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
-            padding: 0 20px 20px 20px;
+            padding: 20px;
+            margin: 0 40px;
+            border-top: 1px solid var(--border-color);
             text-align: center;
             justify-content: center;
 
             a {
-                color: #222;
+                color: var(--muted-color);
                 font-size: 0.8em;
+                font-weight: 500;
             }
         }
-        h1, h2, h3, h4 { color: #333; margin-bottom: 20px; font-weight: bold; }
-        h1 { font-size: 1.8em; }
+        h1, h2, h3, h4 { color: var(--text-color); margin-bottom: 14px; font-weight: bold; letter-spacing: -0.02em; }
+        h1 { font-size: 1.7em; }
         h3 { font-size: 1.4em; }
         h4 { margin-bottom: 10px; }
         a {
             font-weight: bold;
             color: var(--main-color);
             text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+            &:focus-visible {
+                outline: 2px solid var(--main-color);
+                outline-offset: 2px;
+                border-radius: 4px;
+            }
 
             &.disabled {
                 pointer-events: none;
@@ -157,7 +188,7 @@
         }
         thead {
             th {
-                padding: 15px 10px;
+                padding: 10px;
                 font-weight: bold;
                 color: #495057;
                 vertical-align: middle;
@@ -173,8 +204,21 @@
                 }
             }
         }
+        tbody {
+            tr {
+                &:nth-child(even) {
+                    background-color: #fbfcfd;
+                }
+                &:hover {
+                    background-color: #f1f3f5;
+                }
+            }
+            td:last-child {
+                border-right: none;
+            }
+        }
         tbody td {
-            padding: 15px 10px;
+            padding: 10px;
             border-bottom: 1px solid #f1f3f5;
             border-right: 1px solid #f1f3f5;
             color: #333;
@@ -189,11 +233,15 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 12px;
             font-size: 14px;
             background-color: #f8f9fa;
             color: #6c757d;
+
+            &:hover {
+                text-decoration: none;
+            }
 
             &.badge-small {
                 padding: 2px 6px;
@@ -212,7 +260,7 @@
         }
         .severity-dots {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
             align-items: center;
         }
@@ -239,14 +287,25 @@
             &.dot-error { background: var(--error-color); }
         }
 
+        /* inline SVG icons from Lucide (ISC license), kept self-contained so reports work offline */
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
         #menu {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 40px;
+            margin-bottom: 24px;
 
             a {
-                padding: 8px 16px;
+                padding: 6px 14px;
                 border-radius: 20px;
                 font-weight: 600;
                 font-size: 14px;
@@ -255,8 +314,14 @@
                 gap: 6px;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 background: #fff;
+                border: 1px solid var(--border-color);
                 color: #222;
                 text-decoration: none;
+                transition: background-color 0.2s;
+
+                &:hover {
+                    background-color: #f1f3f5;
+                }
 
                 &.disabled {
                     opacity: 0.6;
@@ -264,13 +329,13 @@
             }
         }
         #global-recap {
-            margin-bottom: 40px;
+            margin-bottom: 24px;
         }
         .overview-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 30px;
+            gap: 16px;
+            margin-top: 20px;
 
             .card {
                 flex: 1 1 250px;
@@ -279,16 +344,16 @@
         .card {
             background: #fff;
             border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e9ecef;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            border: 1px solid var(--border-color);
         }
         .card h2 {
             font-size: 1.2rem;
-            margin-bottom: 30px;
+            margin-bottom: 16px;
         }
         .card .count {
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: #333;
             margin-bottom: 5px;
         }
@@ -296,18 +361,18 @@
             color: #777;
             font-size: 0.9rem;
         }
-        #repos { display: grid; gap: 40px; grid-template-columns: repeat(2, 1fr); }
+        #repos { display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); }
         .project-card h3 {
             margin-bottom: 0;
         }
         .project-card p {
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
         .project-card .project-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
 
             img {
                 width: 20px;
@@ -324,7 +389,7 @@
             gap: 4px;
             background: #f8f9fa;
             border-radius: 12px;
-            padding: 15px;
+            padding: 10px;
             max-height: 200px;
             overflow-y: auto;
         }
@@ -337,6 +402,11 @@
             border-radius: 6px;
             border-left: 3px solid var(--main-color);
             word-wrap: anywhere;
+            transition: background-color 0.15s;
+
+            &:hover {
+                background: #f1f3f5;
+            }
 
             &.critical { border-color:#dc3545 }
             &.high { border-color: #fd7e14; }
@@ -367,7 +437,8 @@
             color: #fff;
             padding: 8px 12px;
             border-radius: 6px;
-            white-space: nowrap;
+            white-space: normal;
+            max-width: min(320px, calc(100vw - 32px));
             font-size: 13px;
             font-style: normal;
             z-index: 1000;
@@ -391,10 +462,31 @@
         }
 
         .badge .tooltip {
-            white-space: normal;
             width: max-content;
             max-width: 280px;
             text-align: center;
+        }
+
+        /* header tooltip: anchored to the right edge and opening downward
+           so it never overflows the right side or the top of the viewport */
+        #audit-info {
+            .tooltip {
+                left: auto;
+                right: 0;
+                transform: none;
+                bottom: auto;
+                top: 125%;
+                white-space: nowrap;
+            }
+            .tooltip::after {
+                top: auto;
+                bottom: 100%;
+                left: auto;
+                right: 12px;
+                transform: none;
+                border-top-color: transparent;
+                border-bottom-color: #333;
+            }
         }
 
         /* Helpers */
@@ -414,9 +506,9 @@
             font-weight: bold;
         }
 
-        .mt-20 { margin-top: 20px; }
-        .mb-20 { margin-bottom: 20px; }
-        .mb-10 { margin-bottom: 10px; }
+        .mt-20 { margin-top: 12px; }
+        .mb-20 { margin-bottom: 12px; }
+        .mb-10 { margin-bottom: 8px; }
         .mb-0 { margin-bottom: 0 !important; }
 
         .success {
@@ -428,7 +520,7 @@
 
         @media screen and (max-width: 1024px) {
             #main {
-                padding: 20px;
+                padding: 16px;
             }
 
             #repos {
@@ -439,6 +531,9 @@
         @media screen and (max-width: 768px) {
             #main {
                 margin: 20px;
+            }
+            #footer {
+                margin: 0 20px;
             }
             #header {
                 justify-content: center;
@@ -451,7 +546,33 @@
                 }
                 #audit-info {
                     text-align: center;
+
+                    .tooltip {
+                        left: 50%;
+                        right: auto;
+                        transform: translateX(-50%);
+                    }
+                    .tooltip::after {
+                        left: 50%;
+                        right: auto;
+                        transform: translateX(-50%);
+                        border-top-color: transparent;
+                        border-bottom-color: #333;
+                    }
                 }
+            }
+
+            /* on small screens, anchor tooltips to the left of their link
+               and cap their width so they stay within the viewport */
+            .tooltip-link .tooltip {
+                left: 0;
+                right: auto;
+                transform: none;
+                max-width: calc(100vw - 96px);
+            }
+            .tooltip-link .tooltip::after {
+                left: 12px;
+                transform: none;
             }
         }
     </style>
@@ -490,10 +611,10 @@
         </div>
 
         <nav id="menu">
-            <a href="index.html">📊 Overview</a>
-            <a href="dependencies_report.html" {% if not enabled_checks.dependencies %}class="disabled" aria-disabled="true"{% endif %}>📦 Dependencies</a>
-            <a href="code_report.html" {% if not enabled_checks.code %}class="disabled" aria-disabled="true"{% endif %}>📝 Code</a>
-            <a href="domains_report.html" {% if not enabled_checks.domains %}class="disabled" aria-disabled="true"{% endif %}>🌐 Domains</a>
+            <a href="index.html"><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> Overview</a>
+            <a href="dependencies_report.html" {% if not enabled_checks.dependencies %}class="disabled" aria-disabled="true"{% endif %}><svg class="icon" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M7.5 4.27l9 5.15"/></svg> Dependencies</a>
+            <a href="code_report.html" {% if not enabled_checks.code %}class="disabled" aria-disabled="true"{% endif %}><svg class="icon" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code</a>
+            <a href="domains_report.html" {% if not enabled_checks.domains %}class="disabled" aria-disabled="true"{% endif %}><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Domains</a>
         </nav>
 
         {% block content %}{% endblock %}
