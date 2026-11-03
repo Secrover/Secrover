@@ -68,31 +68,34 @@
                         </div>
                     </div>
 
-                    <p><strong>Vulnerable Packages (CVEs):</strong></p>
-                    {% if audit.packages_impacted %}
-                        {% for file, pkgs in audit.packages_by_file.items() %}
-                            <h4>{{ file }}</h4>
-                            <div class="packages-list">
-                                {% for pkg in pkgs %}
-                                    <div class="{{ pkg.severity }}">
-                                        {{ pkg.name }} <span>{{ pkg.version }}</span>
-                                        {% if pkg.cves %}
-                                            <small>
-                                                <a href="{{ pkg.url }}" target="_blank">{{ pkg.cves | join(', ') }}</a>
-                                            </small>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
-                    {% elif audit.note %}
-                        <p class="no-issues">{{ audit.note }}</p>
-                    {% else %}
-                        <p class="no-issues success">None - All clear!</p>
-                    {% endif %}
+                    <div class="subsection">
+                        <p class="subsection-title"><strong>Vulnerable Packages (CVEs):</strong></p>
+                        {% if audit.packages_impacted %}
+                            {% for file, pkgs in audit.packages_by_file.items() %}
+                                <h4>{{ file }}</h4>
+                                <div class="packages-list">
+                                    {% for pkg in pkgs %}
+                                        <div class="{{ pkg.severity }}">
+                                            {{ pkg.name }} <span>{{ pkg.version }}</span>
+                                            {% if pkg.cves %}
+                                                <small>
+                                                    <a href="{{ pkg.url }}" target="_blank">{{ pkg.cves | join(', ') }}</a>
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        {% elif audit.note %}
+                            <p class="no-issues">{{ audit.note }}</p>
+                        {% else %}
+                            <p class="no-issues success">None - All clear!</p>
+                        {% endif %}
+                    </div>
 
                     {% if audit.risky_packages is defined %}
-                        <p class="mt-20">
+                    <div class="subsection">
+                        <p class="subsection-title">
                             <strong class="tooltip-link">Risky Packages:<span class="tooltip">Risk score from package manifests (ossatrisk): release recency, CVEs, maintainers, popularity, open issues. Complements the CVE list above.</span></strong>
                         </p>
                         <div class="d-flex d-justify-between summary-row mb-10">
@@ -129,6 +132,7 @@
                         {% else %}
                             <p class="no-issues success">None - All clear!</p>
                         {% endif %}
+                    </div>
                     {% endif %}
                 {% endif %}
             </div>
