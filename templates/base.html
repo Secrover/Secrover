@@ -89,7 +89,24 @@
             margin-bottom: 30px;
             padding: 0 0 40px 0;
 
-            #logo { height: 40px; }
+            #project-info {
+                .report-label {
+                    color: #666;
+                    font-size: 14px;
+                    margin-bottom: 6px;
+                }
+                .project-name {
+                    margin-bottom: 0;
+                }
+            }
+            #header-right {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 12px;
+
+                #logo { height: 32px; }
+            }
             #audit-info {
                 text-align: right;
                 color: #666;
@@ -419,6 +436,12 @@
             #header {
                 justify-content: center;
 
+                #project-info {
+                    text-align: center;
+                }
+                #header-right {
+                    align-items: center;
+                }
                 #audit-info {
                     text-align: center;
                 }
@@ -429,28 +452,32 @@
 <body>
     <div id="main">
         <div id="header">
-            <a href="index.html">
-                <img id="logo" src="data:image/svg+xml;base64,{{ logo_b64 }}" alt="Secrover" />
-            </a>
-            <div id="audit-info">
-                <p class="mb-10">
-                    <strong>Security Audit Report</strong>
-                    {% if project and 'name' in project %}
-                        for <strong>{{ project.name }}</strong>
-                    {% endif %}
-                </p>
-                <p class="audit-info">
-                    <em>
-                        Audit run on {{ audit_datetime }} with
-                        <span class="tooltip-link">
-                            Secrover {{ version }}
-                            <span class="tooltip">
-                                osv-scanner: {{ osv_version }}<br>
-                                opengrep: {{ opengrep_version }}
+            <div id="project-info">
+                {% if project and 'name' in project %}
+                    <p class="report-label">Security Audit Report</p>
+                    <h1 class="project-name">{{ project.name }}</h1>
+                {% else %}
+                    <h1 class="project-name">Security Audit Report</h1>
+                {% endif %}
+            </div>
+            <div id="header-right">
+                <a href="index.html">
+                    <img id="logo" src="data:image/svg+xml;base64,{{ logo_b64 }}" alt="Secrover" />
+                </a>
+                <div id="audit-info">
+                    <p class="audit-info">
+                        <em>
+                            Audit run on {{ audit_datetime }} with
+                            <span class="tooltip-link">
+                                Secrover {{ version }}
+                                <span class="tooltip">
+                                    osv-scanner: {{ osv_version }}<br>
+                                    opengrep: {{ opengrep_version }}
+                                </span>
                             </span>
-                        </span>
-                    </em>
-                </p>
+                        </em>
+                    </p>
+                </div>
             </div>
         </div>
 
