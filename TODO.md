@@ -1,2 +1,1 @@
 - support PDF reports in addition to HTML reports
-- integrate ossatrisk in dependencies scans

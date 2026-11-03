@@ -14,9 +14,16 @@
                     <div class="count">{{ dependencies_summary.nbRepos }}</div>
                     <div class="label">Repositories scanned</div>
                 </div>
-                <a href="dependencies_report.html" class="badge {{ 'badge-error' if dependencies_summary.total > 0 else 'badge-success' }}">
-                    <strong>{{ dependencies_summary.total }}</strong> {{ dependencies_summary.total | pluralize('vulnerability') }}
-                </a>
+                <div class="d-flex d-wrap">
+                    <a href="dependencies_report.html" class="badge {{ 'badge-error' if dependencies_summary.total > 0 else 'badge-success' }}">
+                        <strong>{{ dependencies_summary.total }}</strong> {{ dependencies_summary.total | pluralize('vulnerability') }}
+                    </a>
+                    {% if dependencies_summary.risky_total is defined %}
+                        <a href="dependencies_report.html" class="badge {{ 'badge-error' if dependencies_summary.risky_total > 0 else 'badge-success' }}">
+                            <strong>{{ dependencies_summary.risky_total }}</strong> {{ dependencies_summary.risky_total | pluralize('risky package') }}
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         {% endif %}
 
