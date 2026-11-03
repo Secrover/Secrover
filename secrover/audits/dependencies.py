@@ -2,9 +2,10 @@ import json
 import re
 import subprocess
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from secrover.constants import DEPENDENCIES_SEVERITY_ORDER
+from secrover.constants import DEPENDENCIES_SEVERITY_ORDER, MAX_PARALLEL_CHECKS
 from secrover.git import get_repo_name_from_url
 from secrover.report import generate_html_report
 from secrover.style import style
@@ -54,39 +55,57 @@ def merge_severity(existing, new):
     return new if severity_rank(new) < severity_rank(existing) else existing
 
 
+def _audit_repo(repo, repos_path: Path):
+    repo_url = repo.get("url")
+    repo_name = repo.get("name") or get_repo_name_from_url(repo_url)
+    repo_description = repo.get("description") or ""
+    repo_path = repos_path / repo_name
+    audit_results = run_audit(repo_path)
+    risky_summary = run_ossatrisk(repo_path)
+    if audit_results is None and risky_summary is not None:
+        audit_results = build_audit_summary(init_severity_counts(), {})
+    if audit_results is not None and risky_summary is not None:
+        audit_results.update(risky_summary)
+    entry = {
+        "url": repo_url,
+        "description": repo_description,
+        "audit": audit_results,
+    }
+    if audit_results and audit_results["total_vulnerabilities"] > 0:
+        style.info(
+            f"Found {audit_results['total_vulnerabilities']} issues in {repo_name}",
+            indent=1,
+        )
+    else:
+        style.info(f"No issues found in {repo_name}", indent=1)
+    if risky_summary and risky_summary["total_risky_packages"] > 0:
+        style.info(
+            f"Found {risky_summary['total_risky_packages']} risky packages (ossatrisk) in {repo_name}",
+            indent=1,
+        )
+    return repo_name, entry
+
+
 def check_dependencies(
     project, repos, repos_path: Path, output_path: Path, enabled_checks
 ):
-    data = {}
     total = len(repos)
-    for i, repo in enumerate(repos, 1):
-        repo_url = repo.get("url")
-        repo_name = repo.get("name") or get_repo_name_from_url(repo_url)
-        style.normal(f"[{i}/{total}] Scanning repo: {repo_name}...")
-        repo_description = repo.get("description") or ""
-        repo_path = repos_path / repo_name
-        audit_results = run_audit(repo_path)
-        risky_summary = run_ossatrisk(repo_path)
-        if audit_results is None and risky_summary is not None:
-            audit_results = build_audit_summary(init_severity_counts(), {})
-        if audit_results is not None and risky_summary is not None:
-            audit_results.update(risky_summary)
-        data[repo_name] = {
-            "url": repo_url,
-            "description": repo_description,
-            "audit": audit_results,
-        }
-        if audit_results and audit_results["total_vulnerabilities"] > 0:
-            style.info(
-                f"Found {audit_results['total_vulnerabilities']} issues", indent=1
-            )
-        else:
-            style.info("No issues found", indent=1)
-        if risky_summary and risky_summary["total_risky_packages"] > 0:
-            style.info(
-                f"Found {risky_summary['total_risky_packages']} risky packages (ossatrisk)",
-                indent=1,
-            )
+    results = {}
+    with ThreadPoolExecutor(max_workers=MAX_PARALLEL_CHECKS) as executor:
+        futures = {}
+        for i, repo in enumerate(repos, 1):
+            repo_name = repo.get("name") or get_repo_name_from_url(repo.get("url"))
+            style.normal(f"[{i}/{total}] Scanning repo: {repo_name}...")
+            futures[executor.submit(_audit_repo, repo, repos_path)] = repo_name
+        for future in as_completed(futures):
+            repo_name, entry = future.result()
+            results[repo_name] = entry
+    # keep the original config order in the report
+    data = {}
+    for repo in repos:
+        repo_name = repo.get("name") or get_repo_name_from_url(repo.get("url"))
+        if repo_name in results:
+            data[repo_name] = results[repo_name]
 
     summary = aggregate_global_summary(data)
     summary.update({"nbRepos": total})

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docker: update base image to Python 3.15
 - dependencies: handle osv-scanner exit code 128 (no package sources) as an empty result
 - core: use a single audit datetime for all generated report pages
+- core: scan repos and domains in parallel (up to 8 at a time) to speed up audits
 - chore: update deps
 
 ## [0.12.3] - 2026-10-04
