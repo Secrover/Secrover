@@ -37,7 +37,7 @@
                 </div>
                 <p class="project-description">{{ repo_data.description }}</p>
                 {% if not audit %}
-                    <p class="mb-0">No audit data available.</p>
+                    <p class="mb-0">Audit failed - no data available.</p>
                 {% else %}
                     <div class="d-flex d-justify-between mb-20">
                         <span class="badge {{ 'badge-error' if audit.total_vulnerabilities > 0 else 'badge-success' }}">
@@ -73,6 +73,10 @@
                                 {% endfor %}
                             </div>
                         {% endfor %}
+                    {% elif audit.note %}
+                        <div class="packages-list">
+                            <p class="no-issues mb-0">{{ audit.note }}</p>
+                        </div>
                     {% else %}
                         <div class="packages-list">
                             <p class="no-issues success mb-0">None - All clear!</p>

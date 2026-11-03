@@ -102,7 +102,27 @@ def run_audit(repo_path: Path):
         )
 
         if not result.stdout.strip():
-            style.debug(f"osv-scanner returned no output in {repo_path}", indent=1)
+            # osv-scanner exits 128 when it finds no package sources to scan,
+            # and 0/1 on normal completions (0 = no findings, 1 = findings).
+            # In all three cases the scan ran: there is simply nothing to report.
+            if result.returncode == 128:
+                style.debug(
+                    f"osv-scanner found no packages to scan in {repo_path}",
+                    indent=1,
+                )
+                return build_audit_summary(
+                    init_severity_counts(),
+                    {},
+                    {"note": "No dependencies files found - nothing to audit."},
+                )
+            if result.returncode in (0, 1):
+                style.debug(f"osv-scanner returned no output in {repo_path}", indent=1)
+                return build_audit_summary(init_severity_counts(), {})
+            style.error(
+                f"osv-scanner exited with code {result.returncode}: "
+                f"{result.stderr.strip()}",
+                indent=1,
+            )
             return None
 
         try:
