@@ -116,6 +116,14 @@
                     line-height: 1.2;
                     color: #1a1a1a;
                     overflow-wrap: anywhere;
+
+                    a {
+                        color: inherit;
+
+                        &:hover {
+                            text-decoration: none;
+                        }
+                    }
                 }
             }
             #header-right {
@@ -258,6 +266,29 @@
                 color: #991b1b;
             }
         }
+        .donut {
+            flex-shrink: 0;
+        }
+        .donut-total {
+            font-size: 1.1rem;
+            font-weight: bold;
+            fill: var(--text-color);
+        }
+        .stacked-bar {
+            display: flex;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #e9ecef;
+        }
+        .stacked-seg {
+            height: 100%;
+        }
+        .sev-critical { background-color: #ef4444; }
+        .sev-high { background-color: #f97316; }
+        .sev-moderate { background-color: #eab308; }
+        .sev-low { background-color: #22c55e; }
+        .sev-info { background-color: #3b82f6; }
         .severity-dots {
             display: flex;
             gap: 10px;
@@ -585,9 +616,9 @@
             <div id="project-info">
                 {% if project and 'name' in project %}
                     <p class="report-label">Security Audit Report</p>
-                    <h1 class="project-name">{{ project.name }}</h1>
+                    <h1 class="project-name"><a href="index.html">{{ project.name }}</a></h1>
                 {% else %}
-                    <h1 class="project-name">Security Audit Report</h1>
+                    <h1 class="project-name"><a href="index.html">Security Audit Report</a></h1>
                 {% endif %}
             </div>
             <div id="header-right">
