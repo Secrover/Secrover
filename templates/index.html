@@ -33,9 +33,9 @@
     <div class="overview-container">
         {% if enabled_checks.dependencies and dependencies_summary %}
             <div class="card">
+                <h2>Dependencies</h2>
                 <div class="d-flex d-justify-between">
                     <div>
-                        <h2>Dependencies</h2>
                         <div class="mb-20">
                             <div class="count">{{ dependencies_summary.nbRepos }}</div>
                             <div class="label">Repositories scanned</div>
@@ -60,9 +60,9 @@
 
         {% if enabled_checks.code and code_summary %}
             <div class="card">
+                <h2>Code</h2>
                 <div class="d-flex d-justify-between">
                     <div>
-                        <h2>Code</h2>
                         <div class="mb-20">
                             <div class="count">{{ code_summary.nbRepos }}</div>
                             <div class="label">Repositories scanned</div>
@@ -79,9 +79,9 @@
 
         {% if enabled_checks.domains and domains_summary %}
             <div class="card">
+                <h2>Domains</h2>
                 <div class="d-flex d-justify-between">
                     <div>
-                        <h2>Domains</h2>
                         <div class="mb-20">
                             <div class="count">{{ domains_summary.nbDomains }}</div>
                             <div class="label">Domains scanned</div>
