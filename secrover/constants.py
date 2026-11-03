@@ -1,4 +1,4 @@
-VERSION = "0.12.3"
+VERSION = "0.13.0"
 
 # Max concurrent repos/domains scanned in parallel
 MAX_PARALLEL_CHECKS = 8
