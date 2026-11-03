@@ -1,32 +1,7 @@
 {% extends "base.html" %}
+{% import "_macros.html" as ui %}
 
 {% block title %}Report Overview{% endblock %}
-
-{% set sev_colors = {'critical': '#ef4444', 'high': '#f97316', 'moderate': '#eab308', 'low': '#22c55e', 'info': '#3b82f6'} %}
-
-{% macro donut(summary, order, size=80) %}
-    {% set stroke = 10 %}
-    {% set r = (size - stroke) / 2 %}
-    {% set c = 2 * 3.14159265 * r %}
-    {% set total = summary.total | default(0) %}
-    <svg class="donut" width="{{ size }}" height="{{ size }}" viewBox="0 0 {{ size }} {{ size }}" role="img" aria-label="{{ total }} issues">
-        <circle cx="{{ size / 2 }}" cy="{{ size / 2 }}" r="{{ r }}" fill="none" stroke="#e9ecef" stroke-width="{{ stroke }}"/>
-        {% set ns = namespace(offset=0) %}
-        {% for level in order %}
-            {% set count = summary[level] | default(0) %}
-            {% if total > 0 and count > 0 %}
-                {% set frac = count / total %}
-                <circle cx="{{ size / 2 }}" cy="{{ size / 2 }}" r="{{ r }}" fill="none"
-                        stroke="{{ sev_colors.get(level, '#638eed') }}" stroke-width="{{ stroke }}"
-                        stroke-dasharray="{{ (frac * c) | round(3) }} {{ c | round(3) }}"
-                        stroke-dashoffset="{{ (-ns.offset * c) | round(3) }}"
-                        transform="rotate(-90 {{ size / 2 }} {{ size / 2 }})"/>
-                {% set ns.offset = ns.offset + frac %}
-            {% endif %}
-        {% endfor %}
-        <text x="50%" y="52%" text-anchor="middle" dominant-baseline="middle" class="donut-total">{{ total }}</text>
-    </svg>
-{% endmacro %}
 
 {% block content %}
 <section>
@@ -78,7 +53,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    {{ donut(dependencies_summary, dependencies_severity_order) }}
+                    {{ ui.donut(dependencies_summary, dependencies_severity_order) }}
                 </div>
             </div>
         {% endif %}
@@ -97,7 +72,7 @@
                             <strong>{{ code_summary.total }}</strong> {{ code_summary.total | pluralize('vulnerability') }}
                         </a>
                     </div>
-                    {{ donut(code_summary, code_severity_order) }}
+                    {{ ui.donut(code_summary, code_severity_order) }}
                 </div>
             </div>
         {% endif %}
@@ -116,7 +91,7 @@
                             <strong>{{ domains_summary.total }}</strong> {{ domains_summary.total | pluralize('vulnerability') }}
                         </a>
                     </div>
-                    {{ donut(domains_summary, domains_severity_order) }}
+                    {{ ui.donut(domains_summary, domains_severity_order) }}
                 </div>
             </div>
         {% endif %}

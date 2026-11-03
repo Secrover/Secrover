@@ -269,6 +269,15 @@
         .donut {
             flex-shrink: 0;
         }
+        .d-flex.recap-row {
+            gap: 24px;
+        }
+        .summary-row {
+            background: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
         .donut-total {
             font-size: 1.1rem;
             font-weight: bold;
@@ -383,6 +392,11 @@
             font-size: 1.2rem;
             margin-bottom: 16px;
         }
+        .overview-container .card h2,
+        section > .card > h2 {
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
         .card .count {
             font-size: 2rem;
             color: #333;
@@ -404,6 +418,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
 
             img {
                 width: 20px;
