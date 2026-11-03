@@ -7,13 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - dependencies: add ossatrisk package risk assessment (js/php) alongside osv-scanner
-- templates: rework report header, project name on the left, smaller logo on the right
-- templates: add project name to page titles
-- templates: replace emojis with inline Lucide SVG icons and polish menu styling
-- templates: polish report styling, typography, table rows and focus states
-- templates: make report layout more compact inside the main container
+- templates: improve report UI
 - docker: update base image to Python 3.15
 - dependencies: handle osv-scanner exit code 128 (no package sources) as an empty result
+- core: use a single audit datetime for all generated report pages
 - chore: update deps
 
 ## [0.12.3] - 2026-10-04

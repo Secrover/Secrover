@@ -93,8 +93,7 @@
 
                     {% if audit.risky_packages is defined %}
                         <p class="mt-20">
-                            <strong>Risky Packages:</strong>
-                            <span class="tooltip-link"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><span class="tooltip">Risk score from package manifests (ossatrisk): release recency, CVEs, maintainers, popularity, open issues. Complements the CVE list above.</span></span>
+                            <strong class="tooltip-link">Risky Packages:<span class="tooltip">Risk score from package manifests (ossatrisk): release recency, CVEs, maintainers, popularity, open issues. Complements the CVE list above.</span></strong>
                         </p>
                         <div class="d-flex d-justify-between mb-10">
                             <span class="badge {{ 'badge-error' if audit.total_risky_packages > 0 else 'badge-success' }}">
