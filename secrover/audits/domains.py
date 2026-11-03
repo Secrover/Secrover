@@ -6,8 +6,8 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import IP2Location
-import requests
 
+from secrover import http
 from secrover.constants import DOMAINS_SEVERITY_ORDER
 from secrover.helpers import country_code_to_emoji
 from secrover.report import generate_html_report
@@ -32,13 +32,13 @@ def check_http_to_https_redirect(domain):
     url = f"http://{domain}"
     try:
         # We use 'allow_redirects=False' to catch the first response redirect header
-        response = requests.get(url, allow_redirects=False, timeout=5)
+        response = http.get(url, allow_redirects=False, timeout=5)
         if response.status_code in range(300, 400):
             location = response.headers.get("Location", "")
             if location.startswith("https://"):
                 return True
         return False
-    except requests.RequestException:
+    except http.RequestException:
         return False
 
 
@@ -49,7 +49,7 @@ def is_domain_active(domain, timeout=3):
     """
     for scheme in ["https", "http"]:
         try:
-            resp = requests.get(f"{scheme}://{domain}", timeout=timeout)
+            resp = http.get(f"{scheme}://{domain}", timeout=timeout)
             if resp.status_code < 404:
                 return True
         except Exception:
@@ -102,7 +102,7 @@ def check_open_ports(domain):
 
 def check_security_headers(url):
     try:
-        response = requests.get(url, timeout=5)
+        response = http.get(url, timeout=5)
         headers = response.headers
 
         return {
