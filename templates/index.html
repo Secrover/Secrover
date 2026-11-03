@@ -16,11 +16,13 @@
                 </div>
                 <div class="d-flex d-wrap">
                     <a href="dependencies_report.html" class="badge {{ 'badge-error' if dependencies_summary.total > 0 else 'badge-success' }}">
-                        <strong>{{ dependencies_summary.total }}</strong> {{ dependencies_summary.total | pluralize('vulnerability') }}
+                        <strong>{{ dependencies_summary.total }}</strong>
+                        <span class="tooltip-link">{{ dependencies_summary.total | pluralize('vulnerability') }}<span class="tooltip">Known CVEs/advisories found in lockfiles (osv-scanner)</span></span>
                     </a>
                     {% if dependencies_summary.risky_total is defined %}
                         <a href="dependencies_report.html" class="badge {{ 'badge-error' if dependencies_summary.risky_total > 0 else 'badge-success' }}">
-                            <strong>{{ dependencies_summary.risky_total }}</strong> {{ dependencies_summary.risky_total | pluralize('risky package') }}
+                            <strong>{{ dependencies_summary.risky_total }}</strong>
+                            <span class="tooltip-link">{{ dependencies_summary.risky_total | pluralize('risky package') }}<span class="tooltip">Risk score from package manifests (ossatrisk): release recency, CVEs, maintainers, popularity, open issues. Complements the CVE list.</span></span>
                         </a>
                     {% endif %}
                 </div>

@@ -9,10 +9,12 @@
             <div class="d-flex d-justify-between">
                 <div class="d-flex">
                     <span class="badge {{ 'badge-error' if global_summary.total > 0 else 'badge-success' }}">
-                        <strong>{{ global_summary.total }}</strong> {{ global_summary.total | pluralize('vulnerability') }}
+                        <strong>{{ global_summary.total }}</strong>
+                        <span class="tooltip-link">{{ global_summary.total | pluralize('vulnerability') }}<span class="tooltip">Known CVEs/advisories found in lockfiles (osv-scanner)</span></span>
                     </span>
                     <span class="badge {{ 'badge-error' if global_summary.risky_total > 0 else 'badge-success' }}">
-                        <strong>{{ global_summary.risky_total }}</strong> {{ global_summary.risky_total | pluralize('risky package') }}
+                        <strong>{{ global_summary.risky_total }}</strong>
+                        <span class="tooltip-link">{{ global_summary.risky_total | pluralize('risky package') }}<span class="tooltip">Risk score from package manifests (ossatrisk): release recency, CVEs, maintainers, popularity, open issues. Complements the CVE list.</span></span>
                     </span>
                 </div>
                 <div class="severity-dots">
@@ -46,7 +48,8 @@
                 {% else %}
                     <div class="d-flex d-justify-between mb-20">
                         <span class="badge {{ 'badge-error' if audit.total_vulnerabilities > 0 else 'badge-success' }}">
-                            <strong>{{ audit.total_vulnerabilities }}</strong> {{ audit.total_vulnerabilities | pluralize('vulnerability') }}</span>
+                            <strong>{{ audit.total_vulnerabilities }}</strong>
+                            <span class="tooltip-link">{{ audit.total_vulnerabilities | pluralize('vulnerability') }}<span class="tooltip">Known CVEs/advisories found in lockfiles (osv-scanner)</span></span>
                         </span>
                         <div class="severity-dots">
                             {% for level in severity_order %}
@@ -61,7 +64,7 @@
                         </div>
                     </div>
 
-                    <p><strong>📦 Impacted Packages:</strong></p>
+                    <p><strong>📦 Vulnerable Packages (CVEs):</strong></p>
                     {% if audit.packages_impacted %}
                         {% for file, pkgs in audit.packages_by_file.items() %}
                             <h4>{{ file }}</h4>
@@ -89,10 +92,14 @@
                     {% endif %}
 
                     {% if audit.risky_packages is defined %}
-                        <p class="mt-20"><strong>⚠️ Risky Packages (ossatrisk):</strong></p>
+                        <p class="mt-20">
+                            <strong>⚠️ Risky Packages:</strong>
+                            <span class="tooltip-link">ℹ️<span class="tooltip">Risk score from package manifests (ossatrisk): release recency, CVEs, maintainers, popularity, open issues. Complements the CVE list above.</span></span>
+                        </p>
                         <div class="d-flex d-justify-between mb-10">
                             <span class="badge {{ 'badge-error' if audit.total_risky_packages > 0 else 'badge-success' }}">
-                                <strong>{{ audit.total_risky_packages }}</strong> {{ audit.total_risky_packages | pluralize('risky package') }}
+                                <strong>{{ audit.total_risky_packages }}</strong>
+                                <span class="tooltip-link">{{ audit.total_risky_packages | pluralize('risky package') }}<span class="tooltip">Risk score from package manifests (ossatrisk). Complements the CVE list.</span></span>
                             </span>
                             <div class="severity-dots">
                                 {% for level in severity_order %}
